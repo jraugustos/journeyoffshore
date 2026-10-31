@@ -2,9 +2,11 @@
 
 Aplicação em Next.js, TypeScript, PostgreSQL e Prisma, com execução direta em Node.js e sem Docker. Preserva a referência visual do HTML aprovado e acrescenta senha compartilhada, salvamento automático e macroprocessos adicionáveis e editáveis.
 
+Produção: [journeyoffshore.vercel.app](https://journeyoffshore.vercel.app), com banco Prisma Postgres no plano Free. O acesso exige a senha compartilhada do projeto. O repositório é privado: [jraugustos/journeyoffshore](https://github.com/jraugustos/journeyoffshore).
+
 ## Executar localmente
 
-Requisitos: Node.js 22.12 ou superior e npm. Na primeira instalação, é necessário acesso à internet para baixar as dependências.
+Requisitos: Node.js 22.12 ou superior dentro da linha 22 e npm. Na primeira instalação, é necessário acesso à internet para baixar as dependências.
 
 ```sh
 npm ci

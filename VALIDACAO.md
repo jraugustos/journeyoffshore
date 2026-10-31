@@ -1,6 +1,6 @@
 # Validação da aplicação Offshore Journey
 
-Verificação realizada em 30 de outubro de 2026 sobre a aplicação Next.js com PostgreSQL e Prisma, executada diretamente em Node.js, sem Docker.
+Verificações realizadas em 30 de outubro de 2026 sobre a aplicação Next.js com PostgreSQL e Prisma, em ambiente local e na Vercel, sem Docker. A verificação de produção está registrada em 31 de outubro de 2026 às 03:03 UTC.
 
 ## Resultado
 
@@ -14,6 +14,8 @@ Verificação realizada em 30 de outubro de 2026 sobre a aplicação Next.js com
 - Inspeção visual em desktop e celular concluída, incluindo o editor de macroprocesso e a tela de senha.
 - Nenhum erro de execução da interface foi registrado pela suíte.
 - HTML original preservado por comparação de SHA-256.
+- Produção em `https://journeyoffshore.vercel.app` com Prisma Postgres Free: saúde do banco, senha e cookie seguro, bloqueio das APIs e exportações sem sessão, proteção de origem, persistência entre sessões e exportações JSON/HTML/CSV verificados.
+- Conteúdo local da revisão 47 importado e comparado em produção, desconsiderando somente a data de atualização renovada na gravação. A base local permaneceu igual.
 
 ## Cenários de navegador
 
@@ -39,6 +41,8 @@ Verificação realizada em 30 de outubro de 2026 sobre a aplicação Next.js com
 | Executar a interface sem erros de JavaScript | Passou |
 
 ## Evidências
+
+- [Verificação da publicação em produção](tests/application-evidence/production.json)
 
 O campo Operação do blueprint foi padronizado com o card do HTML original: fundo e borda na cor do cadastro, ícone e nome no topo, bandeira e país, e papel ou “Papel a definir nesta etapa”. A conferência em desktop e celular incluiu múltiplas operações, nome longo, papel com várias linhas e abertura do editor ao clicar. Os dados da prévia foram comparados integralmente antes e depois da atualização e permaneceram iguais.
 

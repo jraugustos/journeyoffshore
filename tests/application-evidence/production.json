@@ -1,0 +1,21 @@
+{
+  "url": "https://journeyoffshore.vercel.app",
+  "verifiedAt": "2026-10-31T03:03:20.771Z",
+  "database": "Prisma Postgres",
+  "plan": "Free",
+  "health": "ok",
+  "passwordProtection": "passed",
+  "secureCookie": "passed",
+  "localDataImported": true,
+  "crossSessionPersistence": "passed",
+  "jsonExport": "passed",
+  "htmlExport": "passed",
+  "csvExport": "passed",
+  "originProtection": "passed",
+  "logout": "passed",
+  "localRevision": 47,
+  "productionRevision": 1,
+  "macros": 4,
+  "fronts": 8,
+  "dataSha256": "825a516371c4d80937028b1003eccc70d3bb45cc248f352d0e5ff8aa399a2005"
+}

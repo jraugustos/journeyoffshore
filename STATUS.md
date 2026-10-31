@@ -23,7 +23,7 @@ A aplicação foi reconstruída em componentes React sobre Next.js e TypeScript.
 
 Os itens “Configurar workshop” e “Registros preservados” foram removidos da navegação conforme solicitado. Metadados e históricos já existentes continuam nas exportações JSON.
 
-O HTML original permanece inalterado. O código foi enviado ao repositório privado [jraugustos/journeyoffshore](https://github.com/jraugustos/journeyoffshore), no branch `main`. A publicação do aplicativo na Vercel está em preparação.
+O HTML original permanece inalterado. O código está no repositório privado [jraugustos/journeyoffshore](https://github.com/jraugustos/journeyoffshore), no branch `main`. A aplicação está publicada em [journeyoffshore.vercel.app](https://journeyoffshore.vercel.app).
 
 ## Publicação no GitHub e na Vercel
 
@@ -35,7 +35,9 @@ A conexão Vercel está ativa. O projeto [journeyoffshore](https://vercel.com/ju
 
 O usuário escolheu Prisma Postgres no plano gratuito e confirmou o aceite dos termos. O banco `journeyoffshore` foi criado em Washington, D.C. (`iad1`) e conectado exclusivamente ao ambiente de produção. As variáveis da integração foram criadas como sensíveis. A aplicação usa a conexão com pool e as migrações mantêm a conexão direta.
 
-O plano Free apresentado pela instalação da Vercel informa 100 mil operações mensais, 2 GB e até 50 bancos, sem custo. Esse limite de operações difere dos 200 mil anunciados pela documentação pública do Prisma; o limite apresentado na contratação foi registrado como referência conservadora. O deploy e a verificação funcional de produção estão em andamento.
+O plano Free apresentado pela instalação da Vercel informa 100 mil operações mensais, 2 GB e até 50 bancos, sem custo. Esse limite de operações difere dos 200 mil anunciados pela documentação pública do Prisma; o limite apresentado na contratação foi registrado como referência conservadora.
+
+O deploy de produção foi concluído. O trabalho local na revisão 47 foi transferido para a nova base, preservando o conteúdo dos 4 macroprocessos e 8 frentes e seus registros. A data de atualização é renovada normalmente pela importação. Saúde do banco, bloqueio sem senha, cookie seguro, persistência entre sessões, exportações JSON/HTML/CSV, proteção de origem e encerramento de acesso foram verificados em produção. A comparação dos dados confirmou a preservação do conteúdo e do banco local. Evidência: [verificação de produção](tests/application-evidence/production.json).
 
 ## Validação
 
@@ -52,4 +54,4 @@ Consultar [VALIDACAO.md](VALIDACAO.md) para os testes executados, evidências e 
 
 ## Próximos passos de implantação
 
-Para concluir a Vercel, conectar a conta, configurar o PostgreSQL e as variáveis privadas, publicar e verificar o acesso por senha, a persistência e as exportações. Para outros provedores, o time tech pode seguir [IMPLANTACAO.md](docs/IMPLANTACAO.md).
+A publicação inicial na Vercel está concluída. O uso da equipe deve ocorrer pela URL de produção; a cópia local permanece independente. Para outros provedores, o time tech pode seguir [IMPLANTACAO.md](docs/IMPLANTACAO.md).
