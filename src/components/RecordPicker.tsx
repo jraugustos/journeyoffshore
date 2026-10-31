@@ -1,7 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useId, useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import type { RecordData } from '@/lib/domain';
 import { Country, PersonLabel, RecordTag } from './Visuals';
+import FieldPopover, { fieldAnchor, type FieldAnchor } from './FieldPopover';
 export default function RecordPicker({
   label,
   records,
@@ -9,6 +11,7 @@ export default function RecordPicker({
   onChange,
   kind,
   onCreate,
+  inline = false,
 }: {
   label: string;
   records: RecordData[];
@@ -16,9 +19,11 @@ export default function RecordPicker({
   onChange: (ids: string[]) => void;
   kind?: string;
   onCreate?: (name: string) => void;
+  inline?: boolean;
 }) {
+  const panelId = useId();
   const [query, setQuery] = useState(''),
-    [open, setOpen] = useState(false);
+    [anchor, setAnchor] = useState<FieldAnchor | null>(null);
   const toggle = (id: string) =>
     onChange(selected.includes(id) ? selected.filter((x) => x !== id) : [...selected, id]);
   const visual = (item: RecordData) =>
@@ -34,76 +39,101 @@ export default function RecordPicker({
       (r.status !== 'Inativo' || selected.includes(r.id)) &&
       r.name.toLocaleLowerCase().includes(query.toLocaleLowerCase()),
   );
-  return (
-    <fieldset className="oj-picker">
-      <legend>{label}</legend>
-      <div className="oj-selected-records">
-        {selected.map((id) => {
-          const item = records.find((r) => r.id === id);
-          return item ? (
-            <button
-              type="button"
-              className="oj-selected-chip"
-              key={id}
-              aria-label={'Remover ' + item.name}
-              onClick={() => toggle(id)}
-            >
-              {visual(item)}
-              <span aria-hidden="true">×</span>
-            </button>
-          ) : null;
-        })}
-        {!selected.length && <span className="oj-context">Nenhum selecionado</span>}
+  const picked = selected
+    .map((id) => records.find((r) => r.id === id))
+    .filter(Boolean) as RecordData[];
+  const choices = (
+    <div className="oj-record-options">
+      <input
+        type="search"
+        aria-label={'Buscar em ' + label}
+        placeholder="Buscar ou cadastrar…"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            e.currentTarget.parentElement
+              ?.querySelector<HTMLInputElement>('input[type=checkbox]')
+              ?.focus();
+          }
+        }}
+      />
+      <div className="oj-record-list">
+        {visible.map((item) => (
+          <label key={item.id} className={selected.includes(item.id) ? 'is-active' : ''}>
+            <input
+              type="checkbox"
+              checked={selected.includes(item.id)}
+              onChange={() => toggle(item.id)}
+            />
+            {visual(item)}
+            {kind === 'operations' && <Country value={item.country} />}
+          </label>
+        ))}
       </div>
+      {!visible.length && <p className="oj-picker-empty">Nenhum registro encontrado.</p>}
+      {onCreate &&
+        query.trim() &&
+        !records.some(
+          (r) => r.name.trim().toLocaleLowerCase() === query.trim().toLocaleLowerCase(),
+        ) && (
+          <button
+            type="button"
+            className="oj-picker-create"
+            onClick={() => {
+              onCreate(query.trim());
+              setQuery('');
+            }}
+          >
+            Cadastrar “{query.trim()}” e selecionar
+          </button>
+        )}
+    </div>
+  );
+  if (inline) return choices;
+  return (
+    <div className="oj-record-picker" role="group" aria-label={label}>
+      <span className="oj-picker-label">{label}</span>
       <button
         type="button"
-        className="btn tiny"
-        aria-expanded={open}
-        onClick={() => setOpen(!open)}
+        className="oj-picker-trigger"
+        role="combobox"
+        aria-label={label}
+        aria-controls={anchor ? panelId : undefined}
+        aria-haspopup="dialog"
+        aria-expanded={!!anchor}
+        onClick={(e) => {
+          setQuery('');
+          setAnchor(fieldAnchor(e.currentTarget));
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setQuery('');
+            setAnchor(fieldAnchor(e.currentTarget));
+          }
+        }}
       >
-        {open ? 'Fechar seleção' : 'Adicionar / alterar seleção'}
+        <span className="oj-picker-value">
+          {picked.length ? (
+            <>
+              {picked.slice(0, 2).map((item) => (
+                <span key={item.id}>{visual(item)}</span>
+              ))}
+              {picked.length > 2 && <span>+{picked.length - 2}</span>}
+            </>
+          ) : (
+            <span className="oj-picker-placeholder">Selecionar…</span>
+          )}
+        </span>
+        <ChevronDown size={15} />
       </button>
-      {open && (
-        <>
-          <input
-            type="search"
-            aria-label={'Buscar em ' + label}
-            placeholder="Buscar ou digitar um novo nome"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <div className="oj-check-list">
-            {visible.map((item) => (
-              <label key={item.id} className={selected.includes(item.id) ? 'is-active' : ''}>
-                <input
-                  type="checkbox"
-                  checked={selected.includes(item.id)}
-                  onChange={() => toggle(item.id)}
-                />
-                {visual(item)}
-                {kind === 'operations' && <Country value={item.country} />}
-              </label>
-            ))}
-          </div>
-          {!visible.length && <p>Nenhum registro encontrado.</p>}
-          {onCreate &&
-            query.trim() &&
-            !records.some(
-              (r) => r.name.trim().toLocaleLowerCase() === query.trim().toLocaleLowerCase(),
-            ) && (
-              <button
-                type="button"
-                className="btn"
-                onClick={() => {
-                  onCreate(query.trim());
-                  setQuery('');
-                }}
-              >
-                Cadastrar “{query.trim()}” e selecionar
-              </button>
-            )}
-        </>
+      {anchor && (
+        <FieldPopover id={panelId} label={label} anchor={anchor} onClose={() => setAnchor(null)}>
+          {choices}
+        </FieldPopover>
       )}
-    </fieldset>
+    </div>
   );
 }

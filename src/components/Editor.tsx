@@ -15,6 +15,7 @@ import {
 
 import { Country, PersonLabel, RecordTag, RecordIcon } from './Visuals';
 import PhotoEditor from './PhotoEditor';
+import FieldPopover, { type FieldAnchor } from './FieldPopover';
 import {
   countryCode,
   countryName,
@@ -31,6 +32,7 @@ export type EditorTarget = {
   caseId?: string;
   registry?: string;
   section?: string;
+  anchor?: FieldAnchor;
 };
 export function editorRecord(state: WorkspaceData, target: EditorTarget): RecordData | undefined {
   if (target.type === 'session') return state.session;
@@ -193,7 +195,7 @@ export default function Editor({
   const [localError, setLocalError] = useState('');
   useEffect(() => {
     const element = dialog.current;
-    element?.showModal();
+    if (!target.anchor) element?.showModal();
     return () => {
       element?.close();
     };
@@ -287,6 +289,7 @@ export default function Editor({
   const picker = (kind: string, key: string, label = REGISTRY_LABELS[kind]) => (
     <SelectRecords
       key={kind}
+      inline={!!target.anchor}
       kind={kind}
       label={label}
       records={state[kind] || []}
@@ -340,10 +343,10 @@ export default function Editor({
     title = 'Editar frente';
     body = (
       <>
-        {field('name', 'Nome da frente')}
-        {options('macroId', 'Macroprocesso', state.macros)}
-        {field('summary', 'Descrição', 'textarea')}
-        {field('status', 'Status', 'select', STATUSES)}
+        {!target.section && field('name', 'Nome da frente')}
+        {!target.section && options('macroId', 'Macroprocesso', state.macros)}
+        {!target.section && field('summary', 'Descrição', 'textarea')}
+        {!target.section && field('status', 'Status', 'select', STATUSES)}
         {picker('people', 'ownerIds', 'Responsáveis pelo contexto / produto')}
       </>
     );
@@ -538,293 +541,313 @@ export default function Editor({
     );
   } else if (target.type === 'step') {
     title = 'Editar etapa';
+    const show = (...sections: string[]) => !target.section || sections.includes(target.section);
     body = (
       <>
-        {field('name', 'Etapa do processo')}
-        {field('status', 'Status', 'select', STATUSES)}
-        {field('objective', 'Objetivo do processo', 'select', OBJECTIVES)}
-        {field('release', 'Marco desta etapa', 'select', RELEASES)}
-        <details className="oj-editor-section" open>
-          <summary>Ator e canal</summary>
-          {picker('actors', 'actorIds', 'Atores')}
-          {picker('channels', 'channelIds', 'Canais')}
-        </details>
-        <details className="oj-editor-section" open>
-          <summary>Operação</summary>
-          <SelectRecords
-            label="Áreas operacionais"
-            kind="operations"
-            onCreate={(name) => createLinked('operations', 'operationLinks', name)}
-            records={state.operations}
-            selected={(record.operationLinks || []).map((item: RecordData) => item.areaId)}
-            onChange={(ids) =>
-              update(
-                'operationLinks',
-                ids.map(
-                  (id) =>
-                    record.operationLinks?.find((item: RecordData) => item.areaId === id) || {
-                      areaId: id,
-                      role: '',
-                    },
-                ),
-                true,
-              )
-            }
-          />
-          {(record.operationLinks || []).map((link: RecordData) => (
-            <label className="oj-field" key={link.areaId}>
-              <span>
-                Papel de{' '}
-                {state.operations.find((item: RecordData) => item.id === link.areaId)?.name}
-              </span>
-              <textarea
-                value={link.role}
-                onChange={(event) =>
-                  update(
-                    'operationLinks',
-                    record.operationLinks.map((item: RecordData) =>
-                      item.areaId === link.areaId ? { ...item, role: event.target.value } : item,
-                    ),
-                  )
-                }
-              />
-            </label>
-          ))}
-        </details>
-        <details className="oj-editor-section" open>
-          <summary>Sistemas e capacidades</summary>
-          {picker('systems', 'systemIds', 'Sistemas')}
-          {picker('capabilities', 'capabilityIds', 'Capacidades')}
-          {(record.capabilityIds || []).map((id: string) => {
-            const capability = state.capabilities.find((c: RecordData) => c.id === id);
-            const assignment = state.responsibilities?.find(
-              (r: RecordData) => r.capabilityId === id && r.context === 'board:' + target.boardId,
-            );
-            return (
-              <SelectRecords
-                key={id}
-                kind="people"
-                label={'Responsáveis por ' + (capability?.name || 'capacidade') + ' neste contexto'}
-                records={state.people}
-                selected={assignment ? assignment.personIds : capability?.ownerIds || []}
-                onCreate={(name) => {
-                  change((draft) => {
-                    const personId = uid();
-                    draft.people.push({ id: personId, name, status: 'Ativo' });
-                    draft.responsibilities ??= [];
-                    let row = draft.responsibilities.find(
-                      (r: RecordData) =>
-                        r.capabilityId === id && r.context === 'board:' + target.boardId,
-                    );
-                    if (!row) {
-                      row = {
-                        uid: uid(),
-                        capabilityId: id,
-                        context: 'board:' + target.boardId,
-                        personIds: [...(capability?.ownerIds || [])],
+        {show('name') && field('name', 'Etapa do processo')}
+        {show('status') && field('status', 'Status', 'select', STATUSES)}
+        {show('objective') && field('objective', 'Objetivo do processo', 'select', OBJECTIVES)}
+        {show('release') && field('release', 'Marco desta etapa', 'select', RELEASES)}
+        {show('actor', 'channel') && (
+          <details className="oj-editor-section" open>
+            <summary>Ator e canal</summary>
+            {show('actor') && picker('actors', 'actorIds', 'Atores')}
+            {show('channel') && picker('channels', 'channelIds', 'Canais')}
+          </details>
+        )}
+        {show('operation') && (
+          <details className="oj-editor-section" open>
+            <summary>Operação</summary>
+            <SelectRecords
+              inline={!!target.anchor}
+              label="Áreas operacionais"
+              kind="operations"
+              onCreate={(name) => createLinked('operations', 'operationLinks', name)}
+              records={state.operations}
+              selected={(record.operationLinks || []).map((item: RecordData) => item.areaId)}
+              onChange={(ids) =>
+                update(
+                  'operationLinks',
+                  ids.map(
+                    (id) =>
+                      record.operationLinks?.find((item: RecordData) => item.areaId === id) || {
+                        areaId: id,
                         role: '',
-                      };
-                      draft.responsibilities.push(row);
-                    }
-                    row.personIds = [...row.personIds, personId];
-                  }, true);
-                }}
-                onChange={(ids) =>
-                  change((draft) => {
-                    draft.responsibilities ??= [];
-                    let row = draft.responsibilities.find(
-                      (r: RecordData) =>
-                        r.capabilityId === id && r.context === 'board:' + target.boardId,
-                    );
-                    if (!row) {
-                      row = {
-                        uid: uid(),
-                        capabilityId: id,
-                        context: 'board:' + target.boardId,
-                        role: '',
-                      };
-                      draft.responsibilities.push(row);
-                    }
-                    row.personIds = ids;
-                  }, true)
-                }
-              />
-            );
-          })}
-          {field('capabilityNotes', 'Papel das capacidades', 'textarea')}
-        </details>
-        <details className="oj-editor-section" open>
-          <summary>Dados necessários</summary>
-          {(record.dataRequirements || []).map((data: RecordData) => (
-            <div className="oj-data-row" key={data.uid}>
-              <label className="oj-field">
-                <span>Nome do dado</span>
-                <input
-                  value={data.name}
-                  aria-label="Nome do dado"
+                      },
+                  ),
+                  true,
+                )
+              }
+            />
+            {(record.operationLinks || []).map((link: RecordData) => (
+              <label className="oj-field" key={link.areaId}>
+                <span>
+                  Papel de{' '}
+                  {state.operations.find((item: RecordData) => item.id === link.areaId)?.name}
+                </span>
+                <textarea
+                  value={link.role}
                   onChange={(event) =>
                     update(
-                      'dataRequirements',
-                      record.dataRequirements.map((item: RecordData) =>
-                        item.uid === data.uid ? { ...item, name: event.target.value } : item,
+                      'operationLinks',
+                      record.operationLinks.map((item: RecordData) =>
+                        item.areaId === link.areaId ? { ...item, role: event.target.value } : item,
                       ),
                     )
                   }
                 />
               </label>
-              <label className="oj-field">
-                <span>Fornecido por</span>
-                <select
-                  value={data.providerKind}
-                  aria-label="Tipo de fornecedor"
-                  onChange={(event) =>
-                    update(
-                      'dataRequirements',
-                      record.dataRequirements.map((item: RecordData) =>
-                        item.uid === data.uid
-                          ? { ...item, providerKind: event.target.value, providerId: '' }
-                          : item,
-                      ),
-                      true,
-                    )
-                  }
-                >
-                  <option value="">A definir</option>
-                  <option value="systems">Sistema</option>
-                  <option value="capabilities">Capacidade</option>
-                </select>
-              </label>
-              <label className="oj-field">
-                <span>Fonte</span>
-                <select
-                  value={data.providerId}
-                  aria-label="Fonte do dado"
-                  disabled={!data.providerKind}
-                  onChange={(event) =>
-                    update(
-                      'dataRequirements',
-                      record.dataRequirements.map((item: RecordData) =>
-                        item.uid === data.uid ? { ...item, providerId: event.target.value } : item,
-                      ),
-                      true,
-                    )
-                  }
-                >
-                  <option value="">A definir</option>
-                  {(state[data.providerKind] || []).map((item: RecordData) => (
-                    <option key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              {data.providerKind && (
-                <label className="oj-field">
-                  <span>Cadastrar nova fonte</span>
-                  <input
-                    aria-label="Nome da nova fonte"
-                    placeholder="Digite o nome e pressione Enter"
-                    onKeyDown={(event) => {
-                      if (event.key === 'Enter') {
-                        event.preventDefault();
-                        const name = event.currentTarget.value.trim();
-                        if (!name) return;
-                        change((draft) => {
-                          const id = uid();
-                          draft[data.providerKind].push({
-                            id,
-                            name,
-                            status: 'Ativo',
-                            ...VISUAL_DEFAULTS[data.providerKind],
-                          });
-                          const row = editorRecord(draft, target)!.dataRequirements.find(
-                            (r: RecordData) => r.uid === data.uid,
-                          );
-                          row.providerId = id;
-                        }, true);
-                        event.currentTarget.value = '';
-                      }
+            ))}
+          </details>
+        )}
+        {show('system', 'capabilities') && (
+          <details className="oj-editor-section" open>
+            <summary>Sistemas e capacidades</summary>
+            {show('system') && picker('systems', 'systemIds', 'Sistemas')}
+            {show('capabilities') && picker('capabilities', 'capabilityIds', 'Capacidades')}
+            {show('capabilities') &&
+              (record.capabilityIds || []).map((id: string) => {
+                const capability = state.capabilities.find((c: RecordData) => c.id === id);
+                const assignment = state.responsibilities?.find(
+                  (r: RecordData) =>
+                    r.capabilityId === id && r.context === 'board:' + target.boardId,
+                );
+                return (
+                  <SelectRecords
+                    key={id}
+                    kind="people"
+                    label={
+                      'Responsáveis por ' + (capability?.name || 'capacidade') + ' neste contexto'
+                    }
+                    records={state.people}
+                    selected={assignment ? assignment.personIds : capability?.ownerIds || []}
+                    onCreate={(name) => {
+                      change((draft) => {
+                        const personId = uid();
+                        draft.people.push({ id: personId, name, status: 'Ativo' });
+                        draft.responsibilities ??= [];
+                        let row = draft.responsibilities.find(
+                          (r: RecordData) =>
+                            r.capabilityId === id && r.context === 'board:' + target.boardId,
+                        );
+                        if (!row) {
+                          row = {
+                            uid: uid(),
+                            capabilityId: id,
+                            context: 'board:' + target.boardId,
+                            personIds: [...(capability?.ownerIds || [])],
+                            role: '',
+                          };
+                          draft.responsibilities.push(row);
+                        }
+                        row.personIds = [...row.personIds, personId];
+                      }, true);
                     }}
+                    onChange={(ids) =>
+                      change((draft) => {
+                        draft.responsibilities ??= [];
+                        let row = draft.responsibilities.find(
+                          (r: RecordData) =>
+                            r.capabilityId === id && r.context === 'board:' + target.boardId,
+                        );
+                        if (!row) {
+                          row = {
+                            uid: uid(),
+                            capabilityId: id,
+                            context: 'board:' + target.boardId,
+                            role: '',
+                          };
+                          draft.responsibilities.push(row);
+                        }
+                        row.personIds = ids;
+                      }, true)
+                    }
+                  />
+                );
+              })}
+            {show('capabilities') && field('capabilityNotes', 'Papel das capacidades', 'textarea')}
+          </details>
+        )}
+        {show('data') && (
+          <details className="oj-editor-section" open>
+            <summary>Dados necessários</summary>
+            {(record.dataRequirements || []).map((data: RecordData) => (
+              <div className="oj-data-row" key={data.uid}>
+                <label className="oj-field">
+                  <span>Nome do dado</span>
+                  <input
+                    value={data.name}
+                    aria-label="Nome do dado"
+                    onChange={(event) =>
+                      update(
+                        'dataRequirements',
+                        record.dataRequirements.map((item: RecordData) =>
+                          item.uid === data.uid ? { ...item, name: event.target.value } : item,
+                        ),
+                      )
+                    }
                   />
                 </label>
-              )}
-              <label className="oj-field">
-                <span>Observação</span>
-                <input
-                  value={data.note || ''}
-                  aria-label="Observação do dado"
-                  onChange={(event) =>
+                <label className="oj-field">
+                  <span>Fornecido por</span>
+                  <select
+                    value={data.providerKind}
+                    aria-label="Tipo de fornecedor"
+                    onChange={(event) =>
+                      update(
+                        'dataRequirements',
+                        record.dataRequirements.map((item: RecordData) =>
+                          item.uid === data.uid
+                            ? { ...item, providerKind: event.target.value, providerId: '' }
+                            : item,
+                        ),
+                        true,
+                      )
+                    }
+                  >
+                    <option value="">A definir</option>
+                    <option value="systems">Sistema</option>
+                    <option value="capabilities">Capacidade</option>
+                  </select>
+                </label>
+                <label className="oj-field">
+                  <span>Fonte</span>
+                  <select
+                    value={data.providerId}
+                    aria-label="Fonte do dado"
+                    disabled={!data.providerKind}
+                    onChange={(event) =>
+                      update(
+                        'dataRequirements',
+                        record.dataRequirements.map((item: RecordData) =>
+                          item.uid === data.uid
+                            ? { ...item, providerId: event.target.value }
+                            : item,
+                        ),
+                        true,
+                      )
+                    }
+                  >
+                    <option value="">A definir</option>
+                    {(state[data.providerKind] || []).map((item: RecordData) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                {data.providerKind && (
+                  <label className="oj-field">
+                    <span>Cadastrar nova fonte</span>
+                    <input
+                      aria-label="Nome da nova fonte"
+                      placeholder="Digite o nome e pressione Enter"
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter') {
+                          event.preventDefault();
+                          const name = event.currentTarget.value.trim();
+                          if (!name) return;
+                          change((draft) => {
+                            const id = uid();
+                            draft[data.providerKind].push({
+                              id,
+                              name,
+                              status: 'Ativo',
+                              ...VISUAL_DEFAULTS[data.providerKind],
+                            });
+                            const row = editorRecord(draft, target)!.dataRequirements.find(
+                              (r: RecordData) => r.uid === data.uid,
+                            );
+                            row.providerId = id;
+                          }, true);
+                          event.currentTarget.value = '';
+                        }
+                      }}
+                    />
+                  </label>
+                )}
+                <label className="oj-field">
+                  <span>Observação</span>
+                  <input
+                    value={data.note || ''}
+                    aria-label="Observação do dado"
+                    onChange={(event) =>
+                      update(
+                        'dataRequirements',
+                        record.dataRequirements.map((item: RecordData) =>
+                          item.uid === data.uid ? { ...item, note: event.target.value } : item,
+                        ),
+                      )
+                    }
+                  />
+                </label>
+                <button
+                  type="button"
+                  className="btn ghost"
+                  aria-label={'Remover dado ' + data.name}
+                  onClick={() =>
                     update(
                       'dataRequirements',
-                      record.dataRequirements.map((item: RecordData) =>
-                        item.uid === data.uid ? { ...item, note: event.target.value } : item,
-                      ),
+                      record.dataRequirements.filter((item: RecordData) => item.uid !== data.uid),
+                      true,
                     )
                   }
-                />
-              </label>
-              <button
-                type="button"
-                className="btn ghost"
-                aria-label={'Remover dado ' + data.name}
-                onClick={() =>
-                  update(
-                    'dataRequirements',
-                    record.dataRequirements.filter((item: RecordData) => item.uid !== data.uid),
-                    true,
-                  )
-                }
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
-          ))}
-          <button
-            type="button"
-            className="btn"
-            disabled={record.dataNotApplicable}
-            onClick={() =>
-              update(
-                'dataRequirements',
-                [
-                  ...(record.dataRequirements || []),
-                  { uid: uid(), name: 'Novo dado', providerKind: '', providerId: '', note: '' },
-                ],
-                true,
-              )
-            }
-          >
-            <Plus size={15} />
-            Adicionar dado
-          </button>
-          <label className="oj-check">
-            <input
-              name="dataNotApplicable"
-              type="checkbox"
-              checked={!!record.dataNotApplicable}
-              disabled={!!record.dataRequirements?.length}
-              onChange={(event) => update('dataNotApplicable', event.target.checked, true)}
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="btn"
+              disabled={record.dataNotApplicable}
+              onClick={() =>
+                update(
+                  'dataRequirements',
+                  [
+                    ...(record.dataRequirements || []),
+                    { uid: uid(), name: 'Novo dado', providerKind: '', providerId: '', note: '' },
+                  ],
+                  true,
+                )
+              }
+            >
+              <Plus size={15} />
+              Adicionar dado
+            </button>
+            <label className="oj-check">
+              <input
+                name="dataNotApplicable"
+                type="checkbox"
+                checked={!!record.dataNotApplicable}
+                disabled={!!record.dataRequirements?.length}
+                onChange={(event) => update('dataNotApplicable', event.target.checked, true)}
+              />
+              Sem dados adicionais nesta etapa
+            </label>
+          </details>
+        )}
+        {show('support') && field('support', 'Atendimento', 'textarea')}
+        {show('features') && (
+          <details className="oj-editor-section">
+            <summary>Funcionalidades vinculadas</summary>
+            <SelectRecords
+              label="Funcionalidades"
+              records={matrix.items.map((item: RecordData) => ({
+                id: item.id,
+                name: item.id + ' — ' + item.funcionalidade,
+              }))}
+              selected={record.featureIds || []}
+              onChange={(ids) => update('featureIds', ids, true)}
             />
-            Sem dados adicionais nesta etapa
-          </label>
-        </details>
-        {field('support', 'Atendimento', 'textarea')}
-        <details className="oj-editor-section">
-          <summary>Funcionalidades vinculadas</summary>
-          <SelectRecords
-            label="Funcionalidades"
-            records={matrix.items.map((item: RecordData) => ({
-              id: item.id,
-              name: item.id + ' — ' + item.funcionalidade,
-            }))}
-            selected={record.featureIds || []}
-            onChange={(ids) => update('featureIds', ids, true)}
-          />
-        </details>
-        {field('notes', 'Anotações da etapa', 'textarea')}
-        <small className="oj-context">
-          {board?.name} · {caseData?.title}
-        </small>
+          </details>
+        )}
+        {!target.section && field('notes', 'Anotações da etapa', 'textarea')}
+        {!target.section && (
+          <small className="oj-context">
+            {board?.name} · {caseData?.title}
+          </small>
+        )}
       </>
     );
   } else if (target.type === 'feature') {
@@ -930,9 +953,9 @@ export default function Editor({
   } else {
     body = (
       <>
-        {(DEFINITIONS[target.type]?.fields || []).map(([key, label, type, entries]) =>
-          field(key, label, type, entries),
-        )}
+        {(DEFINITIONS[target.type]?.fields || [])
+          .filter(([key]) => !target.section || target.section === key)
+          .map(([key, label, type, entries]) => field(key, label, type, entries))}
         {target.type === 'offers' && (
           <fieldset className="oj-picker">
             <legend>Elegibilidade por perfil</legend>
@@ -1000,6 +1023,44 @@ export default function Editor({
           </label>
         )}
       </>
+    );
+  }
+  if (target.anchor) {
+    const labels: Record<string, string> = {
+      owners: 'Responsáveis pelo contexto / produto',
+      actor: 'Atores',
+      channel: 'Canais',
+      system: 'Sistemas',
+      operation: 'Operação',
+      capabilities: 'Capacidades',
+      data: 'Dados necessários',
+      support: 'Atendimento',
+      objective: 'Objetivo do processo',
+      status: 'Status',
+      release: 'Marco desta etapa',
+    };
+    const fieldTitle =
+      labels[target.section || ''] ||
+      DEFINITIONS[target.type]?.fields.find(([key]) => key === target.section)?.[1] ||
+      title;
+    return (
+      <FieldPopover label={fieldTitle} anchor={target.anchor} onClose={close}>
+        <form onSubmit={(event) => event.preventDefault()} className="oj-field-form">
+          {body}
+        </form>
+        {(localError || error) && (
+          <p className="oj-editor-error" role="alert">
+            {localError || error}
+          </p>
+        )}
+        <div className="oj-field-save" role="status">
+          {status === 'saved'
+            ? 'Todas as alterações salvas'
+            : status === 'saving'
+              ? 'Salvando…'
+              : 'Alterações pendentes'}
+        </div>
+      </FieldPopover>
     );
   }
   return (

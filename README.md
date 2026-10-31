@@ -88,6 +88,6 @@ Os arquivos antigos não são servidos publicamente pelo Next.js. A base inicial
 
 - Oferta: Problema → Oferta → Recorte → Fora do recorte → Resultado esperado.
 - AS-IS: lista numerada, com edição e reordenação. CSD: colunas, dúvidas e decisões. Plano de ação: entregas com conclusão, responsáveis, prazo e critérios.
-- Nos seletores, os itens selecionados ficam ativos e podem ser removidos individualmente. Busque um nome novo para cadastrá-lo e vinculá-lo sem sair do editor.
+- Os seletores são campos compactos: clique para abrir a busca e marcar os itens. Busque um nome novo para cadastrá-lo e vinculá-lo no mesmo lugar. No blueprint, cada célula abre apenas as opções daquele campo, junto à célula; o nome da etapa mantém a edição completa. Responsáveis do contexto também podem ser selecionados diretamente no cabeçalho.
 - Cada contexto/produto possui seus responsáveis. Capacidades podem ter responsáveis de referência e uma atribuição específica por contexto, que prevalece sobre a referência. A atribuição pode ser feita na etapa ou no botão “Responsáveis por capacidade” da frente.
 - Macroprocessos, contextos e etapas podem ser excluídos pelo editor, com confirmação do impacto. A exclusão de um macroprocesso remove seus contextos; a de um contexto remove seus casos e etapas. Funcionalidades permanecem no catálogo. O conteúdo removido é mantido em `deletedItems` na exportação JSON; não há restauração individual pela interface.

@@ -559,3 +559,7 @@ O anexo a seguir inventaria as funcionalidades do material recebido. Nome, ID e 
 5. Responsáveis pelo contexto/produto coordenam o recorte. Responsáveis por capacidade respondem pela especialidade naquele contexto. Responsáveis de referência de uma capacidade são o padrão quando não há atribuição específica; uma atribuição específica, inclusive vazia, prevalece. A mesma capacidade pode ter responsáveis diferentes por contexto.
 6. Exclusão de macroprocesso remove os contextos associados; exclusão de contexto remove seus dados aninhados; exclusão de etapa afeta somente o caso selecionado. Exigir confirmação e informar a abrangência. Preservar o conteúdo removido e os vínculos em `deletedItems` no JSON, limpar referências operacionais e manter as funcionalidades no catálogo. Permitir excluir o último item e reconstruir o projeto vazio.
 7. Cards de funcionalidades devem ter bordas discretas, mantendo cores e marcadores de horizonte.
+
+### Refinamento de seleção e edição por campo
+
+Seletores devem ocupar um único campo fechado, abrir lista com busca e permitir marcar múltiplos registros. O mesmo padrão atende responsáveis do contexto, da capacidade e demais cadastros. Ao clicar em uma célula do blueprint, apresentar apenas as opções do campo escolhido, em uma lista ou formulário compacto junto à célula, sem bloquear toda a página. Fechar com Escape ou clique fora. Manter cadastro direto e salvamento automático. Edição completa da etapa continua acessível pelo nome da etapa.

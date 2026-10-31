@@ -1,7 +1,8 @@
 'use client';
-import { Pencil, ArrowUpRight, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { Pencil, ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { defaultCase, type RecordData, type WorkspaceData } from '@/lib/domain';
 import type { EditorTarget } from './Editor';
+import { fieldAnchor } from './FieldPopover';
 import { canonicalPhase, featurePhase } from '@/lib/presentation';
 
 export { Phase } from './Visuals';
@@ -288,11 +289,21 @@ export default function Blueprint({
             <ArrowUpRight size={16} />
           </button>
           <button
-            className="btn tiny oj-context-owners"
-            onClick={() => edit({ type: 'front', boardId: front.board.id })}
+            className="oj-context-owners"
+            aria-label={'Responsáveis de ' + front.board.name}
+            aria-haspopup="dialog"
+            onClick={(event) =>
+              edit({
+                type: 'front',
+                boardId: front.board.id,
+                section: 'owners',
+                anchor: fieldAnchor(event.currentTarget),
+              })
+            }
           >
-            <People people={state.people} ids={front.board.ownerIds} />
-            <Pencil size={12} />
+            <People people={state.people} ids={front.board.ownerIds?.slice(0, 2)} />
+            {front.board.ownerIds?.length > 2 && <span>+{front.board.ownerIds.length - 2}</span>}
+            <ChevronDown size={14} />
           </button>
           <select
             aria-label={'Caso de uso de ' + front.board.name}
@@ -356,17 +367,49 @@ export default function Blueprint({
             {!step.placeholder && (
               <>
                 <div className="oj-step-flags">
-                  <Status value={step.status} />
-                  <Phase value={step.release} />
+                  <button
+                    className="oj-inline-flag"
+                    aria-label={'Alterar status de ' + step.name}
+                    onClick={(event) =>
+                      edit({
+                        type: 'step',
+                        boardId: front.board.id,
+                        caseId: front.item.uid,
+                        id: step.uid,
+                        section: 'status',
+                        anchor: fieldAnchor(event.currentTarget),
+                      })
+                    }
+                  >
+                    <Status value={step.status} />
+                  </button>
+                  <button
+                    className="oj-inline-flag"
+                    aria-label={'Alterar marco de ' + step.name}
+                    onClick={(event) =>
+                      edit({
+                        type: 'step',
+                        boardId: front.board.id,
+                        caseId: front.item.uid,
+                        id: step.uid,
+                        section: 'release',
+                        anchor: fieldAnchor(event.currentTarget),
+                      })
+                    }
+                  >
+                    <Phase value={step.release} />
+                  </button>
                 </div>
                 <button
                   className="v17-purpose-tag"
-                  onClick={() =>
+                  onClick={(event) =>
                     edit({
                       type: 'step',
                       boardId: front.board.id,
                       caseId: front.item.uid,
                       id: step.uid,
+                      section: 'objective',
+                      anchor: fieldAnchor(event.currentTarget),
                     })
                   }
                 >
@@ -384,7 +427,7 @@ export default function Blueprint({
               key={key + '-' + step.uid}
               style={{ gridColumn: column, gridRow: laneIndex + 4 }}
               aria-label={'Editar ' + key + ' de ' + step.name}
-              onClick={() =>
+              onClick={(event) =>
                 step.placeholder
                   ? addStep(front.board.id, front.item.uid)
                   : edit({
@@ -393,6 +436,7 @@ export default function Blueprint({
                       caseId: front.item.uid,
                       id: step.uid,
                       section: key,
+                      anchor: fieldAnchor(event.currentTarget),
                     })
               }
             >

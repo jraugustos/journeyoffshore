@@ -63,3 +63,7 @@ As abas das frentes recuperam a organização do HTML: oferta na sequência soli
 Responsáveis pertencem ao contexto/produto. Uma capacidade pode ter responsáveis de referência e atribuições específicas em cada contexto. Atribuições antigas em macroprocessos permanecem nos dados, sem herança automática para novos contextos.
 
 A exclusão de macroprocessos, contextos e etapas informa o impacto e preserva o conteúdo removido no JSON. A limpeza de vínculos evita referências órfãs; o catálogo de funcionalidades permanece disponível.
+
+## Seleção compacta e edição por campo
+
+Responsáveis e demais vínculos usam um campo com lista pesquisável e seleção múltipla. Clicar nas células do blueprint abre somente atores, canais, operação, sistemas, capacidades, dados ou atendimento, junto ao campo. Objetivo, status, marco e os textos da oferta também possuem edição individual. O editor completo permanece disponível nas ações explícitas de edição e no nome da etapa.

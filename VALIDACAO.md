@@ -87,3 +87,7 @@ Casos, etapas e outros registros aninhados usam JSONB nesta entrega. O controle 
 - Uma chamada real à API criou e excluiu macroprocesso/contexto exclusivamente no PostgreSQL isolado da porta 3001; o conteúdo inicial dessa base foi restaurado ao final.
 - Conferência no navegador: sequência da Oferta na leitura e no editor; lista AS-IS; três colunas CSD com borda e espaçamento; criação de ator diretamente na etapa; seleção ativa e persistente de pessoa no contexto; botão de exclusão no editor. Editor conferido em desktop e 390 × 844.
 - Testes desta revisão não executaram a suíte E2E antiga contra bases reais. Dados de produção e da prévia local não foram usados para testes de criação/exclusão.
+
+## Seletores compactos e edição localizada — 31/10/2026
+
+Build otimizado, TypeScript e os 19 testes de regras passaram. Na base isolada, o navegador verificou: clique em Canal sem abrir o editor completo, busca/cadastro/vínculo de canal, marcação de pessoas com busca e persistência após recarga, abertura isolada de Operação/Dados/Capacidades, seleção de responsáveis da capacidade em lista aninhada, Escape fechando apenas essa lista e manutenção do editor completo. Listas de responsáveis conferidas no desktop e em 390 × 844, dentro dos limites da tela. Produção não recebeu os cadastros de teste.

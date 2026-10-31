@@ -44,8 +44,11 @@ const check = async (name, action) => {
       .waitFor();
   };
   const close = async () => {
-    await page.getByRole('dialog').getByRole('button', { name: 'Fechar', exact: true }).click();
-    await page.getByRole('dialog').waitFor({ state: 'hidden' });
+    await page
+      .locator('dialog.oj-dialog')
+      .getByRole('button', { name: 'Fechar', exact: true })
+      .click();
+    await page.locator('dialog.oj-dialog').waitFor({ state: 'hidden' });
   };
   const login = async (target, secret = password) => {
     await target.goto(base);
@@ -148,8 +151,8 @@ const check = async (name, action) => {
     );
     await check('Criação e reordenação de macroprocesso persistem sem editar código', async () => {
       await page.getByRole('button', { name: 'Macroprocesso', exact: true }).click();
-      await page.getByRole('dialog').getByLabel('Nome do macroprocesso').fill('Pós-venda');
-      await page.getByRole('dialog').getByLabel('Posição no blueprint').selectOption('0');
+      await page.locator('dialog.oj-dialog').getByLabel('Nome do macroprocesso').fill('Pós-venda');
+      await page.locator('dialog.oj-dialog').getByLabel('Posição no blueprint').selectOption('0');
       await saved();
       const current = (await state()).data;
       macroId = current.macros.find((item) => item.name === 'Pós-venda').id;
@@ -158,7 +161,10 @@ const check = async (name, action) => {
     });
     await check('Nova frente permanece vinculada ao novo macroprocesso', async () => {
       await page.getByRole('button', { name: 'Adicionar frente', exact: true }).click();
-      await page.getByRole('dialog').getByLabel('Nome da frente').fill('Suporte ao relacionamento');
+      await page
+        .locator('dialog.oj-dialog')
+        .getByLabel('Nome da frente')
+        .fill('Suporte ao relacionamento');
       await saved();
       await close();
       const current = (await state()).data;
@@ -190,13 +196,10 @@ const check = async (name, action) => {
         .getByRole('button', { name: /Suporte ao relacionamento/ })
         .click();
       await page.getByRole('button', { name: 'Etapa', exact: true }).click();
-      const dialog = page.getByRole('dialog');
+      const dialog = page.locator('dialog.oj-dialog');
       await dialog.getByLabel('Etapa do processo').fill('Resolver solicitação');
       await dialog.getByLabel('Objetivo do processo').selectOption('Gerenciar');
-      await dialog
-        .getByRole('group', { name: 'Sistemas', exact: true })
-        .getByRole('button', { name: 'Adicionar / alterar seleção', exact: true })
-        .click();
+      await dialog.getByRole('combobox', { name: 'Sistemas', exact: true }).click();
       await dialog.getByRole('checkbox', { name: 'Sistema de atendimento', exact: true }).check();
       await dialog.getByRole('button', { name: 'Adicionar dado', exact: true }).click();
       await dialog.getByLabel('Nome do dado', { exact: true }).fill('Protocolo de atendimento');
@@ -273,10 +276,9 @@ const check = async (name, action) => {
         .fill('Validar as definições do processo');
       await page
         .getByRole('dialog')
-        .getByRole('group', { name: 'Responsáveis', exact: true })
-        .getByRole('button', { name: 'Adicionar / alterar seleção', exact: true })
+        .getByRole('combobox', { name: 'Responsáveis', exact: true })
         .click();
-      await page.getByRole('dialog').getByRole('checkbox').first().check();
+      await page.locator('dialog.oj-dialog').getByRole('checkbox').first().check();
       await saved();
       await close();
       assert.ok(
@@ -297,7 +299,7 @@ const check = async (name, action) => {
           .locator('.oj-record-section')
           .filter({ has: page.getByRole('heading', { name: 'Decisões', exact: true }) });
         await section.getByRole('button', { name: 'Adicionar', exact: true }).click();
-        const dialog = page.getByRole('dialog');
+        const dialog = page.locator('dialog.oj-dialog');
         await dialog.getByLabel('Título', { exact: true }).fill('Decisão de teste');
         await dialog.getByLabel('Situação da decisão').selectOption('Decisão final');
         await dialog.getByRole('alert').filter({ hasText: 'Informe o responsável' }).waitFor();

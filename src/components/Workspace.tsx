@@ -19,11 +19,13 @@ import {
   Copy,
   ArrowLeft,
   Check,
+  ChevronDown,
 } from 'lucide-react';
 import { useWorkspace } from './useWorkspace';
 import Editor, { type EditorTarget } from './Editor';
 import Blueprint, { Phase, Status, RecordTags } from './Blueprint';
 import FrontBlocks from './FrontBlocks';
+import { fieldAnchor } from './FieldPopover';
 import { removeHierarchy } from '@/lib/hierarchy';
 import AccessForm from './AccessForm';
 import LaunchTimeline from './LaunchTimeline';
@@ -127,8 +129,8 @@ export default function Workspace() {
     window.scrollTo({ top: 0 });
   };
   async function closeEditor() {
-    await api.flush();
     setEditor(null);
+    await api.flush();
   }
   const ownerNames = (ids: string[] = []) => <People people={data.people} ids={ids} />;
   const ownersFor = (front: RecordData) => ownerNames(front.ownerIds);
@@ -570,7 +572,23 @@ export default function Workspace() {
               <h1>{board.name}</h1>
               <div className="board-meta">
                 <Status value={board.status} />
-                <span>Responsáveis: {ownersFor(board)}</span>
+                <button
+                  className="oj-context-owners"
+                  aria-label={'Responsáveis de ' + board.name}
+                  aria-haspopup="dialog"
+                  onClick={(event) =>
+                    setEditor({
+                      type: 'front',
+                      boardId: board.id,
+                      section: 'owners',
+                      anchor: fieldAnchor(event.currentTarget),
+                    })
+                  }
+                >
+                  Responsáveis: <People people={data.people} ids={board.ownerIds?.slice(0, 2)} />
+                  {board.ownerIds?.length > 2 && <span>+{board.ownerIds.length - 2}</span>}
+                  <ChevronDown size={14} />
+                </button>
                 <button
                   className="btn tiny"
                   onClick={() => setEditor({ type: 'front', boardId: board.id })}
@@ -806,7 +824,23 @@ export default function Workspace() {
               ].map(([key, label]) => (
                 <div key={key}>
                   <dt>{label}</dt>
-                  <dd>{board.scope?.[key] || 'A definir'}</dd>
+                  <dd>
+                    <button
+                      className="oj-edit-value"
+                      aria-label={'Editar ' + label}
+                      onClick={(event) =>
+                        setEditor({
+                          type: 'scope',
+                          boardId: board.id,
+                          section: key,
+                          anchor: fieldAnchor(event.currentTarget),
+                        })
+                      }
+                    >
+                      {board.scope?.[key] || 'A definir'}
+                      <Pencil size={13} />
+                    </button>
+                  </dd>
                 </div>
               ))}
             </dl>
@@ -1553,7 +1587,7 @@ export default function Workspace() {
               setMessage(error.message);
             }
           }}
-          key={[editor.type, editor.id, editor.boardId, editor.caseId].join(':')}
+          key={[editor.type, editor.id, editor.boardId, editor.caseId, editor.section].join(':')}
           state={data}
           matrix={matrix}
           target={editor}

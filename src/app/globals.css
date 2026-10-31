@@ -703,15 +703,6 @@ body {
   background: white;
   color: #333;
 }
-.oj-check-list {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 7px;
-  max-height: 215px;
-  overflow: auto;
-  padding: 3px;
-}
-.oj-check-list > label,
 .oj-check {
   display: flex;
   align-items: flex-start;
@@ -722,29 +713,12 @@ body {
   cursor: pointer;
   padding: 7px 2px;
 }
-.oj-check-list > label {
-  background: #f7f7f7;
-  padding: 9px 10px;
-  border-radius: 7px;
-}
-.oj-check-list input,
 .oj-check input {
   width: 16px;
   min-width: 16px;
   height: 16px;
   accent-color: #dc6700;
   margin: 2px 0 0;
-}
-.oj-check-list small {
-  display: block;
-  font-size: 10px;
-  color: #777;
-  margin-top: 3px;
-}
-.oj-check-list p {
-  font-size: 12px;
-  color: #777;
-  grid-column: 1/-1;
 }
 .oj-data-row {
   display: grid;
@@ -950,9 +924,6 @@ body {
   .oj-field textarea,
   .oj-picker > input[type='search'] {
     font-size: 16px;
-  }
-  .oj-check-list {
-    grid-template-columns: 1fr;
   }
   .oj-dialog > footer {
     padding: 14px 19px;
@@ -1246,10 +1217,6 @@ body {
   font-size: 11px;
   color: #686873;
 }
-.oj-check-list .v11-country {
-  display: flex;
-  margin-top: 6px;
-}
 .oj-simple-row > div > .v11-country {
   display: flex;
   margin-top: 8px;
@@ -1329,29 +1296,6 @@ body {
 }
 .oj-scope dd {
   white-space: pre-wrap;
-}
-.oj-selected-records {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  min-height: 30px;
-}
-.oj-selected-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  border: 1px solid #dcdde2;
-  background: #fff;
-  border-radius: 8px;
-  padding: 5px 8px;
-  color: #333;
-}
-.oj-check-list label.is-active {
-  background: #edf3ee;
-  box-shadow: inset 0 0 0 1px #9ab5a1;
-}
-.oj-picker > .btn {
-  align-self: flex-start;
 }
 .oj-danger {
   color: #a3332d !important;
@@ -1472,4 +1416,240 @@ body {
   .oj-dialog > footer .oj-danger {
     margin-right: auto;
   }
+}
+
+/* Compact selectors and editing anchored to the selected blueprint field. */
+.oj-record-picker {
+  grid-column: 1/-1;
+  min-width: 0;
+  display: grid;
+  gap: 7px;
+}
+.oj-picker-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
+}
+.oj-picker-trigger,
+.oj-context-owners {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid #dcdce2;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  min-height: 42px;
+  padding: 8px 11px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  max-width: 100%;
+  min-width: 0;
+}
+.oj-picker-trigger:hover,
+.oj-context-owners:hover {
+  border-color: #a3a3aa;
+}
+.oj-picker-trigger > svg,
+.oj-context-owners > svg {
+  flex-shrink: 0;
+}
+.oj-picker-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-width: 0;
+  text-align: left;
+}
+.oj-picker-value > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.oj-picker-placeholder {
+  color: #64646b;
+}
+.oj-field-popover {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: #fff;
+  color: #333;
+  box-shadow: 0 8px 36px #0003;
+  overflow: auto;
+  overscroll-behavior: contain;
+  font-size: 13px;
+}
+.oj-field-popover::backdrop {
+  background: transparent;
+}
+.oj-field-popover > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px 8px;
+}
+.oj-field-popover > header h2 {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0;
+  letter-spacing: 0;
+}
+.oj-field-popover > header .oj-icon {
+  min-width: 30px;
+  min-height: 30px;
+}
+.oj-record-options {
+  min-width: 0;
+  padding: 0 12px 12px;
+}
+.oj-record-options > input[type='search'] {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid #dcdce2;
+  border-radius: 7px;
+  padding: 9px 10px;
+  min-height: 40px;
+  font: inherit;
+  font-size: 13px;
+  background: #fff;
+  color: #333;
+  margin-bottom: 6px;
+}
+.oj-record-list {
+  max-height: 240px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  display: grid;
+  gap: 2px;
+}
+.oj-record-list > label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px;
+  min-height: 38px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.oj-record-list > label:hover,
+.oj-record-list > label.is-active {
+  background: #f4f4f5;
+}
+.oj-record-list input[type='checkbox'] {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  accent-color: #b65309;
+  margin: 0;
+}
+.oj-record-list .oj-record-tag {
+  white-space: normal;
+}
+.oj-picker-empty {
+  font-size: 12px;
+  color: #64646b;
+  padding: 8px;
+}
+.oj-picker-create {
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  padding: 10px 8px;
+  color: #94420a;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+}
+.oj-picker-create:hover {
+  background: #f7f7f8;
+}
+.oj-field-form {
+  display: grid;
+  gap: 14px;
+  padding: 0 14px 14px;
+}
+.oj-field-form .oj-record-options {
+  padding: 0;
+}
+.oj-field-form .oj-editor-section {
+  padding: 0;
+  border: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+.oj-field-form .oj-editor-section > summary {
+  display: none;
+}
+.oj-field-form .oj-editor-section .oj-field {
+  margin: 0;
+}
+.oj-field-form .oj-data-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin: 0;
+}
+.oj-field-form .oj-data-row > * {
+  grid-column: 1;
+}
+.oj-field-save {
+  font-size: 10px;
+  color: #64646b;
+  padding: 0 14px 12px;
+}
+.oj-field-popover :focus-visible,
+.oj-picker-trigger:focus-visible,
+.oj-context-owners:focus-visible,
+.oj-edit-value:focus-visible,
+.oj-inline-flag:focus-visible {
+  outline: 2px solid #b65309;
+  outline-offset: 2px;
+}
+.oj-product .oj-context-owners {
+  width: 100%;
+  margin: 3px 0;
+  font-size: 12px;
+}
+.oj-context-owners .v15-owner {
+  font-size: inherit;
+}
+.oj-inline-flag {
+  display: inline-flex;
+  background: transparent;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+}
+.oj-edit-value {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  text-align: left;
+  gap: 12px;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  white-space: pre-wrap;
+}
+.oj-edit-value > svg {
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+.oj-edit-value:hover > svg {
+  opacity: 1;
 }
