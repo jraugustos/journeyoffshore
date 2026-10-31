@@ -25,7 +25,8 @@ import { useWorkspace } from './useWorkspace';
 import Editor, { type EditorTarget } from './Editor';
 import Blueprint, { Phase, Status, RecordTags } from './Blueprint';
 import FrontBlocks from './FrontBlocks';
-import { fieldAnchor } from './FieldPopover';
+import FieldPopover, { fieldAnchor, fieldPanelId, type FieldAnchor } from './FieldPopover';
+import RecordPicker from './RecordPicker';
 import { removeHierarchy } from '@/lib/hierarchy';
 import AccessForm from './AccessForm';
 import LaunchTimeline from './LaunchTimeline';
@@ -82,6 +83,7 @@ export default function Workspace() {
   const [editor, setEditor] = useState<EditorTarget | null>(null),
     [collapsed, setCollapsed] = useState(false),
     [focus, setFocus] = useState(false);
+  const [capabilityAnchor, setCapabilityAnchor] = useState<FieldAnchor | null>(null);
   const [macroFilter, setMacroFilter] = useState('all'),
     [profileFilter, setProfileFilter] = useState('all'),
     [releaseFilter, setReleaseFilter] = useState('all'),
@@ -229,6 +231,15 @@ export default function Workspace() {
       front[type] = front[type].filter((item: RecordData) => item.uid !== id);
     }, true);
   }
+  function removeAssignment(id: string) {
+    if (!confirm('Excluir este vínculo de responsabilidade?')) return;
+    mutate((draft) => {
+      draft.responsibilities = (draft.responsibilities || []).filter(
+        (item: RecordData) => item.uid !== id,
+      );
+    }, true);
+    if (editor?.type === 'assignment' && editor.id === id) setEditor(null);
+  }
   function addRegistry() {
     const id = uid();
     mutate(
@@ -326,21 +337,16 @@ export default function Workspace() {
           </label>
         )}
         {page === 'board' && (
-          <label>
-            Caso de uso
-            <select
-              value={selectedCase.uid}
-              onChange={(event) =>
-                setCases((current) => ({ ...current, [board.id]: event.target.value }))
-              }
-            >
-              {board.cases.map((item: RecordData) => (
-                <option key={item.uid} value={item.uid}>
-                  {item.isDefault ? 'Caso padrão' : item.title}
-                </option>
-              ))}
-            </select>
-          </label>
+          <RecordPicker
+            label="Caso de uso"
+            records={board.cases.map((item: RecordData) => ({
+              id: item.uid,
+              name: item.isDefault ? 'Caso padrão' : item.title,
+            }))}
+            selected={[selectedCase.uid]}
+            onChange={(ids) => setCases((current) => ({ ...current, [board.id]: ids[0] }))}
+            multiple={false}
+          />
         )}
         <label>
           Perfil
@@ -375,7 +381,7 @@ export default function Workspace() {
       </div>
       <div className="bp-filter-actions">
         <button
-          className="btn tiny"
+          className="btn"
           onClick={() => {
             setMacroFilter('all');
             setProfileFilter('all');
@@ -401,6 +407,7 @@ export default function Workspace() {
   );
   const blueprint = (
     <Blueprint
+      activeEditor={editor}
       state={data}
       matrix={matrix}
       boardId={page === 'board' ? board.id : undefined}
@@ -575,6 +582,18 @@ export default function Workspace() {
                 <button
                   className="oj-context-owners"
                   aria-label={'Responsáveis de ' + board.name}
+                  aria-expanded={
+                    editor?.type === 'front' &&
+                    editor.boardId === board.id &&
+                    editor.section === 'owners'
+                  }
+                  aria-controls={
+                    editor?.type === 'front' &&
+                    editor.boardId === board.id &&
+                    editor.section === 'owners'
+                      ? fieldPanelId('front', board.id, 'owners')
+                      : undefined
+                  }
                   aria-haspopup="dialog"
                   onClick={(event) =>
                     setEditor({
@@ -598,20 +617,9 @@ export default function Workspace() {
                 </button>
                 <button
                   className="btn tiny"
-                  onClick={() => {
-                    const id = uid();
-                    mutate((draft) => {
-                      draft.responsibilities ??= [];
-                      draft.responsibilities.push({
-                        uid: id,
-                        capabilityId: draft.capabilities[0]?.id || '',
-                        context: 'board:' + board.id,
-                        personIds: [],
-                        role: '',
-                      });
-                    }, true);
-                    setEditor({ type: 'assignment', id });
-                  }}
+                  aria-haspopup="dialog"
+                  aria-expanded={!!capabilityAnchor}
+                  onClick={(event) => setCapabilityAnchor(fieldAnchor(event.currentTarget))}
                 >
                   Responsáveis por capacidade
                 </button>
@@ -678,6 +686,13 @@ export default function Workspace() {
                     onClick={() => setEditor({ type: 'assignment', id: r.uid })}
                   >
                     Editar responsáveis
+                  </button>
+                  <button
+                    className="oj-icon oj-danger"
+                    aria-label="Excluir vínculo"
+                    onClick={() => removeAssignment(r.uid)}
+                  >
+                    <Trash2 size={15} />
                   </button>
                 </div>
               ))}
@@ -1260,14 +1275,7 @@ export default function Workspace() {
                 <button
                   className="oj-icon"
                   aria-label="Excluir vínculo"
-                  onClick={() => {
-                    if (confirm('Excluir este vínculo de responsabilidade?'))
-                      mutate((draft) => {
-                        draft.responsibilities = draft.responsibilities.filter(
-                          (record: RecordData) => record.uid !== item.uid,
-                        );
-                      }, true);
-                  }}
+                  onClick={() => removeAssignment(item.uid)}
                 >
                   <Trash2 size={15} />
                 </button>
@@ -1275,7 +1283,7 @@ export default function Workspace() {
             ))}
             {!data.responsibilities?.length && (
               <div className="oj-empty-panel">
-                Associe pessoas e capacidades ao contexto de uma frente ou macroprocesso.
+                Associe pessoas e capacidades a um contexto/produto.
               </div>
             )}
           </>
@@ -1559,9 +1567,51 @@ export default function Workspace() {
         aria-label="Arquivo JSON para importar"
         onChange={(event) => void importFile(event)}
       />
+      {capabilityAnchor && (
+        <FieldPopover
+          label="Escolher capacidade"
+          anchor={capabilityAnchor}
+          onClose={() => setCapabilityAnchor(null)}
+        >
+          <RecordPicker
+            label="Capacidade"
+            inline
+            records={data.capabilities}
+            selected={[]}
+            kind="capabilities"
+            multiple={false}
+            onChange={(ids) => {
+              const existing = data.responsibilities?.find(
+                (r: RecordData) => r.capabilityId === ids[0] && r.context === 'board:' + board.id,
+              );
+              const id = existing?.uid || uid();
+              if (!existing)
+                mutate((draft) => {
+                  draft.responsibilities ??= [];
+                  draft.responsibilities.push({
+                    uid: id,
+                    capabilityId: ids[0],
+                    context: 'board:' + board.id,
+                    personIds: [
+                      ...(draft.capabilities.find((c: RecordData) => c.id === ids[0])?.ownerIds ||
+                        []),
+                    ],
+                    role: '',
+                  });
+                }, true);
+              setCapabilityAnchor(null);
+              setEditor({ type: 'assignment', id });
+            }}
+          />
+        </FieldPopover>
+      )}
       {editor && (
         <Editor
           onDelete={(target) => {
+            if (target.type === 'assignment') {
+              removeAssignment(target.id!);
+              return;
+            }
             const count =
               target.type === 'macro'
                 ? data.boards.filter((b) => b.macroId === target.id).length

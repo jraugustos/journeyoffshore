@@ -2,6 +2,9 @@
 import { useId, useLayoutEffect, useRef, type ReactNode } from 'react';
 import { X } from 'lucide-react';
 export type FieldAnchor = { left: number; top: number; bottom: number; width: number };
+export function fieldPanelId(type: string, id?: string, section?: string) {
+  return ['oj-field', type, id, section].filter(Boolean).join('-');
+}
 export function fieldAnchor(element: HTMLElement): FieldAnchor {
   const { left, top, bottom, width } = element.getBoundingClientRect();
   return { left, top, bottom, width };

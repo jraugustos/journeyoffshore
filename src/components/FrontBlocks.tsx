@@ -274,7 +274,7 @@ export default function FrontBlocks({
         <div className="oj-section-heading">
           <h2>Dúvidas e próximos passos</h2>
           <div className="oj-row-actions">
-            <label>
+            <label className="oj-filter">
               Filtrar dúvidas
               <select
                 aria-label="Filtrar dúvidas"

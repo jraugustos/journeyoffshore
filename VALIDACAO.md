@@ -95,3 +95,7 @@ Build otimizado, TypeScript e os 19 testes de regras passaram. Na base isolada, 
 ### Uniformidade dos seletores de contexto
 
 Responsáveis e caso de uso no blueprint foram comparados pelo navegador: ambos com 25 px de altura, fonte de 11 px, padding de 3 px vertical, sem borda e fundo transparente. A lista de casos usa o mesmo componente de popup das demais seleções, com busca e escolha única. Troca para “Bloquear cartão no aplicativo” e retorno ao caso padrão atualizaram as etapas e fecharam a lista. Conferido em desktop e 390 × 844, exclusivamente na prévia isolada. TypeScript e build otimizado passaram.
+
+## Revisão de consistência com ST05, ST09 e ST10
+
+A revisão de código dos perfis do Second Brain foi seguida de testes no navegador em desktop e 390 × 844, exclusivamente na base isolada. Medidos padding, altura/raio das ações e filtros, busca móvel, estados acessíveis e retorno de foco. Limpar filtros, reescolha de caso e filtro de dúvidas funcionaram. Abrir/fechar responsabilidades não criou registros, e repetir uma capacidade existente não duplicou vínculos. TypeScript, build e 19 testes passaram. [Relatório e limites](docs/REVISAO-CONSISTENCIA.md), [resultados](tests/application-evidence/consistency/results.json).

@@ -15,7 +15,7 @@ import {
 
 import { Country, PersonLabel, RecordTag, RecordIcon } from './Visuals';
 import PhotoEditor from './PhotoEditor';
-import FieldPopover, { type FieldAnchor } from './FieldPopover';
+import FieldPopover, { fieldPanelId, type FieldAnchor } from './FieldPopover';
 import {
   countryCode,
   countryName,
@@ -1044,7 +1044,12 @@ export default function Editor({
       DEFINITIONS[target.type]?.fields.find(([key]) => key === target.section)?.[1] ||
       title;
     return (
-      <FieldPopover label={fieldTitle} anchor={target.anchor} onClose={close}>
+      <FieldPopover
+        id={fieldPanelId(target.type, target.id || target.boardId, target.section)}
+        label={fieldTitle}
+        anchor={target.anchor}
+        onClose={close}
+      >
         <form onSubmit={(event) => event.preventDefault()} className="oj-field-form">
           {body}
         </form>
@@ -1091,14 +1096,16 @@ export default function Editor({
         </p>
       )}
       <footer>
-        {['macro', 'front', 'step'].includes(target.type) && (
+        {['macro', 'front', 'step', 'assignment'].includes(target.type) && (
           <button type="button" className="btn oj-danger" onClick={() => onDelete(target)}>
             Excluir{' '}
             {target.type === 'macro'
               ? 'macroprocesso'
               : target.type === 'front'
                 ? 'contexto / produto'
-                : 'etapa'}
+                : target.type === 'assignment'
+                  ? 'vínculo'
+                  : 'etapa'}
           </button>
         )}
         <span role="status">

@@ -81,6 +81,9 @@ export default function RecordPicker({
               name={panelId}
               checked={selected.includes(item.id)}
               onChange={() => toggle(item.id)}
+              onClick={() => {
+                if (!multiple && selected.includes(item.id)) setAnchor(null);
+              }}
             />
             {visual(item)}
             {kind === 'operations' && <Country value={item.country} />}

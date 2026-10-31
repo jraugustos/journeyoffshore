@@ -352,7 +352,7 @@ export default function LaunchTimeline({
                     <div className="lt-item-actions">
                       {front && (
                         <button className="btn tiny dark" onClick={() => openFront(front.id)}>
-                          Abrir board relacionado ↗
+                          Abrir frente relacionada ↗
                         </button>
                       )}
                       <button className="btn tiny" onClick={() => openCatalog(item.phase)}>

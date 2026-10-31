@@ -69,3 +69,7 @@ A exclusão de macroprocessos, contextos e etapas informa o impacto e preserva o
 Responsáveis e demais vínculos usam um campo com lista pesquisável e seleção múltipla. Clicar nas células do blueprint abre somente atores, canais, operação, sistemas, capacidades, dados ou atendimento, junto ao campo. Objetivo, status, marco e os textos da oferta também possuem edição individual. O editor completo permanece disponível nas ações explícitas de edição e no nome da etapa.
 
 Os seletores de responsáveis e caso de uso do blueprint agora compartilham a aparência discreta do antigo campo de caso de uso. A lista de casos também utiliza o popup comum com busca; a escolha única fecha a lista e atualiza as etapas.
+
+## Revisão de consistência com agentes do Second Brain
+
+ST05, ST09 e ST10 revisaram código e padrões do projeto. Foram corrigidos recuo do contexto/produto, dimensões das ações da toolbar, filtros de CSD/catálogo, seletor de caso na barra da frente, estados acessíveis, busca móvel e rótulos. A escolha de capacidade agora precede a gravação e reutiliza vínculos existentes; a exclusão do vínculo está disponível também na frente e no editor. Evidências e limites: [revisão de consistência](docs/REVISAO-CONSISTENCIA.md).

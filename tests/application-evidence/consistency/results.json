@@ -1,0 +1,99 @@
+{
+  "context": {
+    "leftInset": 16,
+    "padding": "10px 16px"
+  },
+  "toolbar": [
+    {
+      "font": "12.5px",
+      "height": 42,
+      "radius": "10px",
+      "text": "Limpar filtros"
+    },
+    {
+      "font": "12.5px",
+      "height": 42,
+      "radius": "10px",
+      "text": "Macroprocesso"
+    }
+  ],
+  "clearedFilters": [
+    "all",
+    "all",
+    "all",
+    "all"
+  ],
+  "ownerExpanded": "true",
+  "ownerPanelLink": true,
+  "reselectCloses": true,
+  "frontCasePopup": true,
+  "capabilityOpensChooser": true,
+  "assignmentDeleteAvailable": true,
+  "csdFilter": {
+    "height": 42,
+    "padding": "9px 36px 9px 12px",
+    "radius": "10px"
+  },
+  "csdFilterWorks": true,
+  "frontTabs": {
+    "Oferta e recorte": [
+      "Oferta e recorte",
+      "Produtos e serviços",
+      "Perfis e condições",
+      "Anotações"
+    ],
+    "AS-IS": [
+      "Como acontece hoje",
+      "Anotações"
+    ],
+    "Plano de ação": [
+      "Plano de ação",
+      "Anotações"
+    ]
+  },
+  "tracker": [
+    "Acompanhamento"
+  ],
+  "timeline": [
+    "Launch Timeline"
+  ],
+  "catalog": [
+    "Funcionalidades"
+  ],
+  "catalogFilter": {
+    "height": 42,
+    "radius": "10px"
+  },
+  "registry": [
+    "Cadastros e responsáveis"
+  ],
+  "mobileContext": {
+    "leftInset": 12,
+    "padding": "10px 12px"
+  },
+  "mobileSearch": {
+    "font": "16px"
+  },
+  "mobilePopover": {
+    "left": 58,
+    "right": 378,
+    "viewport": 390
+  },
+  "escapeRestoresFocus": true,
+  "scope": "PostgreSQL isolado, localhost:3001; conferência amostral, sem certificação de acessibilidade",
+  "verifiedAt": "2026-10-31T15:16:47.703Z",
+  "responsibilityFlow": {
+    "before": {
+      "revision": 53,
+      "assignments": 1
+    },
+    "afterOpenCloseAndExistingChoice": {
+      "revision": 53,
+      "assignments": 1
+    },
+    "afterNewChoiceAndRepeat": {
+      "revision": 54,
+      "assignments": 2
+    }
+  }
+}

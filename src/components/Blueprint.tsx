@@ -2,7 +2,7 @@
 import { Pencil, ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { defaultCase, type RecordData, type WorkspaceData } from '@/lib/domain';
 import type { EditorTarget } from './Editor';
-import { fieldAnchor } from './FieldPopover';
+import { fieldAnchor, fieldPanelId } from './FieldPopover';
 import RecordPicker from './RecordPicker';
 import { canonicalPhase, featurePhase } from '@/lib/presentation';
 
@@ -153,7 +153,9 @@ export default function Blueprint({
   addFront,
   addStep,
   moveStep,
+  activeEditor,
 }: {
+  activeEditor?: EditorTarget | null;
   state: WorkspaceData;
   matrix: RecordData;
   boardId?: string;
@@ -292,6 +294,18 @@ export default function Blueprint({
           <button
             className="oj-context-select"
             aria-label={'Responsáveis de ' + front.board.name}
+            aria-expanded={
+              activeEditor?.type === 'front' &&
+              activeEditor.boardId === front.board.id &&
+              activeEditor.section === 'owners'
+            }
+            aria-controls={
+              activeEditor?.type === 'front' &&
+              activeEditor.boardId === front.board.id &&
+              activeEditor.section === 'owners'
+                ? fieldPanelId('front', front.board.id, 'owners')
+                : undefined
+            }
             aria-haspopup="dialog"
             onClick={(event) =>
               edit({
@@ -429,14 +443,14 @@ export default function Blueprint({
             )}
           </div>,
         );
-        LANES.forEach(([key], laneIndex) =>
+        LANES.forEach(([key, label], laneIndex) =>
           cells.push(
             <button
               type="button"
               className="bp-cell bp-value oj-lane"
               key={key + '-' + step.uid}
               style={{ gridColumn: column, gridRow: laneIndex + 4 }}
-              aria-label={'Editar ' + key + ' de ' + step.name}
+              aria-label={'Editar ' + label.toLocaleLowerCase() + ' de ' + step.name}
               onClick={(event) =>
                 step.placeholder
                   ? addStep(front.board.id, front.item.uid)
