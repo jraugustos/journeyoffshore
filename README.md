@@ -30,7 +30,7 @@ Se já houver um PostgreSQL instalado, forneça sua `DATABASE_URL` ao setup e us
 - Abra uma frente para trabalhar seus casos, etapas, oferta, AS-IS, CSD, decisões e ações.
 - Os campos são salvos automaticamente: textos após 700 ms sem digitação, e seleções e reordenações assim que concluídas.
 - “Todas as alterações salvas” significa confirmação do banco. Em caso de falha, mantenha a página aberta até concluir ou baixe as alterações pendentes.
-- Use “Exportar” para JSON completo, CSV ou HTML preenchido para consulta. Importe o JSON para retomar ou transferir o projeto.
+- Use o ícone de exportação no header para baixar JSON completo, CSV ou HTML preenchido para consulta. O trabalho é retomado automaticamente do banco de dados; a importação JSON não faz mais parte da interface.
 - Em Pessoas, adicione ou remova a foto. Nas operações, selecione o país com bandeira. Nos demais cadastros, personalize cor e ícone. As escolhas são refletidas nas etapas vinculadas.
 - Consulte o Launch Timeline na grade horizontal, filtre por horizonte e expanda os produtos e funcionalidades relacionados.
 - “Configurar workshop” e “Registros preservados” foram removidos da navegação. Conteúdos históricos já existentes seguem preservados no JSON.

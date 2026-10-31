@@ -61,3 +61,5 @@ CSV oferece casos, CSD, decisões, ações, acompanhamento e funcionalidades. Ca
 ## Evolução
 
 Contas individuais, permissões por papel, sincronização em tempo real e normalização das demais entidades em tabelas próprias podem ser adicionadas quando necessárias. Essas capacidades não são pressupostos para operar a primeira versão.
+
+A ação de importar JSON foi removida da interface conforme a revisão do header. O endpoint existente continua disponível para restaurações e migrações controladas, com autenticação, validação e controle de revisão. A exportação permanece disponível no menu por ícone.

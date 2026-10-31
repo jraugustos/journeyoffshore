@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import {
   LayoutGrid,
   ChartNoAxesCombined,
@@ -13,7 +13,6 @@ import {
   PanelLeftOpen,
   Presentation,
   Download,
-  Upload,
   X,
   Trash2,
   Copy,
@@ -48,7 +47,6 @@ import {
   STATUSES,
   PROFILES,
   RELEASES,
-  normalizeImported,
 } from '@/lib/domain';
 
 type Page = 'overview' | 'board' | 'tracker' | 'catalog' | 'launch' | 'registry';
@@ -92,7 +90,6 @@ export default function Workspace() {
     [query, setQuery] = useState(''),
     [registry, setRegistry] = useState('people'),
     [message, setMessage] = useState('');
-  const file = useRef<HTMLInputElement>(null);
   if (api.locked) return <AccessForm onSuccess={api.unlock} />;
   if (!api.data || !api.references)
     return (
@@ -283,30 +280,6 @@ export default function Workspace() {
     anchor.download = `offshore-${format === 'csv' ? kind : 'projeto'}.${format}`;
     anchor.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
-  async function importFile(event: React.ChangeEvent<HTMLInputElement>) {
-    const selected = event.target.files?.[0];
-    if (!selected) return;
-    try {
-      const raw = JSON.parse(await selected.text());
-      if (
-        !confirm(
-          'Substituir o projeto pelo arquivo “' +
-            selected.name +
-            '”? Exporte um backup antes de continuar.',
-        )
-      )
-        return;
-      await api.importData(raw);
-      setMessage('Projeto importado e persistido.');
-      setCases({});
-      setEditor(null);
-      navigate('overview');
-    } catch (cause: any) {
-      setMessage(cause.message || 'Arquivo inválido. O projeto não foi alterado.');
-    } finally {
-      event.target.value = '';
-    }
   }
   async function logout() {
     if (
@@ -1267,10 +1240,12 @@ export default function Workspace() {
                   </small>
                 </div>
                 <button
-                  className="btn tiny"
+                  className="oj-icon"
+                  aria-label="Editar vínculo"
+                  title="Editar vínculo"
                   onClick={() => setEditor({ type: 'assignment', id: item.uid })}
                 >
-                  Editar vínculo
+                  <Pencil size={16} />
                 </button>
                 <button
                   className="oj-icon"
@@ -1302,11 +1277,12 @@ export default function Workspace() {
                   <h3>{macro.name}</h3>
                   <div className="oj-row-actions">
                     <button
-                      className="btn"
+                      className="oj-icon"
+                      aria-label={'Editar macroprocesso ' + macro.name}
+                      title="Editar macroprocesso"
                       onClick={() => setEditor({ type: 'macro', id: macro.id })}
                     >
                       <Pencil size={14} />
-                      Editar macroprocesso
                     </button>
                     <button className="btn" onClick={() => addFront(macro.id)}>
                       <Plus size={14} />
@@ -1324,10 +1300,12 @@ export default function Workspace() {
                       </div>
                       <Status value={front.status} />
                       <button
-                        className="btn tiny"
+                        className="oj-icon"
+                        aria-label={'Editar frente ' + front.name}
+                        title="Editar frente"
                         onClick={() => setEditor({ type: 'front', boardId: front.id })}
                       >
-                        Editar frente
+                        <Pencil size={16} />
                       </button>
                     </div>
                   ))}
@@ -1370,10 +1348,12 @@ export default function Workspace() {
                 </div>
                 <Status value={item.status} />
                 <button
-                  className="btn tiny"
+                  className="oj-icon"
+                  aria-label={'Editar ' + item.name}
+                  title="Editar cadastro"
                   onClick={() => setEditor({ type: 'registry', registry, id: item.id })}
                 >
-                  Editar
+                  <Pencil size={16} />
                 </button>
               </div>
             ))}
@@ -1389,10 +1369,21 @@ export default function Workspace() {
       </a>
       <header className="topbar">
         <div className="brand">
+          <button
+            type="button"
+            className="oj-icon oj-header-action"
+            aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
+            title={collapsed ? 'Expandir menu' : 'Recolher menu'}
+            aria-expanded={!collapsed}
+            aria-controls="workspace-navigation"
+            onClick={() => setCollapsed(!collapsed)}
+          >
+            {collapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}
+          </button>
           <img className="brand-logo" src="/brand.svg" alt="Itaú" />
           <div>
             <div className="brand-name">Novas jornadas Offshore</div>
-            <div className="brand-caption">New Bank · Workshop de definição</div>
+            <div className="brand-caption">DeNovo Banco · Mapeamento</div>
           </div>
         </div>
         <div className="toptools">
@@ -1406,23 +1397,17 @@ export default function Workspace() {
             <span>{SAVE_LABELS[api.status]}</span>
           </div>
           <button
-            className="btn ghost v13-toolbar-icon"
+            className="oj-icon oj-header-action"
             aria-label="Modo apresentação"
             title="Modo apresentação"
             onClick={() => setFocus(!focus)}
           >
             <Presentation size={19} />
           </button>
-          <button
-            className="btn ghost v13-toolbar-icon"
-            aria-label="Importar JSON"
-            title="Importar JSON"
-            onClick={() => file.current?.click()}
-          >
-            <Upload size={19} />
-          </button>
           <details className="dropdown">
-            <summary className="btn dark">Exportar</summary>
+            <summary className="oj-icon oj-header-action" aria-label="Exportar" title="Exportar">
+              <Download size={19} />
+            </summary>
             <div className="dropdown-panel">
               <button onClick={() => void exportData('json')}>JSON completo</button>
               <button onClick={() => void exportData('html')}>HTML preenchido para consulta</button>
@@ -1442,7 +1427,7 @@ export default function Workspace() {
             </div>
           </details>
           <button
-            className="oj-icon"
+            className="oj-icon oj-header-action"
             title="Encerrar acesso"
             aria-label="Encerrar acesso"
             onClick={() => void logout()}
@@ -1497,16 +1482,7 @@ export default function Workspace() {
         </div>
       )}
       <div className="shell">
-        <aside className="sidebar">
-          <div className="v13-side-header">
-            <button
-              className="v13-collapse"
-              aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
-              onClick={() => setCollapsed(!collapsed)}
-            >
-              {collapsed ? <PanelLeftOpen size={17} /> : <PanelLeftClose size={17} />}
-            </button>
-          </div>
+        <aside className="sidebar" id="workspace-navigation" aria-label="Navegação principal">
           <div className="nav-caption">Workspace</div>
           {PAGE_LINKS.map((link) => (
             <button
@@ -1559,14 +1535,6 @@ export default function Workspace() {
           <div className="workspace bp-wide oj-workspace">{content}</div>
         </main>
       </div>
-      <input
-        type="file"
-        ref={file}
-        accept="application/json,.json"
-        hidden
-        aria-label="Arquivo JSON para importar"
-        onChange={(event) => void importFile(event)}
-      />
       {capabilityAnchor && (
         <FieldPopover
           label="Escolher capacidade"

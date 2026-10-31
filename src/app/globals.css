@@ -1788,3 +1788,78 @@ body {
   font-weight: 400;
   line-height: 1.5;
 }
+
+/* Compact feature stacks use the same rhythm in the blueprint and catalog. */
+.bp-functional .bp-fref {
+  margin-bottom: 6px;
+}
+.oj-workspace .bp-catalog-list {
+  gap: 6px !important;
+}
+.bp-catalog-list .bp-catalog-row {
+  margin: 0;
+}
+
+/* Navigation lives in the shell header, with the same alignment as its utilities. */
+.topbar .oj-header-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 8px;
+  margin: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #505056;
+  cursor: pointer;
+  list-style: none;
+}
+.topbar .oj-header-action:hover {
+  background: #f0f0f2;
+  color: #171719;
+}
+.topbar .oj-header-action:focus-visible {
+  outline: 2px solid #b65309;
+  outline-offset: 2px;
+}
+.topbar .oj-header-action::-webkit-details-marker {
+  display: none;
+}
+.topbar .brand {
+  min-width: 0;
+}
+.topbar .toptools {
+  align-items: center;
+}
+
+/* Dialogs follow a clear reading order instead of stretching notes into empty grid cells. */
+.oj-editor-form {
+  align-items: start;
+  gap: 18px 20px;
+}
+.oj-editor-form > .oj-context {
+  grid-column: 1/-1;
+  margin: 0;
+  padding: 14px 16px;
+}
+.oj-editor-form > fieldset,
+.oj-editor-form > .v15-photo-box {
+  grid-column: 1/-1;
+}
+@media (max-width: 800px) {
+  .topbar .brand {
+    gap: 7px;
+  }
+  .topbar .oj-header-action {
+    width: 32px;
+    min-width: 32px;
+    height: 34px;
+    min-height: 34px;
+    padding: 6px;
+  }
+}

@@ -563,3 +563,7 @@ O anexo a seguir inventaria as funcionalidades do material recebido. Nome, ID e 
 ### Refinamento de seleção e edição por campo
 
 Seletores devem ocupar um único campo fechado, abrir lista com busca e permitir marcar múltiplos registros. O mesmo padrão atende responsáveis do contexto, da capacidade e demais cadastros. Ao clicar em uma célula do blueprint, apresentar apenas as opções do campo escolhido, em uma lista ou formulário compacto junto à célula, sem bloquear toda a página. Fechar com Escape ou clique fora. Manter cadastro direto e salvamento automático. Edição completa da etapa continua acessível pelo nome da etapa.
+
+### Refinamento do shell e formulários — 31/10/2026
+
+Header: legenda “DeNovo Banco · Mapeamento”, controle de recolher/expandir navegação à esquerda da marca e exportação por ícone. Remover a ação de importar JSON da interface de uso diário, pois a retomada ocorre pelo banco; preservar exportações e a capacidade técnica de restauração. Cadastros usam ícones de edição com nomes acessíveis. Formulários priorizam nome/título em largura total, metadados curtos em pares e descrições/avisos em linhas completas. Cards de funcionalidades do blueprint e catálogo têm separação uniforme de 6 px.

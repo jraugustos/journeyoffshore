@@ -1,0 +1,161 @@
+{
+  "header": {
+    "caption": "DeNovo Banco · Mapeamento",
+    "importButtons": 0,
+    "icons": [
+      {
+        "height": 36,
+        "name": "Recolher menu",
+        "top": 16.5,
+        "width": 36
+      },
+      {
+        "height": 36,
+        "name": "Modo apresentação",
+        "top": 16.5,
+        "width": 36
+      },
+      {
+        "height": 36,
+        "name": "Exportar",
+        "top": 16.5,
+        "width": 36
+      },
+      {
+        "height": 36,
+        "name": "Encerrar acesso",
+        "top": 16.5,
+        "width": 36
+      }
+    ]
+  },
+  "collapsed": {
+    "display": "block",
+    "width": 70
+  },
+  "exportOptions": [
+    "JSON completo",
+    "HTML preenchido para consulta",
+    "Casos de uso (CSV)",
+    "CSD e pendências (CSV)",
+    "Decisões (CSV)",
+    "Plano de ação (CSV)",
+    "Acompanhamento (CSV)",
+    "Funcionalidades (CSV)",
+    "Imprimir tela atual"
+  ],
+  "macroFields": [
+    {
+      "label": "Nome do macroprocesso",
+      "top": 267.6015625,
+      "width": 840
+    },
+    {
+      "label": "Status",
+      "top": 353,
+      "width": 410
+    },
+    {
+      "label": "Posição no blueprint",
+      "top": 353,
+      "width": 410
+    }
+  ],
+  "macroNotes": [
+    {
+      "margin": "0px",
+      "width": 840
+    }
+  ],
+  "catalogGap": {
+    "actual": 6,
+    "gap": "6px"
+  },
+  "registryEditIcons": [
+    {
+      "icon": true,
+      "name": "Editar Tiago",
+      "text": ""
+    },
+    {
+      "icon": true,
+      "name": "Editar Diego",
+      "text": ""
+    },
+    {
+      "icon": true,
+      "name": "Editar Pamela",
+      "text": ""
+    },
+    {
+      "icon": true,
+      "name": "Editar Lanza",
+      "text": ""
+    },
+    {
+      "icon": true,
+      "name": "Editar Renata",
+      "text": ""
+    },
+    {
+      "icon": true,
+      "name": "Editar Yasmin",
+      "text": ""
+    },
+    {
+      "icon": true,
+      "name": "Editar Junior",
+      "text": ""
+    }
+  ],
+  "personTitleWidth": 840,
+  "linkedCardMargin": "6px",
+  "csdLayout": [
+    {
+      "label": "Título",
+      "top": 163.4921875,
+      "width": 840
+    },
+    {
+      "label": "Descrição",
+      "top": 248.890625,
+      "width": 840
+    },
+    {
+      "label": "Classificação",
+      "top": 381.890625,
+      "width": 410
+    },
+    {
+      "label": "Prioridade",
+      "top": 381.890625,
+      "width": 410
+    },
+    {
+      "label": "Status",
+      "top": 467.2890625,
+      "width": 410
+    },
+    {
+      "label": "Marco",
+      "top": 467.2890625,
+      "width": 410
+    }
+  ],
+  "mobileCollapsed": "none",
+  "mobileExpanded": "flex",
+  "mobileHeader": {
+    "bodyWidth": 390,
+    "viewport": 390,
+    "width": 390
+  },
+  "mobileExport": {
+    "left": 106,
+    "right": 341
+  },
+  "mobileMacroWidths": [
+    318,
+    318,
+    318
+  ]
+}

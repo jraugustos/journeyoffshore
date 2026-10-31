@@ -118,8 +118,8 @@ const DEFINITIONS: Record<
     title: 'Certeza, suposição ou dúvida',
     fields: [
       ['title', 'Título'],
-      ['type', 'Classificação', 'select', ['Certeza', 'Suposição', 'Dúvida']],
       ['detail', 'Descrição', 'textarea'],
+      ['type', 'Classificação', 'select', ['Certeza', 'Suposição', 'Dúvida']],
       ['priority', 'Prioridade', 'select', ['Alta', 'Média', 'Baixa']],
       [
         'status',
@@ -127,13 +127,13 @@ const DEFINITIONS: Record<
         'select',
         ['Aberta', 'Em validação', 'Em andamento', 'Registrada', 'Resolvida'],
       ],
+      ['horizon', 'Marco', 'select', ['A definir', ...RELEASES]],
       ['owner', 'Responsável'],
       ['deadline', 'Prazo', 'date'],
       ['action', 'Próximo passo', 'textarea'],
       ['related', 'Área ou dependência'],
-      ['horizon', 'Marco', 'select', ['A definir', ...RELEASES]],
-      ['resolution', 'Resposta ou evidência', 'textarea'],
       ['source', 'Fonte'],
+      ['resolution', 'Resposta ou evidência', 'textarea'],
     ],
   },
   decisions: {
@@ -223,7 +223,13 @@ export default function Editor({
     }, immediate);
   }
   const field = (key: string, label: string, type = 'text', options: string[] = []) => (
-    <label className={'oj-field ' + (type === 'textarea' ? 'full' : '')} key={key}>
+    <label
+      className={
+        'oj-field ' +
+        (type === 'textarea' || ['name', 'title', 'step', 'objective'].includes(key) ? 'full' : '')
+      }
+      key={key}
+    >
       <span>{label}</span>
       {type === 'textarea' ? (
         <textarea
@@ -344,8 +350,8 @@ export default function Editor({
     body = (
       <>
         {!target.section && field('name', 'Nome da frente')}
-        {!target.section && options('macroId', 'Macroprocesso', state.macros)}
         {!target.section && field('summary', 'Descrição', 'textarea')}
+        {!target.section && options('macroId', 'Macroprocesso', state.macros)}
         {!target.section && field('status', 'Status', 'select', STATUSES)}
         {picker('people', 'ownerIds', 'Responsáveis pelo contexto / produto')}
       </>
@@ -546,8 +552,8 @@ export default function Editor({
       <>
         {show('name') && field('name', 'Etapa do processo')}
         {show('status') && field('status', 'Status', 'select', STATUSES)}
-        {show('objective') && field('objective', 'Objetivo do processo', 'select', OBJECTIVES)}
         {show('release') && field('release', 'Marco desta etapa', 'select', RELEASES)}
+        {show('objective') && field('objective', 'Objetivo do processo', 'select', OBJECTIVES)}
         {show('actor', 'channel') && (
           <details className="oj-editor-section" open>
             <summary>Ator e canal</summary>

@@ -73,3 +73,7 @@ Os seletores de responsáveis e caso de uso do blueprint agora compartilham a ap
 ## Revisão de consistência com agentes do Second Brain
 
 ST05, ST09 e ST10 revisaram código e padrões do projeto. Foram corrigidos recuo do contexto/produto, dimensões das ações da toolbar, filtros de CSD/catálogo, seletor de caso na barra da frente, estados acessíveis, busca móvel e rótulos. A escolha de capacidade agora precede a gravação e reutiliza vínculos existentes; a exclusão do vínculo está disponível também na frente e no editor. Evidências e limites: [revisão de consistência](docs/REVISAO-CONSISTENCIA.md).
+
+## Refinamento do header e formulários
+
+Header atualizado para “DeNovo Banco · Mapeamento”, controle da navegação em posição estável à esquerda da marca e exportação por ícone. A ação de importar JSON saiu da interface. Ícones substituem ações de edição nos cadastros; formulários têm títulos completos, metadados em pares e avisos completos. Espaçamento de 6 px aplicado aos cards no catálogo e no blueprint.
