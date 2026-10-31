@@ -99,3 +99,7 @@ Responsáveis e caso de uso no blueprint foram comparados pelo navegador: ambos 
 ## Revisão de consistência com ST05, ST09 e ST10
 
 A revisão de código dos perfis do Second Brain foi seguida de testes no navegador em desktop e 390 × 844, exclusivamente na base isolada. Medidos padding, altura/raio das ações e filtros, busca móvel, estados acessíveis e retorno de foco. Limpar filtros, reescolha de caso e filtro de dúvidas funcionaram. Abrir/fechar responsabilidades não criou registros, e repetir uma capacidade existente não duplicou vínculos. TypeScript, build e 19 testes passaram. [Relatório e limites](docs/REVISAO-CONSISTENCIA.md), [resultados](tests/application-evidence/consistency/results.json).
+
+## Cards de funcionalidades vinculadas — 31/10/2026
+
+Os cards do blueprint agora preenchem 100% da coluna, têm fundo branco e margem inferior de 10 px. Código e marcador de horizonte ficam na mesma linha; a descrição ocupa a linha seguinte. TypeScript e build passaram. Na base isolada foram comparados F002, F004, F050 e F051 em desktop e 390 × 844: largura comum, fundo branco, margem e alinhamento confirmados. O clique continuou abrindo o editor da funcionalidade. Os dados iniciais da base de teste foram restaurados; produção não recebeu o exemplo. Evidências: [desktop](tests/application-evidence/feature-cards-desktop.png), [celular](tests/application-evidence/feature-cards-mobile.png), [medições](tests/application-evidence/feature-cards-results.json).

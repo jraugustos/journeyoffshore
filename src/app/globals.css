@@ -1751,3 +1751,40 @@ body {
   font-size: 12.5px;
   font-weight: 550;
 }
+
+/* Linked functionality cards fill the blueprint column and keep a compact heading. */
+.bp-functional .bp-fref {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  background-color: #fff;
+  box-shadow: none;
+}
+.bp-fref .oj-feature-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 8px;
+}
+.oj-feature-code {
+  color: #c05c05;
+  font-size: 9px;
+  font-weight: 700;
+}
+.bp-fref .oj-phase {
+  display: inline-flex;
+  margin: 0;
+  font-size: 9px;
+}
+.bp-fref .oj-feature-description {
+  display: block;
+  margin: 0;
+  color: #45454b;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+}

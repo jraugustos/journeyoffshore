@@ -483,14 +483,18 @@ export default function Blueprint({
                     className="bp-fref"
                     onClick={() => edit({ type: 'feature', id })}
                   >
-                    <span>{id}</span>
-                    {matrix.items.find((item: RecordData) => item.id === id)?.funcionalidade}
-                    <Phase
-                      value={featurePhase(
-                        matrix.items.find((item: RecordData) => item.id === id) || {},
-                        state.featureRouting?.[id],
-                      )}
-                    />
+                    <span className="oj-feature-heading">
+                      <strong className="oj-feature-code">{id}</strong>
+                      <Phase
+                        value={featurePhase(
+                          matrix.items.find((item: RecordData) => item.id === id) || {},
+                          state.featureRouting?.[id],
+                        )}
+                      />
+                    </span>
+                    <span className="oj-feature-description">
+                      {matrix.items.find((item: RecordData) => item.id === id)?.funcionalidade}
+                    </span>
                   </button>
                 ))}
               </details>
