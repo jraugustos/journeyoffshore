@@ -66,7 +66,14 @@ export default function FieldPopover({
     };
   }, [anchor]);
   return (
-    <div ref={panel} popover="auto" className="oj-field-popover" role="dialog" aria-labelledby={id}>
+    <div
+      id={panelId}
+      ref={panel}
+      popover="auto"
+      className="oj-field-popover"
+      role="dialog"
+      aria-labelledby={id}
+    >
       <header>
         <h2 id={id}>{label}</h2>
         <button className="oj-icon" type="button" aria-label="Fechar seleção" onClick={onClose}>

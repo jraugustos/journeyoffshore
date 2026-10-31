@@ -12,6 +12,9 @@ export default function RecordPicker({
   kind,
   onCreate,
   inline = false,
+  multiple = true,
+  variant = 'field',
+  hideLabel = false,
 }: {
   label: string;
   records: RecordData[];
@@ -20,12 +23,23 @@ export default function RecordPicker({
   kind?: string;
   onCreate?: (name: string) => void;
   inline?: boolean;
+  multiple?: boolean;
+  variant?: 'field' | 'context';
+  hideLabel?: boolean;
 }) {
   const panelId = useId();
   const [query, setQuery] = useState(''),
     [anchor, setAnchor] = useState<FieldAnchor | null>(null);
-  const toggle = (id: string) =>
-    onChange(selected.includes(id) ? selected.filter((x) => x !== id) : [...selected, id]);
+  const toggle = (id: string) => {
+    onChange(
+      multiple
+        ? selected.includes(id)
+          ? selected.filter((x) => x !== id)
+          : [...selected, id]
+        : [id],
+    );
+    if (!multiple) setAnchor(null);
+  };
   const visual = (item: RecordData) =>
     kind === 'people' ? (
       <PersonLabel person={item} />
@@ -47,14 +61,14 @@ export default function RecordPicker({
       <input
         type="search"
         aria-label={'Buscar em ' + label}
-        placeholder="Buscar ou cadastrar…"
+        placeholder={onCreate ? 'Buscar ou cadastrar…' : 'Buscar…'}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === 'ArrowDown') {
             e.preventDefault();
             e.currentTarget.parentElement
-              ?.querySelector<HTMLInputElement>('input[type=checkbox]')
+              ?.querySelector<HTMLInputElement>('input[type=checkbox], input[type=radio]')
               ?.focus();
           }
         }}
@@ -63,7 +77,8 @@ export default function RecordPicker({
         {visible.map((item) => (
           <label key={item.id} className={selected.includes(item.id) ? 'is-active' : ''}>
             <input
-              type="checkbox"
+              type={multiple ? 'checkbox' : 'radio'}
+              name={panelId}
               checked={selected.includes(item.id)}
               onChange={() => toggle(item.id)}
             />
@@ -93,11 +108,15 @@ export default function RecordPicker({
   );
   if (inline) return choices;
   return (
-    <div className="oj-record-picker" role="group" aria-label={label}>
-      <span className="oj-picker-label">{label}</span>
+    <div
+      className={'oj-record-picker ' + (variant === 'context' ? 'oj-context-picker' : '')}
+      role="group"
+      aria-label={label}
+    >
+      {!hideLabel && <span className="oj-picker-label">{label}</span>}
       <button
         type="button"
-        className="oj-picker-trigger"
+        className={variant === 'context' ? 'oj-context-select' : 'oj-picker-trigger'}
         role="combobox"
         aria-label={label}
         aria-controls={anchor ? panelId : undefined}

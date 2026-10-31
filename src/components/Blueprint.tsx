@@ -3,6 +3,7 @@ import { Pencil, ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight, Plus } fr
 import { defaultCase, type RecordData, type WorkspaceData } from '@/lib/domain';
 import type { EditorTarget } from './Editor';
 import { fieldAnchor } from './FieldPopover';
+import RecordPicker from './RecordPicker';
 import { canonicalPhase, featurePhase } from '@/lib/presentation';
 
 export { Phase } from './Visuals';
@@ -289,7 +290,7 @@ export default function Blueprint({
             <ArrowUpRight size={16} />
           </button>
           <button
-            className="oj-context-owners"
+            className="oj-context-select"
             aria-label={'Responsáveis de ' + front.board.name}
             aria-haspopup="dialog"
             onClick={(event) =>
@@ -301,21 +302,30 @@ export default function Blueprint({
               })
             }
           >
-            <People people={state.people} ids={front.board.ownerIds?.slice(0, 2)} />
-            {front.board.ownerIds?.length > 2 && <span>+{front.board.ownerIds.length - 2}</span>}
+            <span>
+              {(front.board.ownerIds || [])
+                .slice(0, 2)
+                .map(
+                  (id: string) => state.people.find((person: RecordData) => person.id === id)?.name,
+                )
+                .filter(Boolean)
+                .join(', ') || 'A definir'}
+              {front.board.ownerIds?.length > 2 ? ' +' + (front.board.ownerIds.length - 2) : ''}
+            </span>
             <ChevronDown size={14} />
           </button>
-          <select
-            aria-label={'Caso de uso de ' + front.board.name}
-            value={front.item.uid}
-            onChange={(event) => setCase(front.board.id, event.target.value)}
-          >
-            {front.board.cases.map((item: RecordData) => (
-              <option key={item.uid} value={item.uid}>
-                {item.isDefault ? 'Caso padrão' : item.title}
-              </option>
-            ))}
-          </select>
+          <RecordPicker
+            label={'Caso de uso de ' + front.board.name}
+            records={front.board.cases.map((item: RecordData) => ({
+              id: item.uid,
+              name: item.isDefault ? 'Caso padrão' : item.title,
+            }))}
+            selected={[front.item.uid]}
+            onChange={(ids) => setCase(front.board.id, ids[0])}
+            multiple={false}
+            variant="context"
+            hideLabel
+          />
         </div>,
       );
       for (const [index, step] of front.steps.entries()) {

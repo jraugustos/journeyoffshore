@@ -67,3 +67,5 @@ A exclusão de macroprocessos, contextos e etapas informa o impacto e preserva o
 ## Seleção compacta e edição por campo
 
 Responsáveis e demais vínculos usam um campo com lista pesquisável e seleção múltipla. Clicar nas células do blueprint abre somente atores, canais, operação, sistemas, capacidades, dados ou atendimento, junto ao campo. Objetivo, status, marco e os textos da oferta também possuem edição individual. O editor completo permanece disponível nas ações explícitas de edição e no nome da etapa.
+
+Os seletores de responsáveis e caso de uso do blueprint agora compartilham a aparência discreta do antigo campo de caso de uso. A lista de casos também utiliza o popup comum com busca; a escolha única fecha a lista e atualiza as etapas.

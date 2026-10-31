@@ -91,3 +91,7 @@ Casos, etapas e outros registros aninhados usam JSONB nesta entrega. O controle 
 ## Seletores compactos e edição localizada — 31/10/2026
 
 Build otimizado, TypeScript e os 19 testes de regras passaram. Na base isolada, o navegador verificou: clique em Canal sem abrir o editor completo, busca/cadastro/vínculo de canal, marcação de pessoas com busca e persistência após recarga, abertura isolada de Operação/Dados/Capacidades, seleção de responsáveis da capacidade em lista aninhada, Escape fechando apenas essa lista e manutenção do editor completo. Listas de responsáveis conferidas no desktop e em 390 × 844, dentro dos limites da tela. Produção não recebeu os cadastros de teste.
+
+### Uniformidade dos seletores de contexto
+
+Responsáveis e caso de uso no blueprint foram comparados pelo navegador: ambos com 25 px de altura, fonte de 11 px, padding de 3 px vertical, sem borda e fundo transparente. A lista de casos usa o mesmo componente de popup das demais seleções, com busca e escolha única. Troca para “Bloquear cartão no aplicativo” e retorno ao caso padrão atualizaram as etapas e fecharam a lista. Conferido em desktop e 390 × 844, exclusivamente na prévia isolada. TypeScript e build otimizado passaram.
