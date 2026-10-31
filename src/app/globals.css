@@ -1800,7 +1800,7 @@ body {
   margin: 0;
 }
 
-/* Navigation lives in the shell header, with the same alignment as its utilities. */
+/* Header utilities share the same dimensions and alignment. */
 .topbar .oj-header-action {
   display: inline-flex;
   align-items: center;
@@ -1861,5 +1861,48 @@ body {
     height: 34px;
     min-height: 34px;
     padding: 6px;
+  }
+}
+
+/* The navigation toggle belongs to the sidebar in both expanded and icon-only states. */
+.oj-sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 40px;
+  padding: 0 8px 0 12px;
+  margin-bottom: 8px;
+}
+.oj-sidebar-head .nav-caption {
+  display: block;
+  margin: 0;
+}
+.oj-sidebar-toggle {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  color: #505056;
+}
+.oj-sidebar-toggle:focus-visible {
+  outline: 2px solid #b65309;
+  outline-offset: 2px;
+}
+.sidebar-collapsed .oj-sidebar-head {
+  justify-content: center;
+  padding: 0;
+}
+@media (max-width: 800px) {
+  .oj-sidebar-head {
+    width: 100%;
+    padding: 0 4px;
+    margin-bottom: 4px;
+  }
+  #app.sidebar-collapsed .sidebar {
+    display: flex !important;
+  }
+  .sidebar-collapsed .oj-sidebar-head {
+    width: auto;
+    flex: 0 0 auto;
+    margin-bottom: 0;
   }
 }

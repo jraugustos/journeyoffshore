@@ -1369,17 +1369,6 @@ export default function Workspace() {
       </a>
       <header className="topbar">
         <div className="brand">
-          <button
-            type="button"
-            className="oj-icon oj-header-action"
-            aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
-            title={collapsed ? 'Expandir menu' : 'Recolher menu'}
-            aria-expanded={!collapsed}
-            aria-controls="workspace-navigation"
-            onClick={() => setCollapsed(!collapsed)}
-          >
-            {collapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}
-          </button>
           <img className="brand-logo" src="/brand.svg" alt="Itaú" />
           <div>
             <div className="brand-name">Novas jornadas Offshore</div>
@@ -1483,7 +1472,20 @@ export default function Workspace() {
       )}
       <div className="shell">
         <aside className="sidebar" id="workspace-navigation" aria-label="Navegação principal">
-          <div className="nav-caption">Workspace</div>
+          <div className="oj-sidebar-head">
+            <span className="nav-caption">Workspace</span>
+            <button
+              type="button"
+              className="oj-icon oj-sidebar-toggle"
+              aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
+              title={collapsed ? 'Expandir menu' : 'Recolher menu'}
+              aria-expanded={!collapsed}
+              aria-controls="workspace-navigation"
+              onClick={() => setCollapsed(!collapsed)}
+            >
+              {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+            </button>
+          </div>
           {PAGE_LINKS.map((link) => (
             <button
               className={'nav-btn ' + (page === link.id ? 'active' : '')}

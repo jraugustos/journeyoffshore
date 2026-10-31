@@ -1,0 +1,18 @@
+{
+  "expanded": {
+    "insideSidebar": true,
+    "sameRow": true
+  },
+  "headerToggleCount": 0,
+  "collapsed": {
+    "expanded": "false",
+    "firstControl": true,
+    "navCenter": 34.5,
+    "toggleCenter": 34.5
+  },
+  "mobileClosed": {
+    "expandVisible": true,
+    "bodyWidth": 390
+  },
+  "mobileReopens": true
+}

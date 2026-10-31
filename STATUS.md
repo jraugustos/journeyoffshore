@@ -76,4 +76,4 @@ ST05, ST09 e ST10 revisaram código e padrões do projeto. Foram corrigidos recu
 
 ## Refinamento do header e formulários
 
-Header atualizado para “DeNovo Banco · Mapeamento”, controle da navegação em posição estável à esquerda da marca e exportação por ícone. A ação de importar JSON saiu da interface. Ícones substituem ações de edição nos cadastros; formulários têm títulos completos, metadados em pares e avisos completos. Espaçamento de 6 px aplicado aos cards no catálogo e no blueprint.
+Header atualizado para “DeNovo Banco · Mapeamento”, controle da navegação ao lado de Workspace na sidebar e como primeiro ícone quando recolhida e exportação por ícone. A ação de importar JSON saiu da interface. Ícones substituem ações de edição nos cadastros; formulários têm títulos completos, metadados em pares e avisos completos. Espaçamento de 6 px aplicado aos cards no catálogo e no blueprint.
