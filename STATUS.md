@@ -31,7 +31,11 @@ A criação do repositório e a publicação na Vercel foram autorizadas pelo us
 
 Foram adicionados `vercel.json`, exclusões de arquivos locais, Node.js 22 e o comando `vercel-build`, que aplica as migrações antes da compilação. A conexão direta opcional `DIRECT_DATABASE_URL` permite usar um pooler na aplicação e uma conexão direta nas migrações.
 
-A publicação ainda depende da autorização da conexão Vercel e da configuração de um PostgreSQL externo exclusivo, além das variáveis privadas de produção. Nenhuma URL pública de produção foi confirmada até aqui.
+A conexão Vercel está ativa. O projeto [journeyoffshore](https://vercel.com/juniors-projects-7bbe2e04/journeyoffshore), na conta Junior's projects, foi criado e ligado ao repositório. Node.js 22, o domínio `journeyoffshore.vercel.app` e as variáveis privadas de senha, sessão e origem de produção foram configurados. A senha compartilhada foi mantida; o segredo de sessão da produção é próprio desse ambiente.
+
+O usuário escolheu Prisma Postgres no plano gratuito e confirmou o aceite dos termos. O banco `journeyoffshore` foi criado em Washington, D.C. (`iad1`) e conectado exclusivamente ao ambiente de produção. As variáveis da integração foram criadas como sensíveis. A aplicação usa a conexão com pool e as migrações mantêm a conexão direta.
+
+O plano Free apresentado pela instalação da Vercel informa 100 mil operações mensais, 2 GB e até 50 bancos, sem custo. Esse limite de operações difere dos 200 mil anunciados pela documentação pública do Prisma; o limite apresentado na contratação foi registrado como referência conservadora. O deploy e a verificação funcional de produção estão em andamento.
 
 ## Validação
 

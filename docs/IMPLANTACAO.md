@@ -14,6 +14,7 @@ O projeto roda diretamente em Node.js e usa um PostgreSQL acessível pelo servid
 | Variável | Uso |
 | --- | --- |
 | `DATABASE_URL` | Conexão PostgreSQL com credenciais do ambiente |
+| `DATABASE_URL_POOLED` | Conexão com pool opcional; tem preferência na aplicação quando fornecida pelo Prisma Postgres |
 | `DIRECT_DATABASE_URL` | Conexão direta opcional para migrações quando a conexão principal usa pooler |
 | `PROJECT_PASSWORD_HASH` | Hash Argon2id da senha compartilhada |
 | `SESSION_SECRET` | Segredo aleatório com pelo menos 32 caracteres |
@@ -67,6 +68,8 @@ O projeto inclui `vercel.json` para Next.js em Node.js 22. A Vercel hospeda a ap
 6. Confira `/api/health`, o bloqueio sem senha e as exportações. Para levar o trabalho local existente, use o JSON autenticado e importe-o na nova base.
 
 Os próximos commits no branch de produção podem gerar novas publicações pela integração GitHub–Vercel. Defina bancos e variáveis próprios para previews quando habilitar esse ambiente. As credenciais e os dados locais não pertencem ao repositório.
+
+Na integração Prisma Postgres, mantenha `DATABASE_URL` como conexão direta e `DATABASE_URL_POOLED` como conexão com pool. A aplicação dá preferência à conexão com pool, enquanto as migrações usam `DIRECT_DATABASE_URL`, quando definida, ou `DATABASE_URL`. Não é necessário substituir as variáveis administradas pela integração.
 
 ## PostgreSQL para desenvolvimento local
 

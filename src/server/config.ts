@@ -9,7 +9,7 @@ export function configuration() {
   const local = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : {};
   const read = (key: string) => process.env[key] || local[key] || '';
   return {
-    databaseUrl: read('DATABASE_URL'),
+    databaseUrl: read('DATABASE_URL_POOLED') || read('DATABASE_URL'),
     passwordHash: read('PROJECT_PASSWORD_HASH'),
     secret: read('SESSION_SECRET'),
     appUrl: read('APP_URL') || 'http://localhost:3000',
