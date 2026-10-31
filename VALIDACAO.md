@@ -5,6 +5,7 @@ Verificações realizadas em 30 de outubro de 2026 sobre a aplicação Next.js c
 ## Resultado
 
 - 15 testes de regras de domínio, preservação dos cadastros e apresentação passaram com Vitest.
+- A suíte também passou após atualizar o Vitest para 5.0.5 e adicionar o controle de conexões da Vercel. A instalação final de dependências reportou zero vulnerabilidades no npm audit.
 - 7 cenários adicionais de fidelidade passaram: foto otimizada e removível, bandeiras, ícones/cores, paleta, timeline horizontal, exportação/importação e retirada dos módulos.
 - 18 cenários de navegador passaram em Chrome, usando uma base isolada e dados sintéticos.
 - Verificação de tipos e build de produção concluídos.

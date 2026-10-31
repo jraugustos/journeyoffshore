@@ -71,6 +71,8 @@ Os próximos commits no branch de produção podem gerar novas publicações pel
 
 Na integração Prisma Postgres, mantenha `DATABASE_URL` como conexão direta e `DATABASE_URL_POOLED` como conexão com pool. A aplicação dá preferência à conexão com pool, enquanto as migrações usam `DIRECT_DATABASE_URL`, quando definida, ou `DATABASE_URL`. Não é necessário substituir as variáveis administradas pela integração.
 
+O pool da aplicação usa até duas conexões por instância, encerra conexões ociosas após cinco segundos e limita a espera inicial de conexão a dez segundos. Na Vercel, `attachDatabasePool` libera conexões ociosas antes da suspensão das funções, conforme a [orientação do provedor](https://vercel.com/kb/guide/connection-pooling-with-functions).
+
 ## PostgreSQL para desenvolvimento local
 
 O projeto oferece um auxiliar de desenvolvimento com o pacote `embedded-postgres`, que inicia um processo PostgreSQL nativo. Ele permite testar localmente sem instalar um serviço global e sem Docker. Os dados persistem fora da pasta de código.
