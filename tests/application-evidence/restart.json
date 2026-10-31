@@ -1,0 +1,5 @@
+{
+  "result": "passed",
+  "scenario": "Gravação de macroprocesso preservada após encerramento e reinício de Node.js e PostgreSQL",
+  "restoredInitialData": true
+}

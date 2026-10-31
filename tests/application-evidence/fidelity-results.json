@@ -1,0 +1,33 @@
+{
+  "results": [
+    {
+      "name": "Módulos removidos da navegação",
+      "result": "passed"
+    },
+    {
+      "name": "Foto com corte e otimização, salvamento automático e recarga",
+      "result": "passed"
+    },
+    {
+      "name": "País e bandeira da operação persistem e aparecem no blueprint",
+      "result": "passed"
+    },
+    {
+      "name": "Ícones e cores configuráveis em sistemas e capacidades",
+      "result": "passed"
+    },
+    {
+      "name": "Timeline horizontal, paleta original e expansão do catálogo",
+      "result": "passed"
+    },
+    {
+      "name": "Exportações e importação mantêm fotos, país, ícones e históricos",
+      "result": "passed"
+    },
+    {
+      "name": "Interface sem erros de execução",
+      "result": "passed"
+    }
+  ],
+  "errors": []
+}

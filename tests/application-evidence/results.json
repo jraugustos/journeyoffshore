@@ -1,0 +1,77 @@
+{
+  "results": [
+    {
+      "name": "Páginas e dados são bloqueados sem senha",
+      "result": "passed"
+    },
+    {
+      "name": "Senha compartilhada libera sessão protegida e senha incorreta mantém o bloqueio",
+      "result": "passed"
+    },
+    {
+      "name": "Inspeção visual desktop e celular",
+      "result": "passed"
+    },
+    {
+      "name": "Cards pretos permitem renomear macroprocesso com salvamento automático",
+      "result": "passed"
+    },
+    {
+      "name": "Criação e reordenação de macroprocesso persistem sem editar código",
+      "result": "passed"
+    },
+    {
+      "name": "Nova frente permanece vinculada ao novo macroprocesso",
+      "result": "passed"
+    },
+    {
+      "name": "Cadastros são persistidos automaticamente",
+      "result": "passed"
+    },
+    {
+      "name": "Etapa salva objetivo, sistema e fornecedor de dados automaticamente",
+      "result": "passed"
+    },
+    {
+      "name": "Edição de oferta e caso de uso permanece após recarga",
+      "result": "passed"
+    },
+    {
+      "name": "Falha de conexão mantém alteração pendente e reenvia ao reconectar",
+      "result": "passed"
+    },
+    {
+      "name": "Responsabilidades por capacidade e contexto são editáveis",
+      "result": "passed"
+    },
+    {
+      "name": "Decisão final exige responsável e justificativa e gera histórico no servidor",
+      "result": "passed"
+    },
+    {
+      "name": "Mesma senha funciona em outro navegador e conflitos não sobrescrevem dados",
+      "result": "passed"
+    },
+    {
+      "name": "Origem indevida e importação inválida são rejeitadas sem alterar o banco",
+      "result": "passed"
+    },
+    {
+      "name": "Exportações JSON, CSV e HTML contêm o trabalho persistido",
+      "result": "passed"
+    },
+    {
+      "name": "Restauração JSON é atômica e recusa uma revisão antiga",
+      "result": "passed"
+    },
+    {
+      "name": "Encerrar acesso revoga a sessão e volta a bloquear os dados",
+      "result": "passed"
+    },
+    {
+      "name": "Nenhum erro de execução na interface",
+      "result": "passed"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client"
+  output = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Workspace {
+  id String @id
+  session Json
+  metadata Json
+  revision Int @default(0)
+  updatedAt DateTime @updatedAt
+  macros MacroProcess[]
+  fronts WorkFront[]
+}
+
+model MacroProcess {
+  id String @id
+  workspaceId String
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  name String
+  short String
+  status String
+  position Int
+  ownerIds String[]
+  metadata Json
+  fronts WorkFront[]
+  @@index([workspaceId, position])
+}
+
+model WorkFront {
+  id String @id
+  workspaceId String
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  macroId String
+  macro MacroProcess @relation(fields: [macroId], references: [id], onDelete: Restrict)
+  name String
+  position Int
+  payload Json
+  @@index([workspaceId, position])
+  @@index([macroId])
+}
+
+model AccessSession {
+  tokenHash String @id
+  configVersion String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([expiresAt])
+}
+
+model LoginAttempt {
+  key String @id
+  failures Int @default(0)
+  windowStart DateTime
+  blockedUntil DateTime?
+}

@@ -1,0 +1,779 @@
+{
+  "items": [
+    {
+      "id": "wealth-suite",
+      "name": "Current Wealth Suite",
+      "phase": "Day-1",
+      "kind": "existing",
+      "prep": "work",
+      "board": "wealth",
+      "featureIds": [
+        "F040",
+        "F041",
+        "F042",
+        "F043",
+        "F044",
+        "F080",
+        "F081",
+        "F082"
+      ],
+      "products": [
+        {
+          "name": "Demand Deposit Accounts (DDA)",
+          "category": "Banking Products",
+          "group": "Accounts & Deposits",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Money Market Account",
+          "category": "Banking Products",
+          "group": "Accounts & Deposits",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Fiduciary Time Deposits",
+          "category": "Banking Products",
+          "group": "Accounts & Deposits",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Wire Transfers",
+          "category": "Banking Products",
+          "group": "Payments & Transfers",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Account to Account Transfers",
+          "category": "Banking Products",
+          "group": "Payments & Transfers",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Check Issuance",
+          "category": "Banking Products",
+          "group": "Payments & Transfers",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "ACH / International ACH Transactions (IAT)",
+          "category": "Banking Products",
+          "group": "Payments & Transfers",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Corestone",
+          "category": "Banking Products",
+          "group": "Brokerage-Linked Banking",
+          "platform": "IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Securities-Based Lending (SBL)",
+          "category": "Credit Products",
+          "group": "Secured Lending",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Overdraft",
+          "category": "Credit Products",
+          "group": "Unsecured Lending",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Term Loans",
+          "category": "Credit Products",
+          "group": "Unsecured Lending",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Clean Lending",
+          "category": "Credit Products",
+          "group": "Unsecured Lending",
+          "platform": "",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "4131 Loans",
+          "category": "Credit Products",
+          "group": "Specialized Lending",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Standby Letter of Credit (SBLC)",
+          "category": "Credit Products",
+          "group": "Specialized Lending",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Cross-Border Lending",
+          "category": "Credit Products",
+          "group": "Specialized Lending",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Reverse Cross-Border Lending",
+          "category": "Credit Products",
+          "group": "Specialized Lending",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "BRL Synthetic Loans",
+          "category": "Credit Products",
+          "group": "Specialized Lending",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Cornercard",
+          "category": "Card Products",
+          "group": "Credit Cards",
+          "platform": "BII",
+          "outsourced": "Outsourced",
+          "current": true
+        },
+        {
+          "name": "Karta",
+          "category": "Card Products",
+          "group": "Credit Cards",
+          "platform": "BII",
+          "outsourced": "Outsourced",
+          "current": true
+        },
+        {
+          "name": "Itaú Global Wallet",
+          "category": "Card Products",
+          "group": "Debit Cards",
+          "platform": "BII",
+          "outsourced": "Outsourced",
+          "current": true
+        },
+        {
+          "name": "Corporate Bonds",
+          "category": "Investment Products",
+          "group": "Fixed Income",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Sovereign Bonds",
+          "category": "Investment Products",
+          "group": "Fixed Income",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Certificates of Deposit (CDs)",
+          "category": "Investment Products",
+          "group": "Fixed Income",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Time Deposits (TDs)",
+          "category": "Investment Products",
+          "group": "Fixed Income",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "U.S. Equities",
+          "category": "Investment Products",
+          "group": "Equities & ETFs",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "International Equities",
+          "category": "Investment Products",
+          "group": "Equities & ETFs",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Exchange-Traded Funds (ETFs)",
+          "category": "Investment Products",
+          "group": "Equities & ETFs",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "UCITS ETFs",
+          "category": "Investment Products",
+          "group": "Equities & ETFs",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Mutual Funds",
+          "category": "Investment Products",
+          "group": "Funds",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "1940 Act Mutual Funds",
+          "category": "Investment Products",
+          "group": "Funds",
+          "platform": "IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "UCITS Mutual Funds",
+          "category": "Investment Products",
+          "group": "Funds",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Hedge Funds",
+          "category": "Investment Products",
+          "group": "Alternatives",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Private Markets – Private Credit",
+          "category": "Investment Products",
+          "group": "Alternatives",
+          "platform": "",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Private Markets – Private Equity",
+          "category": "Investment Products",
+          "group": "Alternatives",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Private Markets – Real Estate",
+          "category": "Investment Products",
+          "group": "Alternatives",
+          "platform": "",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Structured Notes – Itaú-Issued",
+          "category": "Investment Products",
+          "group": "Structured Products",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Structured Notes – Third-Party",
+          "category": "Investment Products",
+          "group": "Structured Products",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Actively Managed Certificates (AMCs / AMS)",
+          "category": "Investment Products",
+          "group": "Structured Products",
+          "platform": "IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Exchange-Traded Options",
+          "category": "Investment Products",
+          "group": "Derivatives & FX",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Spot FX",
+          "category": "Investment Products",
+          "group": "Derivatives & FX",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "FX Forwards",
+          "category": "Investment Products",
+          "group": "Derivatives & FX",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Non-Deliverable Forwards (NDFs)",
+          "category": "Investment Products",
+          "group": "Derivatives & FX",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "FX Swaps",
+          "category": "Investment Products",
+          "group": "Derivatives & FX",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "OTC FX Options",
+          "category": "Investment Products",
+          "group": "Derivatives & FX",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "OTC Equity Options",
+          "category": "Investment Products",
+          "group": "Derivatives & FX",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Interest Rate Swaps (IRS)",
+          "category": "Investment Products",
+          "group": "Derivatives & FX",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Cross-Currency Swaps",
+          "category": "Investment Products",
+          "group": "Derivatives & FX",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Trusts",
+          "category": "Fiduciary Products",
+          "group": "Trusts",
+          "platform": "BII",
+          "outsourced": "Outsourced",
+          "current": true
+        },
+        {
+          "name": "Personal Investment Companies (PICs)",
+          "category": "Fiduciary Products",
+          "group": "Investment Vehicles",
+          "platform": "BII",
+          "outsourced": "Outsourced",
+          "current": true
+        },
+        {
+          "name": "Private Label Funds",
+          "category": "Fiduciary Products",
+          "group": "Investment Vehicles",
+          "platform": "BII",
+          "outsourced": "Outsourced",
+          "current": true
+        },
+        {
+          "name": "4373 Accounts",
+          "category": "Fiduciary Products",
+          "group": "Specialized Accounts",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Separately Managed Accounts (SMAs)",
+          "category": "Other Products and Services",
+          "group": "Portfolio Management",
+          "platform": "IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Discretionary Portfolio Mandates (DPM)",
+          "category": "Other Products and Services",
+          "group": "Portfolio Management",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Feeder Funds",
+          "category": "Other Products and Services",
+          "group": "Portfolio Management",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Advisory (Investors – Quant, Growth, Core, IID)",
+          "category": "Other Products and Services",
+          "group": "Advisory & Planning",
+          "platform": "",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Tax Reports",
+          "category": "Other Products and Services",
+          "group": "Reporting & Statements",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Consolidated Reporting (i.e., Addepar)",
+          "category": "Other Products and Services",
+          "group": "Reporting & Statements",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Custom Reports",
+          "category": "Other Products and Services",
+          "group": "Reporting & Statements",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Statements",
+          "category": "Other Products and Services",
+          "group": "Reporting & Statements",
+          "platform": "BII/IIS",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "Digital Investment Portal (Self-Service)",
+          "category": "Other Products and Services",
+          "group": "Digital Channels",
+          "platform": "BII",
+          "outsourced": "",
+          "current": true
+        },
+        {
+          "name": "DAC",
+          "category": "Other Products and Services",
+          "group": "Digital Channels",
+          "platform": "",
+          "outsourced": "",
+          "current": true
+        }
+      ],
+      "note": "O catálogo do arquivo lista 61 produtos de cliente na oferta atual. O esforço para transferir a carteira ao novo arranjo ainda está em avaliação.",
+      "sourceNote": "ⓘ Extent of effort to transfer current suite (61 products) under assessment"
+    },
+    {
+      "id": "checking",
+      "name": "Checking Account",
+      "phase": "Day-1",
+      "kind": "product",
+      "prep": "work",
+      "board": "accounts",
+      "featureIds": [
+        "F001",
+        "F002",
+        "F003",
+        "F004",
+        "F005",
+        "F007",
+        "F009",
+        "F010",
+        "F011",
+        "F012",
+        "F015",
+        "F016",
+        "F055",
+        "F056",
+        "F057",
+        "F058",
+        "F059",
+        "F060",
+        "F061",
+        "F062"
+      ],
+      "products": [
+        {
+          "name": "Checking Account",
+          "category": "Banking Products",
+          "group": "Accounts & Deposits",
+          "platform": "Day-1",
+          "outsourced": "",
+          "current": false
+        }
+      ],
+      "note": "Abertura e funcionamento da conta devem ser detalhados no board. Disponibilidade de telas/canais ainda depende de validação.",
+      "sourceNote": ""
+    },
+    {
+      "id": "savings",
+      "name": "Savings Account",
+      "phase": "Day-1",
+      "kind": "product",
+      "prep": "work",
+      "board": "accounts",
+      "featureIds": [
+        "F003",
+        "F009",
+        "F010",
+        "F013",
+        "F060",
+        "F061"
+      ],
+      "products": [
+        {
+          "name": "Savings Account",
+          "category": "Banking Products",
+          "group": "Accounts & Deposits",
+          "platform": "Day-1",
+          "outsourced": "",
+          "current": false
+        }
+      ],
+      "note": "Taxas, remuneração, elegibilidade e condições comerciais da Savings precisam ser definidas.",
+      "sourceNote": ""
+    },
+    {
+      "id": "p2p",
+      "name": "Peer-to-Peer Payments",
+      "phase": "Release A",
+      "kind": "product",
+      "prep": "work",
+      "board": "payments",
+      "featureIds": [
+        "F024",
+        "F070"
+      ],
+      "products": [
+        {
+          "name": "Peer-to-Peer Payments",
+          "category": "Banking Products",
+          "group": "Payments & Transfers",
+          "platform": "Release A",
+          "outsourced": "",
+          "current": false
+        }
+      ],
+      "note": "O marco de P2P não confirma Zelle, RTP ou FedNow; a cobertura RFI para esses serviços é parcial.",
+      "sourceNote": ""
+    },
+    {
+      "id": "debit",
+      "name": "Proprietary Debit Card",
+      "phase": "Release A",
+      "kind": "product",
+      "prep": "work",
+      "board": "",
+      "featureIds": [
+        "F027",
+        "F028",
+        "F029",
+        "F030",
+        "F071",
+        "F072",
+        "F073"
+      ],
+      "products": [
+        {
+          "name": "Proprietary Debit Card",
+          "category": "Card Products",
+          "group": "Debit Cards",
+          "platform": "Release A",
+          "outsourced": "",
+          "current": false
+        }
+      ],
+      "note": "O cartão de débito proprietário é diferente da Global Wallet terceirizada. O board de Cartões atual prioriza crédito.",
+      "sourceNote": ""
+    },
+    {
+      "id": "credit-card",
+      "name": "Proprietary Credit Card",
+      "phase": "Release B",
+      "kind": "product",
+      "prep": "tbd",
+      "board": "cards",
+      "featureIds": [
+        "F031",
+        "F032",
+        "F033",
+        "F034",
+        "F035",
+        "F074",
+        "F075"
+      ],
+      "products": [
+        {
+          "name": "Proprietary Credit Card",
+          "category": "Card Products",
+          "group": "Credit Cards",
+          "platform": "Release B",
+          "outsourced": "",
+          "current": false
+        }
+      ],
+      "note": "Oferta proprietária distinta de Karta e Cornercard. A experiência e as integrações de cartão não estão confirmadas por esta timeline.",
+      "sourceNote": ""
+    },
+    {
+      "id": "mortgages",
+      "name": "Mortgages",
+      "phase": "Release C",
+      "kind": "product",
+      "prep": "work",
+      "board": "",
+      "featureIds": [
+        "F039",
+        "F079"
+      ],
+      "products": [
+        {
+          "name": "Mortgages",
+          "category": "Credit Products",
+          "group": "Secured Lending",
+          "platform": "Release C",
+          "outsourced": "",
+          "current": false
+        }
+      ],
+      "note": "Fora do ciclo atual. A RFI indica lacunas em TRID/HMDA, a serem resolvidas por soluções externas.",
+      "sourceNote": ""
+    },
+    {
+      "id": "loans",
+      "name": "Other Loan Types",
+      "phase": "Release C",
+      "kind": "product",
+      "prep": "tbd",
+      "board": "",
+      "featureIds": [
+        "F038",
+        "F078"
+      ],
+      "products": [
+        {
+          "name": "Other Loan Types",
+          "category": "Credit Products",
+          "group": "Unsecured Lending",
+          "platform": "Release C",
+          "outsourced": "",
+          "current": false
+        }
+      ],
+      "note": "Fora do ciclo atual. A originação demanda sistema externo de crédito (LOS) e regras de underwriting.",
+      "sourceNote": ""
+    },
+    {
+      "id": "trusts",
+      "name": "U.S. Trusts",
+      "phase": "Release C",
+      "kind": "product",
+      "prep": "tbd",
+      "board": "",
+      "featureIds": [
+        "F085"
+      ],
+      "products": [
+        {
+          "name": "U.S. Trusts",
+          "category": "Fiduciary Products",
+          "group": "Trusts",
+          "platform": "Release C",
+          "outsourced": "",
+          "current": false
+        }
+      ],
+      "note": "Produto novo listado no cronograma; a cobertura fiduciária na RFI exige integração/parceiros e validação.",
+      "sourceNote": ""
+    },
+    {
+      "id": "planning",
+      "name": "Wealth Planning",
+      "phase": "Release C",
+      "kind": "product",
+      "prep": "tbd",
+      "board": "wealth",
+      "featureIds": [
+        "F047",
+        "F085"
+      ],
+      "products": [
+        {
+          "name": "Wealth Planning",
+          "category": "Other Products and Services",
+          "group": "Advisory & Planning",
+          "platform": "Release C",
+          "outsourced": "",
+          "current": false
+        }
+      ],
+      "note": "Novo serviço na Release C; a RFI não indica uma solução nativa de planejamento patrimonial no core.",
+      "sourceNote": ""
+    },
+    {
+      "id": "avenue",
+      "name": "Avenue Accounts Integration",
+      "phase": "Release D",
+      "kind": "integration",
+      "prep": "tbd",
+      "board": "wealth",
+      "featureIds": [
+        "F045",
+        "F084"
+      ],
+      "products": [],
+      "note": "O documento prevê integração de contas Avenue, mas não especifica o conjunto final de dados, ordens e experiências integradas.",
+      "sourceNote": ""
+    }
+  ],
+  "catalogCount": 77,
+  "clientCurrentCount": 61,
+  "source": "DeNovo_Products_and_Launch_Timeline_v24(1).html"
+}

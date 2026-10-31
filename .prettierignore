@@ -1,0 +1,12 @@
+node_modules/
+.next/
+src/generated/
+src/workshop.css
+src/workshop-core.js
+src/workshop-blueprint.js
+src/startup.js
+src/validation.js
+src/data/
+index.html
+offshore_workshop_interativo_v17.html
+dist/

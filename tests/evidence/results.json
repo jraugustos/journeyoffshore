@@ -1,0 +1,66 @@
+{
+  "results": [
+    {
+      "name": "Original recebido permanece inalterado",
+      "result": "passed"
+    },
+    {
+      "name": "Abertura local mantém a base e identifica a versão 18",
+      "result": "passed"
+    },
+    {
+      "name": "Desktop, celular e acesso ao conteúdo por teclado",
+      "result": "passed"
+    },
+    {
+      "name": "Navegação pelas áreas e frentes não gera erro de execução",
+      "result": "passed"
+    },
+    {
+      "name": "Casos criados nos editores continuam ativos após recarregar",
+      "result": "passed"
+    },
+    {
+      "name": "Oferta de Onboarding permanece ativa na recarga",
+      "result": "passed"
+    },
+    {
+      "name": "Editor salva objetivo e dados com fornecedor, sem alterar o caso padrão",
+      "result": "passed"
+    },
+    {
+      "name": "Normalização atual é idempotente e preserva cópias independentes",
+      "result": "passed"
+    },
+    {
+      "name": "JSON inválido, IDs duplicados e cancelamento preservam a sessão",
+      "result": "passed"
+    },
+    {
+      "name": "Migrações dos schemas 1 a 3 preservam o original completo",
+      "result": "passed"
+    },
+    {
+      "name": "Cobertura explica e calcula oito verificações por etapa",
+      "result": "passed"
+    },
+    {
+      "name": "Exportação JSON e importação mantêm todos os dados da sessão",
+      "result": "passed"
+    },
+    {
+      "name": "HTML preenchido reabre offline com caracteres especiais e sessão independente",
+      "result": "passed"
+    },
+    {
+      "name": "Falha de armazenamento mantém edição e exportação disponíveis",
+      "result": "passed"
+    },
+    {
+      "name": "Aplicação funciona sem solicitações externas ou erros de execução",
+      "result": "passed"
+    }
+  ],
+  "errors": [],
+  "requests": []
+}

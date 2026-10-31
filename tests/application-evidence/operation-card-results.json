@@ -1,0 +1,13 @@
+{
+  "result": "passed",
+  "checks": [
+    "Card único com cor e ícone do cadastro",
+    "Bandeira e país",
+    "Papel vazio e preenchido com múltiplas linhas",
+    "Dois cards e nome longo sem corte",
+    "Desktop e celular com rolagem do blueprint",
+    "Clique preserva edição da etapa",
+    "Sem erros de execução"
+  ],
+  "errors": []
+}

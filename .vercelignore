@@ -1,0 +1,17 @@
+.git
+.vercel
+.env*
+!.env.example
+node_modules
+.next
+dist
+coverage
+tests
+offshore_workshop_interativo_v17.html
+index.html
+src/workshop-core.js
+src/workshop-blueprint.js
+src/shell.html
+src/startup.js
+src/validation.js
+scripts/build.py
