@@ -25,7 +25,7 @@ Se já houver um PostgreSQL instalado, forneça sua `DATABASE_URL` ao setup e us
 
 - Informe a senha compartilhada para liberar o workspace. Não há cadastro de usuário.
 - Clique no nome de um card preto para editar o macroprocesso, ou use “+ Macroprocesso” para criar outro.
-- No editor do macroprocesso, altere nome, posição, status e responsáveis; os vínculos com frentes permanecem.
+- No editor do macroprocesso, altere nome, posição e status. Defina responsáveis no contexto/produto e, quando necessário, por capacidade dentro desse contexto.
 - Adicione frentes pelo blueprint ou em “Cadastros e responsáveis → Macroprocessos e frentes”.
 - Abra uma frente para trabalhar seus casos, etapas, oferta, AS-IS, CSD, decisões e ações.
 - Os campos são salvos automaticamente: textos após 700 ms sem digitação, e seleções e reordenações assim que concluídas.
@@ -83,3 +83,11 @@ Os testes de navegador criam dados sintéticos e restauram a base inicial da ins
 O [HTML v17 recebido](offshore_workshop_interativo_v17.html), a distribuição experimental `index.html` e suas fontes JavaScript permanecem preservados como histórico. A aplicação atual é acessada pelo servidor Node.js. Abrir `src/shell.html` ou `index.html` diretamente não abre a aplicação com banco e senha.
 
 Os arquivos antigos não são servidos publicamente pelo Next.js. A base inicial usa os dados de referência e preserva os arquivos de migração encontrados no HTML.
+
+### Ajustes nas frentes
+
+- Oferta: Problema → Oferta → Recorte → Fora do recorte → Resultado esperado.
+- AS-IS: lista numerada, com edição e reordenação. CSD: colunas, dúvidas e decisões. Plano de ação: entregas com conclusão, responsáveis, prazo e critérios.
+- Nos seletores, os itens selecionados ficam ativos e podem ser removidos individualmente. Busque um nome novo para cadastrá-lo e vinculá-lo sem sair do editor.
+- Cada contexto/produto possui seus responsáveis. Capacidades podem ter responsáveis de referência e uma atribuição específica por contexto, que prevalece sobre a referência. A atribuição pode ser feita na etapa ou no botão “Responsáveis por capacidade” da frente.
+- Macroprocessos, contextos e etapas podem ser excluídos pelo editor, com confirmação do impacto. A exclusão de um macroprocesso remove seus contextos; a de um contexto remove seus casos e etapas. Funcionalidades permanecem no catálogo. O conteúdo removido é mantido em `deletedItems` na exportação JSON; não há restauração individual pela interface.

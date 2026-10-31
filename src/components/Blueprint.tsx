@@ -90,7 +90,24 @@ function Lane({ lane, step, state }: { lane: string; step: RecordData; state: Wo
   if (lane === 'capabilities')
     return step.capabilityIds?.length || step.capabilityNotes ? (
       <>
-        <RecordTags state={state} kind="capabilities" ids={step.capabilityIds} />
+        {(step.capabilityIds || []).map((id: string) => {
+          const capability = state.capabilities.find((c: RecordData) => c.id === id);
+          const front = state.boards.find((b) =>
+            b.cases.some((c: RecordData) => c.steps.some((s: RecordData) => s.uid === step.uid)),
+          );
+          const assignment = state.responsibilities?.find(
+            (r: RecordData) => r.capabilityId === id && r.context === 'board:' + front?.id,
+          );
+          return (
+            <span className="oj-capability-responsibility" key={id}>
+              <RecordTags state={state} kind="capabilities" ids={[id]} />
+              <People
+                people={state.people}
+                ids={assignment ? assignment.personIds : capability?.ownerIds}
+              />
+            </span>
+          );
+        })}
         {step.capabilityNotes && <span>{step.capabilityNotes}</span>}
       </>
     ) : (
@@ -238,7 +255,6 @@ export default function Blueprint({
           <Pencil size={15} />
         </button>
         <div className="oj-macro-meta">
-          <small>{<People people={state.people} ids={group.macro.ownerIds} />}</small>
           <Status value={group.macro.status} />
         </div>
       </div>,
@@ -270,6 +286,13 @@ export default function Blueprint({
           <button onClick={() => openFront(front.board.id)} className="bp-product-title">
             {front.board.name}
             <ArrowUpRight size={16} />
+          </button>
+          <button
+            className="btn tiny oj-context-owners"
+            onClick={() => edit({ type: 'front', boardId: front.board.id })}
+          >
+            <People people={state.people} ids={front.board.ownerIds} />
+            <Pencil size={12} />
           </button>
           <select
             aria-label={'Caso de uso de ' + front.board.name}

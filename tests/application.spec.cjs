@@ -193,6 +193,10 @@ const check = async (name, action) => {
       const dialog = page.getByRole('dialog');
       await dialog.getByLabel('Etapa do processo').fill('Resolver solicitação');
       await dialog.getByLabel('Objetivo do processo').selectOption('Gerenciar');
+      await dialog
+        .getByRole('group', { name: 'Sistemas', exact: true })
+        .getByRole('button', { name: 'Adicionar / alterar seleção', exact: true })
+        .click();
       await dialog.getByRole('checkbox', { name: 'Sistema de atendimento', exact: true }).check();
       await dialog.getByRole('button', { name: 'Adicionar dado', exact: true }).click();
       await dialog.getByLabel('Nome do dado', { exact: true }).fill('Protocolo de atendimento');
@@ -267,6 +271,11 @@ const check = async (name, action) => {
         .getByRole('dialog')
         .getByLabel('Papel ou responsabilidade')
         .fill('Validar as definições do processo');
+      await page
+        .getByRole('dialog')
+        .getByRole('group', { name: 'Responsáveis', exact: true })
+        .getByRole('button', { name: 'Adicionar / alterar seleção', exact: true })
+        .click();
       await page.getByRole('dialog').getByRole('checkbox').first().check();
       await saved();
       await close();

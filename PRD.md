@@ -132,7 +132,7 @@ Na matriz, 79 itens têm natureza “RFI + proposta de UX” e 6 são “Hipóte
 | --- | --- | --- |
 | Acesso por senha | Liberar o uso do workspace | Entrada de senha, validação, erro de acesso e encerramento da sessão autenticada |
 | Visão geral | Entender a jornada completa | Blueprint agregado, filtros, seleção de casos por frente e atalhos |
-| Macroetapas | Organizar os agrupamentos representados pelos cards pretos | Adicionar e editar nome, posição, status, responsáveis e vínculo com frentes |
+| Macroetapas | Organizar os agrupamentos representados pelos cards pretos | Adicionar, editar nome, posição e status, vincular frentes e excluir com confirmação do impacto |
 | Frente | Trabalhar um recorte específico | Blueprint, oferta e recorte, AS-IS, CSD e decisões, plano de ação |
 | Acompanhamento | Ler avanço e responsabilidade | Cobertura, validações, casos específicos, dúvidas e ações |
 | Launch Timeline | Consultar a sequência de disponibilização | Day-1, Releases A a D, produtos, funcionalidades e dependências |
@@ -156,7 +156,7 @@ A base persistente da nova aplicação será o banco de dados. A importação de
 ### Criar e editar macroetapas
 
 1. Após o acesso por senha, acionar a criação de uma macroetapa.
-2. Definir seu nome e os atributos de organização adotados no modelo, incluindo ordem, status e responsáveis.
+2. Definir seu nome e os atributos de organização adotados no modelo, incluindo ordem e status. Responsáveis são definidos por contexto/produto e capacidade.
 3. Adicionar frentes ou associar frentes existentes ao agrupamento.
 4. Editar o card preto para atualizar a macroetapa, preservando seu identificador e os conteúdos associados.
 5. Refletir a alteração no blueprint, na navegação e no acompanhamento a partir dos mesmos registros do banco.
@@ -208,7 +208,7 @@ P0 indica preservação dos dados e fluxos indispensáveis. P1 indica capacidade
 | RF04 | P0 | Exportar JSON completo mediante acesso autenticado. Todos os registros da sessão, históricos, classificações e arquivos internos são incluídos. |
 | RF05 | P1 | Oferecer exportações e relatórios compatíveis com o controle de acesso. JSON completo, CSV e HTML de consulta são os formatos adotados; dados do workspace não podem ser obtidos por rotas públicas de exportação. |
 | RF06 | P1 | Manter dados da sessão com título, data, facilitador, participantes e objetivo. Campos vazios continuam vazios, sem preenchimento presumido. |
-| RF07 | P1 | Manter macroetapas e frentes com nome, status e responsáveis editáveis. Alterar prioridade ou desativar não exclui dados. A criação de macroetapas é detalhada em RF37. |
+| RF07 | P1 | Manter macroetapas e frentes com nome e status editáveis; responsáveis pertencem às frentes (contextos/produtos). Alterar prioridade ou desativar não exclui dados. A criação de macroetapas é detalhada em RF37. |
 | RF08 | P0 | Manter um caso padrão por frente. A visão geral e a tela da frente usam o mesmo objeto como origem das etapas. |
 | RF09 | P1 | Criar e editar casos específicos com perfis, necessidade, gatilho, resultado e exceção. Eles continuam disponíveis após recarga e exportação. |
 | RF10 | P1 | Copiar etapas com novos IDs, preservando referência à origem. Editar a cópia não altera o caso original. |
@@ -549,3 +549,13 @@ O anexo a seguir inventaria as funcionalidades do material recebido. Nome, ID e 
 | F084 | Integrar posição, contas e clientes Avenue | Operação / Comercial | Release D |
 | F085 | Atender demandas de Wealth Planning / Trust | Operação / Comercial | Release C |
 
+
+## Ajustes de fidelidade e gestão — 31/10/2026
+
+1. Oferta deve apresentar, tanto na leitura quanto na edição: Problema (o que queremos resolver), Oferta, Recorte, Fora do recorte e Resultado esperado.
+2. AS-IS deve ser uma lista numerada de etapas, editável e reordenável, com onde acontece, quem faz, referência e fonte.
+3. CSD mantém as colunas Certezas/Suposições/Dúvidas, quadro de decisões, tabela de dúvidas, filtros e histórico. O plano de ação mantém cards de entregas com responsável, prazo, prioridade, horizonte, critério de conclusão e controle de conclusão.
+4. Seletores exibem as escolhas como itens ativos removíveis, com busca e cadastro rápido sem abandonar o editor. O cadastro e o vínculo são persistidos juntos.
+5. Responsáveis pelo contexto/produto coordenam o recorte. Responsáveis por capacidade respondem pela especialidade naquele contexto. Responsáveis de referência de uma capacidade são o padrão quando não há atribuição específica; uma atribuição específica, inclusive vazia, prevalece. A mesma capacidade pode ter responsáveis diferentes por contexto.
+6. Exclusão de macroprocesso remove os contextos associados; exclusão de contexto remove seus dados aninhados; exclusão de etapa afeta somente o caso selecionado. Exigir confirmação e informar a abrangência. Preservar o conteúdo removido e os vínculos em `deletedItems` no JSON, limpar referências operacionais e manter as funcionalidades no catálogo. Permitir excluir o último item e reconstruir o projeto vazio.
+7. Cards de funcionalidades devem ter bordas discretas, mantendo cores e marcadores de horizonte.

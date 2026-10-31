@@ -80,3 +80,10 @@ A validação usou Chrome no macOS e um PostgreSQL local iniciado pelo auxiliar 
 O detector de interface aplicado aos novos componentes não apontou ocorrências. Os estilos históricos do HTML foram preservados para manter a identidade aprovada; a revisão não equivale a uma certificação completa de acessibilidade.
 
 Casos, etapas e outros registros aninhados usam JSONB nesta entrega. O controle de conflito dessas listas é mais amplo que uma célula individual, conforme [ARQUITETURA.md](docs/ARQUITETURA.md). HTML exportado é uma cópia de consulta; os dados completos podem ser restaurados por JSON.
+
+## Revisão das frentes — 31/10/2026
+
+- TypeScript e build otimizado do Next.js passaram. 19 testes de regras passaram, incluindo exclusão em cascata, preservação de conteúdo, limpeza de vínculos e workspace vazio.
+- Uma chamada real à API criou e excluiu macroprocesso/contexto exclusivamente no PostgreSQL isolado da porta 3001; o conteúdo inicial dessa base foi restaurado ao final.
+- Conferência no navegador: sequência da Oferta na leitura e no editor; lista AS-IS; três colunas CSD com borda e espaçamento; criação de ator diretamente na etapa; seleção ativa e persistente de pessoa no contexto; botão de exclusão no editor. Editor conferido em desktop e 390 × 844.
+- Testes desta revisão não executaram a suíte E2E antiga contra bases reais. Dados de produção e da prévia local não foram usados para testes de criação/exclusão.

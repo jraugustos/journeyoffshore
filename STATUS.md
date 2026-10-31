@@ -1,6 +1,6 @@
 # Estado do Offshore Journey
 
-Atualizado em 30 de outubro de 2026. Implementação autorizada pelo usuário após a definição da stack e a decisão de seguir sem Docker.
+Atualizado em 31 de outubro de 2026. Implementação autorizada pelo usuário após a definição da stack e a decisão de seguir sem Docker.
 
 ## Primeira versão funcional
 
@@ -10,7 +10,7 @@ A aplicação foi reconstruída em componentes React sobre Next.js e TypeScript.
 | --- | --- |
 | Execução sem Docker | Node.js diretamente, com PostgreSQL do ambiente ou auxiliar nativo para desenvolvimento |
 | Senha compartilhada | Tela com somente senha; proteção de páginas, APIs, importação e exportações |
-| Macroprocessos dos cards pretos | Criação, edição de nome, status e responsáveis, reordenação e inclusão de frentes |
+| Macroprocessos dos cards pretos | Criação, edição de nome e status, reordenação, inclusão de frentes e exclusão com confirmação |
 | Salvamento automático | Campos e operações persistidos sem botão Salvar; estado de gravação e novas tentativas |
 | Exportação | JSON completo, CSV e HTML independente para consulta |
 | Continuidade | Importação atômica e preservação de migrações e registros históricos no JSON |
@@ -55,3 +55,11 @@ Consultar [VALIDACAO.md](VALIDACAO.md) para os testes executados, evidências e 
 ## Próximos passos de implantação
 
 A publicação inicial na Vercel está concluída. O uso da equipe deve ocorrer pela URL de produção; a cópia local permanece independente. Para outros provedores, o time tech pode seguir [IMPLANTACAO.md](docs/IMPLANTACAO.md).
+
+## Revisão das abas e responsabilidades
+
+As abas das frentes recuperam a organização do HTML: oferta na sequência solicitada, AS-IS em etapas ordenáveis, CSD em colunas com tabela de dúvidas e decisões e plano de ação com metadados e conclusão. Cards de funcionalidades possuem borda discreta. Seletores mostram chips ativos e permitem cadastro rápido com vínculo imediato.
+
+Responsáveis pertencem ao contexto/produto. Uma capacidade pode ter responsáveis de referência e atribuições específicas em cada contexto. Atribuições antigas em macroprocessos permanecem nos dados, sem herança automática para novos contextos.
+
+A exclusão de macroprocessos, contextos e etapas informa o impacto e preserva o conteúdo removido no JSON. A limpeza de vínculos evita referências órfãs; o catálogo de funcionalidades permanece disponível.

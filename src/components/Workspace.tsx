@@ -23,6 +23,8 @@ import {
 import { useWorkspace } from './useWorkspace';
 import Editor, { type EditorTarget } from './Editor';
 import Blueprint, { Phase, Status, RecordTags } from './Blueprint';
+import FrontBlocks from './FrontBlocks';
+import { removeHierarchy } from '@/lib/hierarchy';
 import AccessForm from './AccessForm';
 import LaunchTimeline from './LaunchTimeline';
 import { Avatar, People, Country, RecordTag, PhaseLegend } from './Visuals';
@@ -106,7 +108,10 @@ export default function Workspace() {
     );
   const data = api.data,
     { matrix, launch } = api.references;
-  const board = data.boards.find((item) => item.id === frontId) || data.boards[0];
+  const board =
+    data.boards.find((item) => item.id === frontId) ||
+    data.boards[0] ||
+    newFront(data.macros[0]?.id || '');
   const selectedCase =
     board.cases.find((item: RecordData) => item.uid === cases[board.id]) || defaultCase(board);
   const mutate = api.change;
@@ -126,12 +131,7 @@ export default function Workspace() {
     setEditor(null);
   }
   const ownerNames = (ids: string[] = []) => <People people={data.people} ids={ids} />;
-  const ownersFor = (front: RecordData) =>
-    ownerNames(
-      front.ownerIds?.length
-        ? front.ownerIds
-        : data.macros.find((macro) => macro.id === front.macroId)?.ownerIds,
-    );
+  const ownersFor = (front: RecordData) => ownerNames(front.ownerIds);
   function addMacro() {
     const id = uid();
     mutate((draft) => {
@@ -578,6 +578,25 @@ export default function Workspace() {
                   <Pencil size={14} />
                   Editar frente
                 </button>
+                <button
+                  className="btn tiny"
+                  onClick={() => {
+                    const id = uid();
+                    mutate((draft) => {
+                      draft.responsibilities ??= [];
+                      draft.responsibilities.push({
+                        uid: id,
+                        capabilityId: draft.capabilities[0]?.id || '',
+                        context: 'board:' + board.id,
+                        personIds: [],
+                        role: '',
+                      });
+                    }, true);
+                    setEditor({ type: 'assignment', id });
+                  }}
+                >
+                  Responsáveis por capacidade
+                </button>
               </div>
             </div>
             <div className="board-summary">
@@ -619,6 +638,33 @@ export default function Workspace() {
             <option value={2}>Validado</option>
           </select>
         </label>
+        {(data.responsibilities || []).some(
+          (r: RecordData) => r.context === 'board:' + board.id,
+        ) && (
+          <section className="oj-context-responsibilities">
+            <h3>Responsabilidades por capacidade neste contexto</h3>
+            {(data.responsibilities || [])
+              .filter((r: RecordData) => r.context === 'board:' + board.id)
+              .map((r: RecordData) => (
+                <div className="oj-simple-row" key={r.uid}>
+                  <div>
+                    <strong>
+                      {data.capabilities.find((c: RecordData) => c.id === r.capabilityId)?.name ||
+                        'Capacidade a definir'}
+                    </strong>
+                    <People people={data.people} ids={r.personIds} />
+                    <small>{r.role}</small>
+                  </div>
+                  <button
+                    className="btn tiny"
+                    onClick={() => setEditor({ type: 'assignment', id: r.uid })}
+                  >
+                    Editar responsáveis
+                  </button>
+                </div>
+              ))}
+          </section>
+        )}
         {block === 'blueprint' ? (
           <>
             {toolbar}
@@ -720,12 +766,16 @@ export default function Workspace() {
                             '”? As funcionalidades permanecem no catálogo.',
                         )
                       )
-                        mutate((draft) => {
-                          const item = draft.boards
-                            .find((front) => front.id === board.id)!
-                            .cases.find((row: RecordData) => row.uid === selectedCase.uid);
-                          item.steps = item.steps.filter((row: RecordData) => row.uid !== step.uid);
-                        }, true);
+                        mutate(
+                          (draft) =>
+                            removeHierarchy(draft, {
+                              type: 'step',
+                              boardId: board.id,
+                              caseId: selectedCase.uid,
+                              id: step.uid,
+                            }),
+                          true,
+                        );
                     }}
                   >
                     <Trash2 size={15} />
@@ -748,9 +798,9 @@ export default function Workspace() {
             </div>
             <dl className="oj-scope">
               {[
-                ['offerDefinition', 'Definição da oferta'],
-                ['problem', 'Problema'],
-                ['within', 'Dentro do recorte'],
+                ['problem', 'Problema (o que queremos resolver)'],
+                ['offerDefinition', 'Oferta'],
+                ['within', 'Recorte'],
                 ['outside', 'Fora do recorte'],
                 ['value', 'Resultado esperado'],
               ].map(([key, label]) => (
@@ -800,24 +850,31 @@ export default function Workspace() {
               })}
             </section>
           </>
-        ) : block === 'asis' ? (
-          recordList('asis', 'Etapas atuais')
-        ) : block === 'csd' ? (
-          <>
-            {recordList('csd', 'Certezas, suposições e dúvidas')}
-            {recordList('decisions', 'Decisões')}
-            <details className="oj-context">
-              <summary>Histórico de decisões</summary>
-              {(board.decisionHistory || []).map((item: RecordData) => (
-                <p key={item.uid}>
-                  {item.title} · {item.from} → {item.to} · {item.at}
-                </p>
-              ))}
-              {!board.decisionHistory?.length && <p>Nenhuma mudança registrada.</p>}
-            </details>
-          </>
         ) : (
-          recordList('actionPlan', 'Plano de ação')
+          <FrontBlocks
+            block={block}
+            board={board}
+            add={addRecord}
+            edit={(type, id) => setEditor({ type, boardId: board.id, id })}
+            remove={removeRecord}
+            update={(type, id, key, value) =>
+              mutate((draft) => {
+                draft.boards
+                  .find((b) => b.id === board.id)!
+                  [type].find((r: RecordData) => r.uid === id)[key] = value;
+              }, true)
+            }
+            move={(type, id, direction) =>
+              mutate((draft) => {
+                const rows = draft.boards.find((b) => b.id === board.id)![type];
+                const from = rows.findIndex((r: RecordData) => r.uid === id),
+                  to = from + direction;
+                if (to < 0 || to >= rows.length) return;
+                const [item] = rows.splice(from, 1);
+                rows.splice(to, 0, item);
+              }, true)
+            }
+          />
         )}
         <section className="oj-record-section">
           <div className="oj-section-heading">
@@ -1132,7 +1189,7 @@ export default function Workspace() {
                     draft.responsibilities.push({
                       uid: id,
                       capabilityId: draft.capabilities[0]?.id || '',
-                      context: 'macro:' + draft.macros[0].id,
+                      context: 'board:' + board.id,
                       personIds: [],
                       role: '',
                     });
@@ -1470,6 +1527,32 @@ export default function Workspace() {
       />
       {editor && (
         <Editor
+          onDelete={(target) => {
+            const count =
+              target.type === 'macro'
+                ? data.boards.filter((b) => b.macroId === target.id).length
+                : 0;
+            if (
+              !confirm(
+                target.type === 'macro'
+                  ? `Excluir este macroprocesso e seus ${count} contextos/produtos? Seus casos, etapas e registros serão removidos da área ativa e preservados no backup JSON.`
+                  : target.type === 'front'
+                    ? 'Excluir este contexto/produto e todos os seus casos e etapas? O conteúdo será preservado no backup JSON.'
+                    : 'Excluir esta etapa? As funcionalidades permanecem no catálogo e o conteúdo no backup JSON.',
+              )
+            )
+              return;
+            try {
+              mutate((draft) => removeHierarchy(draft, target), true);
+              setEditor(null);
+              navigate('overview');
+              setMessage(
+                'Registro excluído. O conteúdo removido continua disponível na exportação JSON.',
+              );
+            } catch (error: any) {
+              setMessage(error.message);
+            }
+          }}
           key={[editor.type, editor.id, editor.boardId, editor.caseId].join(':')}
           state={data}
           matrix={matrix}

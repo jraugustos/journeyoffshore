@@ -50,69 +50,8 @@ export function editorRecord(state: WorkspaceData, target: EditorTarget): Record
   return board[target.type]?.find((row: RecordData) => row.uid === target.id);
 }
 
-export function SelectRecords({
-  label,
-  records,
-  selected,
-  onChange,
-  kind,
-}: {
-  kind?: string;
-  label: string;
-  records: RecordData[];
-  selected: string[];
-  onChange: (ids: string[]) => void;
-}) {
-  const [query, setQuery] = useState('');
-  const visible = records.filter(
-    (item) =>
-      item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase()) &&
-      (item.status !== 'Inativo' || selected.includes(item.id)),
-  );
-  return (
-    <fieldset className="oj-picker">
-      <legend>{label}</legend>
-      <input
-        type="search"
-        aria-label={'Buscar em ' + label}
-        placeholder="Buscar no cadastro"
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-      />
-      <div className="oj-check-list">
-        {visible.map((item) => (
-          <label key={item.id}>
-            <input
-              type="checkbox"
-              checked={selected.includes(item.id)}
-              onChange={(event) =>
-                onChange(
-                  event.target.checked
-                    ? [...selected, item.id]
-                    : selected.filter((id) => id !== item.id),
-                )
-              }
-            />
-            <span>
-              {kind === 'people' ? (
-                <PersonLabel person={item} />
-              ) : kind ? (
-                <RecordTag record={item} kind={kind} />
-              ) : (
-                item.name
-              )}
-              {kind === 'operations' && <Country value={item.country} />}
-            </span>
-          </label>
-        ))}
-        {!visible.length && (
-          <p>Nenhum registro encontrado. Cadastre em “Cadastros e responsáveis”.</p>
-        )}
-      </div>
-    </fieldset>
-  );
-}
-
+export { default as SelectRecords } from './RecordPicker';
+import SelectRecords from './RecordPicker';
 const DEFINITIONS: Record<
   string,
   { title: string; fields: [string, string, string?, string[]?][] }
@@ -130,9 +69,9 @@ const DEFINITIONS: Record<
   scope: {
     title: 'Oferta e recorte',
     fields: [
-      ['offerDefinition', 'Definição da oferta', 'textarea'],
-      ['problem', 'Problema que resolvemos', 'textarea'],
-      ['within', 'Dentro do recorte', 'textarea'],
+      ['problem', 'Problema (o que queremos resolver)', 'textarea'],
+      ['offerDefinition', 'Oferta', 'textarea'],
+      ['within', 'Recorte', 'textarea'],
       ['outside', 'Fora do recorte', 'textarea'],
       ['value', 'Resultado esperado', 'textarea'],
     ],
@@ -236,7 +175,9 @@ export default function Editor({
   close,
   status,
   error,
+  onDelete,
 }: {
+  onDelete: (target: EditorTarget) => void;
   state: WorkspaceData;
   target: EditorTarget;
   matrix: RecordData;
@@ -329,6 +270,20 @@ export default function Editor({
       </select>
     </label>
   );
+  function createLinked(kind: string, key: string, name: string) {
+    change((draft) => {
+      const id = uid();
+      draft[kind] ??= [];
+      draft[kind].push({ id, name, status: 'Ativo', description: '', ...VISUAL_DEFAULTS[kind] });
+      const destination = editorRecord(draft, target)!;
+      if (key === 'operationLinks')
+        destination.operationLinks = [
+          ...(destination.operationLinks || []),
+          { areaId: id, role: '' },
+        ];
+      else destination[key] = [...(destination[key] || []), id];
+    }, true);
+  }
   const picker = (kind: string, key: string, label = REGISTRY_LABELS[kind]) => (
     <SelectRecords
       key={kind}
@@ -337,6 +292,7 @@ export default function Editor({
       records={state[kind] || []}
       selected={record[key] || []}
       onChange={(ids) => update(key, ids, true)}
+      onCreate={(name) => createLinked(kind, key, name)}
     />
   );
   let title = DEFINITIONS[target.type]?.title || 'Editar registro';
@@ -367,10 +323,16 @@ export default function Editor({
             ))}
           </select>
         </label>
-        {picker('people', 'ownerIds', 'Responsáveis pelo macroprocesso')}
+        {record.ownerIds?.length > 0 && (
+          <p className="oj-context">
+            Atribuição anterior do macroprocesso preservada no backup. Defina agora os responsáveis
+            em cada contexto/produto.
+          </p>
+        )}
         <div className="oj-context">
           {state.boards.filter((item) => item.macroId === record.id).length} frentes vinculadas.
-          Nome, posição e responsáveis são atualizados em todas as visões.
+          Nome e posição são atualizados em todas as visões. Os responsáveis pertencem aos
+          contextos/produtos.
         </div>
       </>
     );
@@ -382,7 +344,7 @@ export default function Editor({
         {options('macroId', 'Macroprocesso', state.macros)}
         {field('summary', 'Descrição', 'textarea')}
         {field('status', 'Status', 'select', STATUSES)}
-        {picker('people', 'ownerIds', 'Responsáveis pela frente')}
+        {picker('people', 'ownerIds', 'Responsáveis pelo contexto / produto')}
       </>
     );
   } else if (target.type === 'case') {
@@ -440,6 +402,8 @@ export default function Editor({
             {field('email', 'E-mail', 'email')}
           </>
         )}
+        {target.registry === 'capabilities' &&
+          picker('people', 'ownerIds', 'Responsáveis de referência pela capacidade')}
         {target.registry === 'operations' && (
           <fieldset className="oj-picker full">
             <legend>País da operação</legend>
@@ -524,17 +488,43 @@ export default function Editor({
       <>
         {options('capabilityId', 'Capacidade', state.capabilities)}
         <label className="oj-field">
+          <span>Cadastrar capacidade neste vínculo</span>
+          <input
+            placeholder="Nome da capacidade; Enter para criar"
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                const name = event.currentTarget.value.trim();
+                if (!name) return;
+                change((draft) => {
+                  const id = uid();
+                  draft.capabilities.push({
+                    id,
+                    name,
+                    status: 'Ativo',
+                    ...VISUAL_DEFAULTS.capabilities,
+                  });
+                  editorRecord(draft, target)!.capabilityId = id;
+                }, true);
+                event.currentTarget.value = '';
+              }
+            }}
+          />
+        </label>
+        <label className="oj-field">
           <span>Contexto</span>
           <select
             value={record.context || ''}
             onChange={(event) => update('context', event.target.value, true)}
           >
             <option value="">A definir</option>
-            {state.macros.map((item) => (
-              <option key={item.id} value={'macro:' + item.id}>
-                Macroprocesso: {item.name}
-              </option>
-            ))}
+            {state.macros
+              .filter((item) => record.context === 'macro:' + item.id)
+              .map((item) => (
+                <option key={item.id} value={'macro:' + item.id}>
+                  Macroprocesso: {item.name}
+                </option>
+              ))}
             {state.boards.map((item) => (
               <option key={item.id} value={'board:' + item.id}>
                 Frente: {item.name}
@@ -564,6 +554,7 @@ export default function Editor({
           <SelectRecords
             label="Áreas operacionais"
             kind="operations"
+            onCreate={(name) => createLinked('operations', 'operationLinks', name)}
             records={state.operations}
             selected={(record.operationLinks || []).map((item: RecordData) => item.areaId)}
             onChange={(ids) =>
@@ -604,6 +595,62 @@ export default function Editor({
           <summary>Sistemas e capacidades</summary>
           {picker('systems', 'systemIds', 'Sistemas')}
           {picker('capabilities', 'capabilityIds', 'Capacidades')}
+          {(record.capabilityIds || []).map((id: string) => {
+            const capability = state.capabilities.find((c: RecordData) => c.id === id);
+            const assignment = state.responsibilities?.find(
+              (r: RecordData) => r.capabilityId === id && r.context === 'board:' + target.boardId,
+            );
+            return (
+              <SelectRecords
+                key={id}
+                kind="people"
+                label={'Responsáveis por ' + (capability?.name || 'capacidade') + ' neste contexto'}
+                records={state.people}
+                selected={assignment ? assignment.personIds : capability?.ownerIds || []}
+                onCreate={(name) => {
+                  change((draft) => {
+                    const personId = uid();
+                    draft.people.push({ id: personId, name, status: 'Ativo' });
+                    draft.responsibilities ??= [];
+                    let row = draft.responsibilities.find(
+                      (r: RecordData) =>
+                        r.capabilityId === id && r.context === 'board:' + target.boardId,
+                    );
+                    if (!row) {
+                      row = {
+                        uid: uid(),
+                        capabilityId: id,
+                        context: 'board:' + target.boardId,
+                        personIds: [...(capability?.ownerIds || [])],
+                        role: '',
+                      };
+                      draft.responsibilities.push(row);
+                    }
+                    row.personIds = [...row.personIds, personId];
+                  }, true);
+                }}
+                onChange={(ids) =>
+                  change((draft) => {
+                    draft.responsibilities ??= [];
+                    let row = draft.responsibilities.find(
+                      (r: RecordData) =>
+                        r.capabilityId === id && r.context === 'board:' + target.boardId,
+                    );
+                    if (!row) {
+                      row = {
+                        uid: uid(),
+                        capabilityId: id,
+                        context: 'board:' + target.boardId,
+                        role: '',
+                      };
+                      draft.responsibilities.push(row);
+                    }
+                    row.personIds = ids;
+                  }, true)
+                }
+              />
+            );
+          })}
           {field('capabilityNotes', 'Papel das capacidades', 'textarea')}
         </details>
         <details className="oj-editor-section" open>
@@ -671,6 +718,36 @@ export default function Editor({
                   ))}
                 </select>
               </label>
+              {data.providerKind && (
+                <label className="oj-field">
+                  <span>Cadastrar nova fonte</span>
+                  <input
+                    aria-label="Nome da nova fonte"
+                    placeholder="Digite o nome e pressione Enter"
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') {
+                        event.preventDefault();
+                        const name = event.currentTarget.value.trim();
+                        if (!name) return;
+                        change((draft) => {
+                          const id = uid();
+                          draft[data.providerKind].push({
+                            id,
+                            name,
+                            status: 'Ativo',
+                            ...VISUAL_DEFAULTS[data.providerKind],
+                          });
+                          const row = editorRecord(draft, target)!.dataRequirements.find(
+                            (r: RecordData) => r.uid === data.uid,
+                          );
+                          row.providerId = id;
+                        }, true);
+                        event.currentTarget.value = '';
+                      }
+                    }}
+                  />
+                </label>
+              )}
               <label className="oj-field">
                 <span>Observação</span>
                 <input
@@ -953,6 +1030,16 @@ export default function Editor({
         </p>
       )}
       <footer>
+        {['macro', 'front', 'step'].includes(target.type) && (
+          <button type="button" className="btn oj-danger" onClick={() => onDelete(target)}>
+            Excluir{' '}
+            {target.type === 'macro'
+              ? 'macroprocesso'
+              : target.type === 'front'
+                ? 'contexto / produto'
+                : 'etapa'}
+          </button>
+        )}
         <span role="status">
           {status === 'saved'
             ? 'Todas as alterações salvas'

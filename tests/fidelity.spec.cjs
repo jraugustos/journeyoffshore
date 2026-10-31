@@ -80,6 +80,7 @@ const check = async (name, action) => {
     step.capabilityIds = ['qa-capability'];
     step.operationLinks = [{ areaId: 'qa-operation', role: 'Conferir cadastro' }];
     step.release = 'Release A';
+    front.ownerIds = ['qa-photo'];
     assert.equal(
       (
         await api.post(base + '/api/import', {
@@ -109,13 +110,11 @@ const check = async (name, action) => {
         .getByRole('button', { name: 'Editar', exact: true })
         .click();
       const dialog = page.getByRole('dialog');
-      await dialog
-        .locator('input[type=file]')
-        .setInputFiles({
-          name: 'arquivo.txt',
-          mimeType: 'text/plain',
-          buffer: Buffer.from('arquivo inválido'),
-        });
+      await dialog.locator('input[type=file]').setInputFiles({
+        name: 'arquivo.txt',
+        mimeType: 'text/plain',
+        buffer: Buffer.from('arquivo inválido'),
+      });
       await dialog.getByRole('alert').filter({ hasText: 'Escolha uma imagem' }).waitFor();
       await dialog.locator('input[type=file]').setInputFiles({
         name: 'foto.png',
@@ -141,7 +140,7 @@ const check = async (name, action) => {
       await close();
       await page.reload();
       await saved();
-      assert.ok(await page.locator('.oj-macro img[alt="Foto de Pessoa de referência"]').count());
+      assert.ok(await page.locator('.oj-product img[alt="Foto de Pessoa de referência"]').count());
       await nav('Cadastros e responsáveis');
       assert.equal(
         await page.getByRole('img', { name: 'Foto de Pessoa de referência', exact: true }).count(),

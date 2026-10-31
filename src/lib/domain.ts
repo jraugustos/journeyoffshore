@@ -90,8 +90,8 @@ export const workspaceSchema = z
   .object({
     schema: z.literal(4),
     session: z.record(z.string(), z.unknown()),
-    macros: z.array(recordSchema).min(1),
-    boards: z.array(boardSchema).min(1),
+    macros: z.array(recordSchema),
+    boards: z.array(boardSchema),
     people: z.array(recordSchema),
     actors: z.array(recordSchema),
     channels: z.array(recordSchema),
