@@ -23,7 +23,15 @@ A aplicação foi reconstruída em componentes React sobre Next.js e TypeScript.
 
 Os itens “Configurar workshop” e “Registros preservados” foram removidos da navegação conforme solicitado. Metadados e históricos já existentes continuam nas exportações JSON.
 
-O HTML original permanece inalterado. Nenhuma publicação em AWS ou outro serviço foi realizada.
+O HTML original permanece inalterado. O código foi enviado ao repositório privado [jraugustos/journeyoffshore](https://github.com/jraugustos/journeyoffshore), no branch `main`. A publicação do aplicativo na Vercel está em preparação.
+
+## Publicação no GitHub e na Vercel
+
+A criação do repositório e a publicação na Vercel foram autorizadas pelo usuário, com o nome `journeyoffshore`. O repositório privado já contém o código funcional, as migrações e a documentação, sem credenciais ou banco local.
+
+Foram adicionados `vercel.json`, exclusões de arquivos locais, Node.js 22 e o comando `vercel-build`, que aplica as migrações antes da compilação. A conexão direta opcional `DIRECT_DATABASE_URL` permite usar um pooler na aplicação e uma conexão direta nas migrações.
+
+A publicação ainda depende da autorização da conexão Vercel e da configuração de um PostgreSQL externo exclusivo, além das variáveis privadas de produção. Nenhuma URL pública de produção foi confirmada até aqui.
 
 ## Validação
 
@@ -40,4 +48,4 @@ Consultar [VALIDACAO.md](VALIDACAO.md) para os testes executados, evidências e 
 
 ## Próximos passos de implantação
 
-O time tech deve configurar ambiente Node.js, PostgreSQL, domínio, HTTPS, senha e rotina de backup conforme [IMPLANTACAO.md](docs/IMPLANTACAO.md). A autorização atual cobre a construção local; publicação e acesso externo continuam dependendo da solicitação correspondente.
+Para concluir a Vercel, conectar a conta, configurar o PostgreSQL e as variáveis privadas, publicar e verificar o acesso por senha, a persistência e as exportações. Para outros provedores, o time tech pode seguir [IMPLANTACAO.md](docs/IMPLANTACAO.md).
