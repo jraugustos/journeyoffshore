@@ -21,24 +21,6 @@ O setup pede uma senha com pelo menos 12 caracteres sem exibi-la. A configuraç�
 
 Se já houver um PostgreSQL instalado, forneça sua `DATABASE_URL` ao setup e use `OFFSHORE_LOCAL_DB=false`. Para hospedagem, siga o [procedimento de implantação](docs/IMPLANTACAO.md).
 
-## Usar o projeto
-
-- Informe a senha compartilhada para liberar o workspace. Não há cadastro de usuário.
-- Clique no nome de um card preto para editar o macroprocesso, ou use “+ Macroprocesso” para criar outro.
-- No editor do macroprocesso, altere nome, posição e status. Defina responsáveis no contexto/produto e, quando necessário, por capacidade dentro desse contexto.
-- Na blueprint, passe o cursor sobre as divisórias para inserir macroprocessos, contextos/produtos e etapas exatamente naquele ponto. Os controles também aparecem ao receber foco pelo teclado e ficam visíveis em telas de toque.
-- O lápis do contexto/produto abre a edição de nome, descrição, status, macroprocesso, posição e responsáveis. Contexto/produto e frente de trabalho são o mesmo registro nas duas visões.
-- Na divisa entre contextos ou macroprocessos, um único “+” permite escolher em qual dos dois lados inserir o item. Uma inserção limpa os filtros para revelar o novo registro. Frentes também podem ser adicionadas em “Cadastros e responsáveis → Macroprocessos e frentes”.
-- Abra uma frente para trabalhar seus casos, etapas, oferta, AS-IS, CSD, decisões e ações.
-- Os campos são salvos automaticamente: textos após 700 ms sem digitação, e seleções e reordenações assim que concluídas.
-- “Todas as alterações salvas” significa confirmação do banco. Em caso de falha, mantenha a página aberta até concluir ou baixe as alterações pendentes.
-- Use o ícone de exportação no header para baixar JSON completo, CSV ou HTML preenchido para consulta. O trabalho é retomado automaticamente do banco de dados; a importação JSON não faz mais parte da interface.
-- Em Pessoas, adicione ou remova a foto. Nas operações, selecione o país com bandeira. Nos demais cadastros, personalize cor e ícone. As escolhas são refletidas nas etapas vinculadas.
-- Consulte o Launch Timeline na grade horizontal, filtre por horizonte e expanda os produtos e funcionalidades relacionados.
-- “Configurar workshop” e “Registros preservados” foram removidos da navegação. Conteúdos históricos já existentes seguem preservados no JSON.
-
-O JSON inclui o trabalho e seus históricos, sem senha ou tokens de acesso. O HTML exportado é uma cópia de consulta com opção de baixar seu JSON; as cópias exportadas são independentes do sistema hospedado.
-
 ## Hospedar
 
 ```sh
@@ -81,27 +63,3 @@ A suíte adicional de fidelidade pode ser executada com `npm run test:fidelity`,
 `npm run test:structure` verifica inserção por posição, edição e movimentação de contextos, persistência, filtros, teclado, toque e exportação, também com `TEST_BASE_URL` e `TEST_PROJECT_PASSWORD` de uma base isolada.
 
 Os testes de navegador criam dados sintéticos e restauram a base inicial da instância testada. Execute-os somente contra uma base isolada. As capturas e o resultado são gravados na pasta temporária indicada pela suíte.
-
-## Referência original
-
-O [HTML v17 recebido](offshore_workshop_interativo_v17.html), a distribuição experimental `index.html` e suas fontes JavaScript permanecem preservados como histórico. A aplicação atual é acessada pelo servidor Node.js. Abrir `src/shell.html` ou `index.html` diretamente não abre a aplicação com banco e senha.
-
-Os arquivos antigos não são servidos publicamente pelo Next.js. A base inicial usa os dados de referência e preserva os arquivos de migração encontrados no HTML.
-
-### Ajustes nas frentes
-
-- Oferta: Problema → Oferta → Recorte → Fora do recorte → Resultado esperado.
-- AS-IS: lista numerada, com edição e reordenação. CSD: colunas, dúvidas e decisões. Plano de ação: entregas com conclusão, responsáveis, prazo e critérios.
-- Os seletores são campos compactos: clique para abrir a busca e marcar os itens. Busque um nome novo para cadastrá-lo e vinculá-lo no mesmo lugar. No blueprint, cada célula abre apenas as opções daquele campo, junto à célula; o nome da etapa mantém a edição completa. Responsáveis do contexto também podem ser selecionados diretamente no cabeçalho.
-- Cada contexto/produto possui seus responsáveis. Capacidades podem ter responsáveis de referência e uma atribuição específica por contexto, que prevalece sobre a referência. A atribuição pode ser feita na etapa ou no botão “Responsáveis por capacidade” da frente.
-- Macroprocessos, contextos e etapas podem ser excluídos pelo editor, com confirmação do impacto. A exclusão de um macroprocesso remove seus contextos; a de um contexto remove seus casos e etapas. Funcionalidades permanecem no catálogo. O conteúdo removido é mantido em `deletedItems` na exportação JSON; não há restauração individual pela interface.
-
-### Catálogo e duas timelines
-
-Em Funcionalidades, use Adicionar funcionalidade ou abra um card para editar título, público, jornada, cobertura, referências, observações, marco e vínculos. Os códigos são gerados automaticamente e permanecem estáveis. Na linha Funcionalidades da blueprint da frente, expanda a lista e use Vincular ou criar para pesquisar ou cadastrar sem sair da etapa. A referência original permanece disponível no editor.
-
-No Launch Timeline, Timeline Planejada mantém o planejamento de referência. Timeline Aprofundada organiza todos os casos de uso por macroprocesso e contexto/produto. Cada caso ocupa uma linha, com os marcos das suas etapas. Expanda para consultar etapas e funcionalidades ou abrir sua edição. A definir reúne etapas sem marco e casos sem etapas. Nenhuma data ou duração é inferida.
-
-`npm run test:study` verifica catálogo, exportações, capacidades e timeline em uma instância isolada com as mesmas variáveis das demais suítes de navegador.
-
-Para excluir uma funcionalidade, abra seu card e use **Excluir funcionalidade** no rodapé do editor. A confirmação informa o número de etapas afetadas. A exclusão remove a funcionalidade do catálogo ativo, de todos os casos de uso e da classificação; guarda definição e vínculos no backup JSON. Os códigos excluídos não são reutilizados. Referências históricas da Timeline Planejada são preservadas como consulta.
