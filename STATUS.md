@@ -77,3 +77,7 @@ ST05, ST09 e ST10 revisaram código e padrões do projeto. Foram corrigidos recu
 ## Refinamento do header e formulários
 
 Header atualizado para “DeNovo Banco · Mapeamento”, controle da navegação ao lado de Workspace na sidebar e como primeiro ícone quando recolhida e exportação por ícone. A ação de importar JSON saiu da interface. Ícones substituem ações de edição nos cadastros; formulários têm títulos completos, metadados em pares e avisos completos. Espaçamento de 6 px aplicado aos cards no catálogo e no blueprint.
+
+## Rotação e verificação de segurança — 02/11/2026
+
+Senha de acesso alterada em produção e na configuração local, sem registrar seu valor neste repositório. Sessões anteriores invalidadas, senha antiga recusada e conteúdo preservado. A varredura não encontrou credenciais reais nos arquivos versionados, histórico e artefatos examinados. Uma anotação local com a senha anterior foi sanitizada e uma cópia temporária da conexão do banco foi removida. O limitador global de tentativas permanece como achado de disponibilidade. Escopo, evidências e limites: [SEGURANCA.md](docs/SEGURANCA.md).

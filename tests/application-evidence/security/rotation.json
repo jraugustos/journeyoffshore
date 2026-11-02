@@ -1,0 +1,34 @@
+{
+  "verifiedAt": "2026-11-02T14:06:47.922Z",
+  "url": "https://journeyoffshore.vercel.app",
+  "previousSessionRejected": true,
+  "previousPasswordRejected": true,
+  "newPasswordAccepted": true,
+  "cookieHttpOnly": true,
+  "cookieSecure": true,
+  "cookieSameSiteStrict": true,
+  "projectDataPreserved": true,
+  "projectRevision": 35,
+  "anonymous": {
+    "/api/workspace": true,
+    "/api/export?format=json": true,
+    "/api/export?format=html": true,
+    "/api/export?format=csv": true
+  },
+  "originProtection": true,
+  "privateFiles": {
+    "/.env": true,
+    "/.env.local": true,
+    "/src/data/seed.json": true,
+    "/offshore_workshop_interativo_v17.html": true,
+    "/src/shell.html": true,
+    "/prisma/schema.prisma": true
+  },
+  "exportSecretFree": {
+    "json": true,
+    "html": true,
+    "csv": true
+  },
+  "previousDeploymentProtected": true,
+  "logout": true
+}
