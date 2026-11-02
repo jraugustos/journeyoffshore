@@ -1,0 +1,37 @@
+{
+  "results": [
+    {
+      "name": "Insere macroprocesso na divisória, com persistência após recarregar",
+      "result": "passed"
+    },
+    {
+      "name": "Cria e edita contexto/produto na própria blueprint",
+      "result": "passed"
+    },
+    {
+      "name": "Etapas vazias e inserção entre etapas no caso correto",
+      "result": "passed"
+    },
+    {
+      "name": "Inserção com filtro ativo usa a ordem completa e revela a nova etapa",
+      "result": "passed"
+    },
+    {
+      "name": "Teclado e visual desktop: inserção visível ao focar sem alterar as colunas",
+      "result": "passed"
+    },
+    {
+      "name": "Contexto criado na frente fica acessível, pode ser movido e excluído",
+      "result": "passed"
+    },
+    {
+      "name": "Visão geral espelha alterações e exportação preserva estrutura",
+      "result": "passed"
+    },
+    {
+      "name": "Celular e toque mantêm ações acessíveis e layout dentro da tela",
+      "result": "passed"
+    }
+  ],
+  "pageErrors": []
+}

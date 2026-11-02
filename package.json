@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "node tests/application.spec.cjs",
+    "test:structure": "node tests/structure.spec.cjs",
     "package": "node scripts/package.mjs",
     "postinstall": "prisma generate",
     "format": "prettier --write 'src/{app,components,lib,server}/**/*.{ts,tsx,css}' 'scripts/*.mjs' 'tests/{application,fidelity}.spec.cjs' next.config.ts prisma.config.ts vitest.config.ts",

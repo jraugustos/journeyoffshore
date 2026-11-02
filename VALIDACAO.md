@@ -1,5 +1,13 @@
 # Validação da aplicação Offshore Journey
 
+## Estrutura editável da blueprint — 02/11/2026
+
+Build de produção e 24 testes unitários passaram. A suíte `test:structure` passou em 8 cenários, em uma instância separada com PostgreSQL temporário: inserção de macroprocesso na posição escolhida; criação, edição e reordenação do contexto; inserção de etapas no caso correto; ordem com filtro de horizonte ativo; foco e inserção por teclado; criação de contexto dentro da frente, transferência para outro macroprocesso e exclusão; reflexo na visão geral e exportação JSON; controles de toque e ausência de overflow da página em 390 × 844. Os testes restauraram os dados iniciais da instância isolada e não utilizaram os dados de trabalho.
+
+Conferidos os controles nas divisórias e a edição explícita dos contextos/produtos em desktop e celular. Divisas entre pais diferentes usam um único controle com escolha do destino, evitando sobreposição. Safari, Firefox e leitura completa por tecnologia assistiva não foram exercitados nesta revisão.
+
+Evidências: [resultados](tests/application-evidence/structure/results.json), [desktop](tests/application-evidence/structure/desktop.png), [celular](tests/application-evidence/structure/mobile.png).
+
 Verificações realizadas em 30 de outubro de 2026 sobre a aplicação Next.js com PostgreSQL e Prisma, em ambiente local e na Vercel, sem Docker. A verificação de produção está registrada em 31 de outubro de 2026 às 03:03 UTC.
 
 ## Resultado

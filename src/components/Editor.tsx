@@ -54,6 +54,7 @@ export function editorRecord(state: WorkspaceData, target: EditorTarget): Record
 
 export { default as SelectRecords } from './RecordPicker';
 import SelectRecords from './RecordPicker';
+import { moveFront } from '@/lib/blueprintStructure';
 const DEFINITIONS: Record<
   string,
   { title: string; fields: [string, string, string?, string[]?][] }
@@ -215,11 +216,13 @@ export default function Editor({
         draft.featureRouting[target.id!] ??= {};
       }
       const destination = editorRecord(draft, target)!;
+      if (target.type === 'front' && key === 'macroId') {
+        moveFront(draft, destination.id, value);
+        return;
+      }
       destination[key] = value;
       if (target.type === 'macro' && key === 'name') destination.short = value;
       if (target.type === 'front' && key === 'name') destination.short = value;
-      if (target.type === 'front' && key === 'macroId')
-        for (const item of destination.cases) item.macroId = value;
     }, immediate);
   }
   const field = (key: string, label: string, type = 'text', options: string[] = []) => (
@@ -241,6 +244,7 @@ export default function Editor({
       ) : type === 'select' ? (
         <select
           name={key}
+          aria-label={label}
           value={record[key] || ''}
           onChange={(event) => update(key, event.target.value, true)}
         >
@@ -266,10 +270,13 @@ export default function Editor({
       <span>{label}</span>
       <select
         name={key}
+        aria-label={label}
         value={record[key] || ''}
         onChange={(event) => update(key, event.target.value, true)}
       >
-        <option value="">A definir</option>
+        <option value="" disabled={target.type === 'front' && key === 'macroId'}>
+          A definir
+        </option>
         {entries.map((item) => (
           <option key={item.id} value={item.id}>
             {item.name}
@@ -346,13 +353,41 @@ export default function Editor({
       </>
     );
   } else if (target.type === 'front') {
-    title = 'Editar frente';
+    title = 'Editar contexto / produto';
     body = (
       <>
-        {!target.section && field('name', 'Nome da frente')}
+        {!target.section && field('name', 'Nome do contexto / produto')}
         {!target.section && field('summary', 'Descrição', 'textarea')}
         {!target.section && options('macroId', 'Macroprocesso', state.macros)}
         {!target.section && field('status', 'Status', 'select', STATUSES)}
+        {!target.section && (
+          <label className="oj-field">
+            <span>Posição no macroprocesso</span>
+            <select
+              aria-label="Posição no macroprocesso"
+              value={state.boards
+                .filter((item) => item.macroId === record.macroId)
+                .findIndex((item) => item.id === record.id)}
+              onChange={(event) => {
+                const index = Number(event.target.value);
+                change((draft) => {
+                  const siblings = draft.boards.filter(
+                    (item) => item.macroId === record.macroId && item.id !== record.id,
+                  );
+                  moveFront(draft, record.id, record.macroId, siblings[index]?.id);
+                }, true);
+              }}
+            >
+              {state.boards
+                .filter((item) => item.macroId === record.macroId)
+                .map((item, index) => (
+                  <option value={index} key={item.id}>
+                    {index + 1} — {item.name}
+                  </option>
+                ))}
+            </select>
+          </label>
+        )}
         {picker('people', 'ownerIds', 'Responsáveis pelo contexto / produto')}
       </>
     );

@@ -253,6 +253,142 @@ body {
   line-height: 1.5;
   font-size: 13px;
 }
+.oj-product-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+.oj-product-heading .bp-product-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.oj-product-heading .oj-icon {
+  flex-shrink: 0;
+}
+
+/* Insertions belong to the boundary and do not move the blueprint's columns. */
+.oj-structure-cell {
+  position: relative;
+}
+.oj-bp-insert {
+  position: absolute;
+  z-index: 6;
+  top: 8px;
+  bottom: 8px;
+  right: -16px;
+  width: 32px;
+}
+.oj-bp-insert.is-start {
+  right: auto;
+  left: -16px;
+  z-index: 9;
+}
+.oj-bp-insert::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: #b65309;
+  opacity: 0;
+}
+.oj-bp-insert > button {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0;
+  border: 1px solid #d3d3d8;
+  border-radius: 8px;
+  color: #57575f;
+  background: #fff;
+  cursor: pointer;
+  opacity: 0;
+}
+.oj-bp-insert-label {
+  position: absolute;
+  top: calc(50% + 22px);
+  right: 8px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  color: #fff;
+  background: #222;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+  width: max-content;
+  max-width: 220px;
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+}
+.oj-bp-insert.is-start .oj-bp-insert-label {
+  right: auto;
+  left: 8px;
+}
+.oj-bp-insert:hover::before,
+.oj-bp-insert:focus-within::before,
+.oj-bp-insert:hover > button,
+.oj-bp-insert:focus-within > button,
+.oj-bp-insert:hover .oj-bp-insert-label,
+.oj-bp-insert:focus-within .oj-bp-insert-label {
+  opacity: 1;
+}
+.oj-bp-insert > button:hover {
+  border-color: #b65309;
+  color: #a34806;
+  background: #fff8f2;
+}
+.oj-bp-insert > button:focus-visible {
+  outline: 2px solid #b65309;
+  outline-offset: 2px;
+}
+.oj-insert-options {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  gap: 4px;
+}
+.oj-insert-options > button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px;
+  border: 0;
+  border-radius: 6px;
+  background: white;
+  color: #34343a;
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.oj-insert-options > button svg {
+  flex-shrink: 0;
+}
+.oj-insert-options > button:hover {
+  background: #fff8f2;
+}
+.oj-insert-options > button:focus-visible {
+  outline: 2px solid #b65309;
+  outline-offset: -2px;
+}
+@media (hover: none), (pointer: coarse) {
+  .oj-bp-insert > button {
+    opacity: 1;
+  }
+}
 .oj-product select {
   width: 100%;
   max-width: 300px;
@@ -1706,7 +1842,7 @@ body {
 
 /* React context cells do not use the legacy inner wrapper that supplies its padding. */
 .bp-cell.bp-product.oj-product {
-  padding: 10px 16px !important;
+  padding: 10px 24px 10px 16px !important;
 }
 .bp-toolbar .bp-filter-actions {
   padding-bottom: 0;
@@ -1719,7 +1855,7 @@ body {
 }
 @media (max-width: 800px) {
   .bp-cell.bp-product.oj-product {
-    padding-inline: 12px !important;
+    padding-inline: 12px 24px !important;
   }
   .oj-record-options > input[type='search'] {
     font-size: 16px;

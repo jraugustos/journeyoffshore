@@ -1,8 +1,9 @@
 'use client';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Pencil, ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { defaultCase, type RecordData, type WorkspaceData } from '@/lib/domain';
 import type { EditorTarget } from './Editor';
-import { fieldAnchor, fieldPanelId } from './FieldPopover';
+import FieldPopover, { fieldAnchor, fieldPanelId, type FieldAnchor } from './FieldPopover';
 import RecordPicker from './RecordPicker';
 import { canonicalPhase, featurePhase } from '@/lib/presentation';
 
@@ -138,6 +139,63 @@ function Lane({ lane, step, state }: { lane: string; step: RecordData; state: Wo
   return step.support || empty;
 }
 
+function InsertControl({
+  label,
+  onClick,
+  start = false,
+  alternative,
+}: {
+  label: string;
+  onClick: () => void;
+  start?: boolean;
+  alternative?: { label: string; onClick: () => void };
+}) {
+  const [anchor, setAnchor] = useState<FieldAnchor | null>(null);
+  const panelId = useId();
+  return (
+    <div className={'oj-bp-insert' + (start ? ' is-start' : '')}>
+      <button
+        type="button"
+        aria-label={label}
+        data-insert-alternative={alternative?.label}
+        aria-haspopup={alternative ? 'dialog' : undefined}
+        aria-expanded={alternative ? !!anchor : undefined}
+        aria-controls={anchor ? panelId : undefined}
+        onClick={(event) => (alternative ? setAnchor(fieldAnchor(event.currentTarget)) : onClick())}
+      >
+        <Plus size={16} aria-hidden="true" />
+      </button>
+      <span className="oj-bp-insert-label" aria-hidden="true">
+        {label}
+      </span>
+      {anchor && alternative && (
+        <FieldPopover
+          id={panelId}
+          label="Posição do novo item"
+          anchor={anchor}
+          onClose={() => setAnchor(null)}
+        >
+          <div className="oj-insert-options">
+            {[{ label, onClick }, alternative].map((action) => (
+              <button
+                type="button"
+                key={action.label}
+                onClick={() => {
+                  setAnchor(null);
+                  action.onClick();
+                }}
+              >
+                <Plus size={14} aria-hidden="true" />
+                {action.label}
+              </button>
+            ))}
+          </div>
+        </FieldPopover>
+      )}
+    </div>
+  );
+}
+
 export default function Blueprint({
   state,
   matrix,
@@ -150,6 +208,7 @@ export default function Blueprint({
   setCase,
   edit,
   openFront,
+  addMacro,
   addFront,
   addStep,
   moveStep,
@@ -167,10 +226,20 @@ export default function Blueprint({
   setCase: (boardId: string, id: string) => void;
   edit: (target: EditorTarget) => void;
   openFront: (id: string) => void;
-  addFront: (macroId: string) => void;
-  addStep: (boardId: string, caseId: string) => void;
+  addMacro: (beforeId?: string) => void;
+  addFront: (macroId: string, beforeId?: string) => void;
+  addStep: (boardId: string, caseId: string, beforeId?: string) => void;
   moveStep: (boardId: string, caseId: string, id: string, direction: number) => void;
 }) {
+  const grid = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!activeEditor || activeEditor.section) return;
+    const id = activeEditor.type === 'front' ? activeEditor.boardId : activeEditor.id;
+    if (!id || !['macro', 'front', 'step'].includes(activeEditor.type)) return;
+    grid.current
+      ?.querySelector(`[data-structure-id="${CSS.escape(id)}"]`)
+      ?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }, [activeEditor?.type, activeEditor?.id, activeEditor?.boardId, activeEditor?.section]);
   const groups = state.macros
     .filter(
       (macro) =>
@@ -228,27 +297,40 @@ export default function Blueprint({
   if (!groups.length)
     return (
       <div className="oj-empty-panel">
-        <h3>Nenhuma etapa neste recorte</h3>
-        <p>Altere os filtros para consultar outras partes do blueprint.</p>
+        <h3>{state.macros.length ? 'Nenhuma etapa neste recorte' : 'Comece sua blueprint'}</h3>
+        <p>
+          {state.macros.length
+            ? 'Altere os filtros para consultar outras partes do blueprint.'
+            : 'Adicione um macroprocesso e organize seus contextos/produtos e etapas.'}
+        </p>
+        {!state.macros.length && (
+          <button className="btn dark" onClick={() => addMacro()}>
+            <Plus size={16} /> Adicionar macroprocesso
+          </button>
+        )}
       </div>
     );
   const flat = groups.flatMap((group) =>
     group.fronts.flatMap((front) => front.steps.map((step) => ({ ...front, step }))),
   );
   const columns = groups.reduce((count, group) => count + group.count, 0);
+  const visibleFronts = groups.flatMap((group) => group.fronts);
   let macroColumn = 2;
   let frontColumn = 2;
   const cells: React.ReactNode[] = [];
-  for (const group of groups) {
+  for (const [groupIndex, group] of groups.entries()) {
+    const macroIndex = state.macros.findIndex((macro) => macro.id === group.macro.id);
+    const siblings = state.boards.filter((front) => front.macroId === group.macro.id);
     cells.push(
       <div
         className={
-          'bp-cell bp-macro oj-macro ' +
+          'bp-cell bp-macro oj-macro oj-structure-cell ' +
           (['Não priorizado', 'Desativado'].includes(group.macro.status) ? 'is-muted' : '')
         }
         key={'macro-' + group.macro.id}
         style={{ gridColumn: `${macroColumn} / span ${group.count}`, gridRow: 1 }}
         data-testid={'macro-' + group.macro.id}
+        data-structure-id={group.macro.id}
       >
         <button
           type="button"
@@ -261,6 +343,17 @@ export default function Blueprint({
         <div className="oj-macro-meta">
           <Status value={group.macro.status} />
         </div>
+        {groupIndex === 0 && (
+          <InsertControl
+            start
+            label={'Adicionar macroprocesso antes de ' + group.macro.name}
+            onClick={() => addMacro(group.macro.id)}
+          />
+        )}
+        <InsertControl
+          label={'Adicionar macroprocesso depois de ' + group.macro.name}
+          onClick={() => addMacro(state.macros[macroIndex + 1]?.id)}
+        />
       </div>,
     );
     macroColumn += group.count;
@@ -269,28 +362,46 @@ export default function Blueprint({
         <div
           className="bp-cell oj-empty-macro"
           key={'empty-' + group.macro.id}
-          style={{ gridColumn: frontColumn++, gridRow: '2 / span 10' }}
+          style={{ gridColumn: frontColumn++, gridRow: boardId ? '2 / span 10' : '2 / span 9' }}
         >
           <button className="btn" onClick={() => addFront(group.macro.id)}>
             <Plus size={15} />
-            Adicionar frente
+            Adicionar contexto / produto
           </button>
-          <p>Crie uma frente para começar a desenhar este macroprocesso.</p>
+          <p>Crie um contexto/produto para começar a desenhar este macroprocesso.</p>
         </div>,
       );
       continue;
     }
-    for (const front of group.fronts) {
+    for (const [frontIndex, front] of group.fronts.entries()) {
+      const siblingIndex = siblings.findIndex((board) => board.id === front.board.id);
+      const nextGroup = groups[groupIndex + 1];
+      const nextFront =
+        visibleFronts[visibleFronts.findIndex((row) => row.board.id === front.board.id) + 1];
+      const startsSection =
+        frontIndex === 0 && (groupIndex === 0 || !groups[groupIndex - 1].fronts.length);
       cells.push(
         <div
-          className="bp-cell bp-product oj-product"
+          className="bp-cell bp-product oj-product oj-structure-cell"
           key={'front-' + front.board.id}
           style={{ gridColumn: `${frontColumn} / span ${front.steps.length}`, gridRow: 2 }}
+          data-structure-id={front.board.id}
         >
-          <button onClick={() => openFront(front.board.id)} className="bp-product-title">
-            {front.board.name}
-            <ArrowUpRight size={16} />
-          </button>
+          <div className="oj-product-heading">
+            <button onClick={() => openFront(front.board.id)} className="bp-product-title">
+              {front.board.name}
+              <ArrowUpRight size={16} />
+            </button>
+            <button
+              className="oj-icon"
+              type="button"
+              aria-label={'Editar contexto / produto ' + front.board.name}
+              title="Editar contexto / produto"
+              onClick={() => edit({ type: 'front', boardId: front.board.id })}
+            >
+              <Pencil size={15} />
+            </button>
+          </div>
           <button
             className="oj-context-select"
             aria-label={'Responsáveis de ' + front.board.name}
@@ -340,23 +451,45 @@ export default function Blueprint({
             variant="context"
             hideLabel
           />
+          {startsSection && (
+            <InsertControl
+              start
+              label={'Adicionar contexto / produto antes de ' + front.board.name}
+              onClick={() => addFront(group.macro.id, front.board.id)}
+            />
+          )}
+          <InsertControl
+            label={'Adicionar contexto / produto depois de ' + front.board.name}
+            onClick={() => addFront(group.macro.id, siblings[siblingIndex + 1]?.id)}
+            alternative={
+              frontIndex === group.fronts.length - 1 && nextGroup?.fronts.length
+                ? {
+                    label:
+                      'Adicionar contexto / produto antes de ' + nextGroup.fronts[0].board.name,
+                    onClick: () => addFront(nextGroup.macro.id, nextGroup.fronts[0].board.id),
+                  }
+                : undefined
+            }
+          />
         </div>,
       );
       for (const [index, step] of front.steps.entries()) {
         const column = frontColumn + index;
+        const stepIndex = front.item.steps.findIndex((item: RecordData) => item.uid === step.uid);
         cells.push(
           <div
-            className="bp-cell bp-step-head oj-step"
+            className="bp-cell bp-step-head oj-step oj-structure-cell"
             key={'step-' + step.uid}
             style={{ gridColumn: column, gridRow: 3 }}
+            data-structure-id={step.uid}
           >
             <div className="bp-step-count">
-              <span>{String(index + 1).padStart(2, '0')}</span>
+              <span>{String(step.placeholder ? 1 : stepIndex + 1).padStart(2, '0')}</span>
               {!step.placeholder && (
                 <span className="oj-step-order">
                   <button
                     className="oj-icon"
-                    disabled={index === 0}
+                    disabled={stepIndex === 0}
                     aria-label={'Mover ' + step.name + ' para antes'}
                     onClick={() => moveStep(front.board.id, front.item.uid, step.uid, -1)}
                   >
@@ -364,7 +497,7 @@ export default function Blueprint({
                   </button>
                   <button
                     className="oj-icon"
-                    disabled={index === front.item.steps.length - 1}
+                    disabled={stepIndex === front.item.steps.length - 1}
                     aria-label={'Mover ' + step.name + ' para depois'}
                     onClick={() => moveStep(front.board.id, front.item.uid, step.uid, 1)}
                   >
@@ -441,6 +574,40 @@ export default function Blueprint({
                 </button>
               </>
             )}
+            {!step.placeholder && index === 0 && startsSection && (
+              <InsertControl
+                start
+                label={'Adicionar etapa antes de ' + step.name}
+                onClick={() => addStep(front.board.id, front.item.uid, step.uid)}
+              />
+            )}
+            <InsertControl
+              label={
+                step.placeholder
+                  ? 'Adicionar primeira etapa em ' + front.board.name
+                  : 'Adicionar etapa depois de ' + step.name
+              }
+              onClick={() =>
+                addStep(front.board.id, front.item.uid, front.item.steps[stepIndex + 1]?.uid)
+              }
+              alternative={
+                index === front.steps.length - 1 &&
+                nextFront &&
+                (frontIndex < group.fronts.length - 1 || nextGroup?.fronts.length)
+                  ? {
+                      label: nextFront.steps[0].placeholder
+                        ? 'Adicionar primeira etapa em ' + nextFront.board.name
+                        : 'Adicionar etapa antes de ' + nextFront.steps[0].name,
+                      onClick: () =>
+                        addStep(
+                          nextFront.board.id,
+                          nextFront.item.uid,
+                          nextFront.steps[0].placeholder ? undefined : nextFront.steps[0].uid,
+                        ),
+                    }
+                  : undefined
+              }
+            />
           </div>,
         );
         LANES.forEach(([key, label], laneIndex) =>
@@ -516,6 +683,7 @@ export default function Blueprint({
         aria-label="Blueprint com rolagem horizontal"
       >
         <div
+          ref={grid}
           className="bp-grid oj-blueprint"
           style={
             {

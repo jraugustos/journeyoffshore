@@ -81,3 +81,9 @@ Header atualizado para “DeNovo Banco · Mapeamento”, controle da navegação
 ## Rotação e verificação de segurança — 02/11/2026
 
 Senha de acesso alterada em produção e na configuração local, sem registrar seu valor neste repositório. Sessões anteriores invalidadas, senha antiga recusada e conteúdo preservado. A varredura não encontrou credenciais reais nos arquivos versionados, histórico e artefatos examinados. Uma anotação local com a senha anterior foi sanitizada e uma cópia temporária da conexão do banco foi removida. O limitador global de tentativas permanece como achado de disponibilidade. Escopo, evidências e limites: [SEGURANCA.md](docs/SEGURANCA.md).
+
+## Estrutura personalizável da blueprint — 02/11/2026
+
+Macroprocessos, contextos/produtos e etapas podem ser inseridos pelas próprias divisórias, na visão geral e nas frentes. O contexto possui edição explícita por lápis, posição dentro do macroprocesso e transferência para outro macroprocesso, preservando casos, responsabilidades e vínculos das funcionalidades. Nas divisas compartilhadas, um único controle oferece os dois destinos possíveis. Inserções revelam o novo registro ao limpar os filtros; a ordem usa IDs reais da coleção completa. Salvamento automático e exclusões com confirmação continuam disponíveis. A grafia adotada é “macroprocesso”.
+
+Build de produção, 24 testes de regras e 8 cenários de navegador passaram em base isolada, com conferência visual em desktop e celular. [Evidências](tests/application-evidence/structure/results.json).

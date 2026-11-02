@@ -26,7 +26,9 @@ Se já houver um PostgreSQL instalado, forneça sua `DATABASE_URL` ao setup e us
 - Informe a senha compartilhada para liberar o workspace. Não há cadastro de usuário.
 - Clique no nome de um card preto para editar o macroprocesso, ou use “+ Macroprocesso” para criar outro.
 - No editor do macroprocesso, altere nome, posição e status. Defina responsáveis no contexto/produto e, quando necessário, por capacidade dentro desse contexto.
-- Adicione frentes pelo blueprint ou em “Cadastros e responsáveis → Macroprocessos e frentes”.
+- Na blueprint, passe o cursor sobre as divisórias para inserir macroprocessos, contextos/produtos e etapas exatamente naquele ponto. Os controles também aparecem ao receber foco pelo teclado e ficam visíveis em telas de toque.
+- O lápis do contexto/produto abre a edição de nome, descrição, status, macroprocesso, posição e responsáveis. Contexto/produto e frente de trabalho são o mesmo registro nas duas visões.
+- Na divisa entre contextos ou macroprocessos, um único “+” permite escolher em qual dos dois lados inserir o item. Uma inserção limpa os filtros para revelar o novo registro. Frentes também podem ser adicionadas em “Cadastros e responsáveis → Macroprocessos e frentes”.
 - Abra uma frente para trabalhar seus casos, etapas, oferta, AS-IS, CSD, decisões e ações.
 - Os campos são salvos automaticamente: textos após 700 ms sem digitação, e seleções e reordenações assim que concluídas.
 - “Todas as alterações salvas” significa confirmação do banco. Em caso de falha, mantenha a página aberta até concluir ou baixe as alterações pendentes.
@@ -75,6 +77,8 @@ npm run build
 A suíte de navegador usa Playwright e uma instância isolada da aplicação. Defina `TEST_PROJECT_PASSWORD` e, se necessário, `TEST_BASE_URL`, e execute `npm run test:e2e`. O Playwright deve estar disponível no ambiente; é possível informar seu módulo com `-- --playwright /caminho/para/playwright`.
 
 A suíte adicional de fidelidade pode ser executada com `npm run test:fidelity`, usando as mesmas variáveis para uma instância isolada.
+
+`npm run test:structure` verifica inserção por posição, edição e movimentação de contextos, persistência, filtros, teclado, toque e exportação, também com `TEST_BASE_URL` e `TEST_PROJECT_PASSWORD` de uma base isolada.
 
 Os testes de navegador criam dados sintéticos e restauram a base inicial da instância testada. Execute-os somente contra uma base isolada. As capturas e o resultado são gravados na pasta temporária indicada pela suíte.
 

@@ -160,10 +160,10 @@ const check = async (name, action) => {
       await close();
     });
     await check('Nova frente permanece vinculada ao novo macroprocesso', async () => {
-      await page.getByRole('button', { name: 'Adicionar frente', exact: true }).click();
+      await page.getByRole('button', { name: 'Adicionar contexto / produto', exact: true }).click();
       await page
         .locator('dialog.oj-dialog')
-        .getByLabel('Nome da frente')
+        .getByLabel('Nome do contexto / produto')
         .fill('Suporte ao relacionamento');
       await saved();
       await close();

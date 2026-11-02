@@ -27,6 +27,7 @@ import FrontBlocks from './FrontBlocks';
 import FieldPopover, { fieldAnchor, fieldPanelId, type FieldAnchor } from './FieldPopover';
 import RecordPicker from './RecordPicker';
 import { removeHierarchy } from '@/lib/hierarchy';
+import { insertMacro, insertFront, insertStep } from '@/lib/blueprintStructure';
 import AccessForm from './AccessForm';
 import LaunchTimeline from './LaunchTimeline';
 import { Avatar, People, Country, RecordTag, PhaseLegend } from './Visuals';
@@ -38,7 +39,6 @@ import {
   clone,
   uid,
   newFront,
-  newStep,
   newCase,
   copyCase,
   coverage,
@@ -133,27 +133,29 @@ export default function Workspace() {
   }
   const ownerNames = (ids: string[] = []) => <People people={data.people} ids={ids} />;
   const ownersFor = (front: RecordData) => ownerNames(front.ownerIds);
-  function addMacro() {
-    const id = uid();
+  function revealStructure() {
+    setMacroFilter('all');
+    setProfileFilter('all');
+    setReleaseFilter('all');
+    setStatusFilter('all');
+  }
+  function addMacro(beforeId?: string) {
+    let id = '';
     mutate((draft) => {
-      draft.macros.push({
-        id,
-        name: 'Novo macroprocesso',
-        short: 'Novo macroprocesso',
-        status: 'Em definição',
-        ownerIds: [],
-        boards: [],
-      });
+      id = insertMacro(draft, beforeId).id;
     }, true);
+    revealStructure();
+    if (page === 'board') navigate('overview');
     setEditor({ type: 'macro', id });
   }
-  function addFront(macroId: string) {
-    const next = newFront(macroId);
+  function addFront(macroId: string, beforeId?: string) {
+    let id = '';
     mutate((draft) => {
-      draft.boards.push(next);
-      draft.macros.find((item) => item.id === macroId)!.boards.push(next.id);
+      id = insertFront(draft, macroId, beforeId).id;
     }, true);
-    setEditor({ type: 'front', boardId: next.id });
+    revealStructure();
+    if (page === 'board') openFront(id);
+    setEditor({ type: 'front', boardId: id });
   }
   function addCase() {
     const item = copyCase(defaultCase(board), board);
@@ -164,17 +166,13 @@ export default function Workspace() {
     setCases((current) => ({ ...current, [board.id]: item.uid }));
     setEditor({ type: 'case', boardId: board.id, caseId: item.uid });
   }
-  function addStep(boardId: string, caseId: string) {
-    const step = newStep();
-    mutate(
-      (draft) =>
-        draft.boards
-          .find((front) => front.id === boardId)!
-          .cases.find((item: RecordData) => item.uid === caseId)
-          .steps.push(step),
-      true,
-    );
-    setEditor({ type: 'step', boardId, caseId, id: step.uid });
+  function addStep(boardId: string, caseId: string, beforeId?: string) {
+    let id = '';
+    mutate((draft) => {
+      id = insertStep(draft, boardId, caseId, beforeId).uid;
+    }, true);
+    revealStructure();
+    setEditor({ type: 'step', boardId, caseId, id });
   }
   function moveStep(boardId: string, caseId: string, id: string, direction: number) {
     mutate((draft) => {
@@ -370,7 +368,7 @@ export default function Workspace() {
             Caso de uso
           </button>
         ) : (
-          <button className="btn dark" onClick={addMacro}>
+          <button className="btn dark" onClick={() => addMacro()}>
             <Plus size={14} />
             Macroprocesso
           </button>
@@ -392,6 +390,7 @@ export default function Workspace() {
       setCase={(id, value) => setCases((current) => ({ ...current, [id]: value }))}
       edit={setEditor}
       openFront={openFront}
+      addMacro={addMacro}
       addFront={addFront}
       addStep={addStep}
       moveStep={moveStep}
@@ -490,7 +489,7 @@ export default function Workspace() {
             className="btn"
             onClick={() =>
               setMessage(
-                'Clique nos cards pretos para editar os macroprocessos. Clique em uma frente para detalhar, ou em uma célula para preencher. Todas as alterações são salvas automaticamente.',
+                'Use o + nas divisórias para inserir macroprocessos, contextos/produtos e etapas na posição desejada. O lápis do contexto permite editar nome, posição, macroprocesso e responsáveis. Clique em uma célula para preencher. Todas as alterações são salvas automaticamente.',
               )
             }
           >
@@ -507,8 +506,8 @@ export default function Workspace() {
         </div>
         {blueprint}
         <div className="oj-context">
-          Clique no nome de um macroprocesso para editá-lo. A visão geral e as frentes mostram os
-          mesmos registros.
+          Use o + nas divisórias para inserir itens. Edite os contextos/produtos pelo lápis no
+          cabeçalho. A visão geral e as frentes mostram os mesmos registros.
         </div>
         <div className="oj-front-links">
           {data.macros.map((macro) => (
@@ -1266,7 +1265,7 @@ export default function Workspace() {
           <>
             <div className="oj-section-heading">
               <h2>Macroprocessos e frentes</h2>
-              <button className="btn dark" onClick={addMacro}>
+              <button className="btn dark" onClick={() => addMacro()}>
                 <Plus size={14} />
                 Macroprocesso
               </button>
