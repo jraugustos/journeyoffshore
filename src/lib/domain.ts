@@ -86,6 +86,12 @@ const caseSchema = z
   })
   .passthrough();
 const boardSchema = recordSchema.extend({ macroId: z.string().min(1), cases: z.array(caseSchema) });
+const featureSchema = z
+  .object({
+    id: z.string().regex(/^F\d+$/, 'Código de funcionalidade inválido.'),
+    funcionalidade: z.string().trim().min(1, 'Informe o nome da funcionalidade.').max(2000),
+  })
+  .passthrough();
 export const workspaceSchema = z
   .object({
     schema: z.literal(4),
@@ -98,10 +104,16 @@ export const workspaceSchema = z
     operations: z.array(recordSchema),
     systems: z.array(recordSchema),
     capabilities: z.array(recordSchema),
+    featureCatalog: z.array(featureSchema).optional(),
   })
   .passthrough()
   .superRefine((data, ctx) => {
     const error = (message: string) => ctx.addIssue({ code: 'custom', message });
+    if (
+      data.featureCatalog &&
+      new Set(data.featureCatalog.map((feature) => feature.id)).size !== data.featureCatalog.length
+    )
+      error('Há códigos de funcionalidades duplicados.');
     for (const kind of ['macros', 'boards', ...REGISTRIES] as const) {
       const ids = data[kind].map((item) => item.id);
       if (new Set(ids).size !== ids.length) error('Há identificadores duplicados em ' + kind + '.');

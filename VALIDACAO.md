@@ -125,3 +125,9 @@ Conforme a referência fornecida pelo usuário, o controle saiu do header. Abert
 ## Login simplificado — 02/11/2026
 
 Removidos marca, apresentação e rodapé da tela de acesso. Textos atuais: “Acessar Workspace”, “Senha” e “Login”. TypeScript e build passaram. No navegador da base isolada, senha incorreta manteve o bloqueio; mostrar/ocultar senha funcionou; a senha de teste liberou o workspace e encerrar acesso retornou ao login. Layout conferido em desktop e 390 × 844. Evidências: [desktop](tests/application-evidence/login-clean-desktop.png), [celular](tests/application-evidence/login-clean-mobile.png), [resultados](tests/application-evidence/login-clean-results.json).
+
+## Catálogo, capacidades e timeline — 02/11/2026
+
+Build otimizado e 27 testes de regras passaram. A suíte `test:study` passou em quatro cenários completos, usando apenas uma instância isolada: criação e edição de funcionalidade com recarga e exportação JSON/CSV/HTML; casos padrão, digital e comercial como linhas distintas no roadmap; mudança de Release C para D pelo editor da etapa refletida na timeline; planejamento original com os mesmos 11 itens; responsáveis contidos no card da capacidade; cadastro e vínculo de funcionalidade diretamente na etapa; layout móvel sem overflow da página e ausência de erros JavaScript. O conteúdo inicial da base isolada foi restaurado.
+
+Evidências: [resultados](tests/application-evidence/study/results.json), [timeline desktop](tests/application-evidence/study/timeline-desktop.png), [timeline celular](tests/application-evidence/study/timeline-mobile.png), [capacidade com responsáveis](tests/application-evidence/study/capabilities-desktop.png). Conferido no Chrome; não substitui testes em outros navegadores ou uma auditoria completa de acessibilidade.

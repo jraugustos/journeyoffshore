@@ -4,6 +4,7 @@ import type { RecordData, WorkspaceData } from '@/lib/domain';
 import { RELEASES } from '@/lib/domain';
 import { featurePhase, phaseStyle } from '@/lib/presentation';
 import { Phase, PhaseLegend } from './Visuals';
+import DeepTimeline from './DeepTimeline';
 
 const POSITIONS: Record<string, number> = {
   'Day-1': 28,
@@ -94,7 +95,7 @@ function Products({ item }: { item: RecordData }) {
     </div>
   ));
 }
-export default function LaunchTimeline({
+function PlannedTimeline({
   launch,
   matrix,
   state,
@@ -315,7 +316,7 @@ export default function LaunchTimeline({
                               {related
                                 .filter((f: RecordData) => f.publico === audience)
                                 .map((f: RecordData) => {
-                                  const phase = featurePhase(f, state.featureRouting?.[f.id]);
+                                  const phase = featurePhase(f);
                                   return (
                                     <button
                                       className="lt-feature"
@@ -397,5 +398,43 @@ export default function LaunchTimeline({
         de calendário.
       </div>
     </div>
+  );
+}
+
+export default function LaunchTimeline(props: {
+  launch: RecordData;
+  matrix: RecordData;
+  studyMatrix: RecordData;
+  state: WorkspaceData;
+  editFeature: (id: string) => void;
+  openFront: (id: string) => void;
+  openCatalog: (phase: string) => void;
+  editStep: (boardId: string, caseId: string, id: string) => void;
+}) {
+  const [view, setView] = useState('planned');
+  return (
+    <>
+      <div className="oj-board-tabs" role="group" aria-label="Visões do Launch Timeline">
+        <button
+          className={view === 'planned' ? 'is-selected' : ''}
+          aria-pressed={view === 'planned'}
+          onClick={() => setView('planned')}
+        >
+          Timeline Planejada
+        </button>
+        <button
+          className={view === 'study' ? 'is-selected' : ''}
+          aria-pressed={view === 'study'}
+          onClick={() => setView('study')}
+        >
+          Timeline Aprofundada
+        </button>
+      </div>
+      {view === 'planned' ? (
+        <PlannedTimeline {...props} />
+      ) : (
+        <DeepTimeline {...props} matrix={props.studyMatrix} />
+      )}
+    </>
   );
 }

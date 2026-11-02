@@ -104,10 +104,13 @@ function Lane({ lane, step, state }: { lane: string; step: RecordData; state: Wo
           return (
             <span className="oj-capability-responsibility" key={id}>
               <RecordTags state={state} kind="capabilities" ids={[id]} />
-              <People
-                people={state.people}
-                ids={assignment ? assignment.personIds : capability?.ownerIds}
-              />
+              <span className="oj-capability-owners">
+                <small>Responsáveis</small>
+                <People
+                  people={state.people}
+                  ids={assignment ? assignment.personIds : capability?.ownerIds}
+                />
+              </span>
             </span>
           );
         })}
@@ -664,6 +667,23 @@ export default function Blueprint({
                     </span>
                   </button>
                 ))}
+                {!step.placeholder && (
+                  <button
+                    className="btn tiny oj-feature-link"
+                    onClick={(event) =>
+                      edit({
+                        type: 'step',
+                        boardId: front.board.id,
+                        caseId: front.item.uid,
+                        id: step.uid,
+                        section: 'features',
+                        anchor: fieldAnchor(event.currentTarget),
+                      })
+                    }
+                  >
+                    <Plus size={13} /> Vincular ou criar
+                  </button>
+                )}
               </details>
             </div>,
           );

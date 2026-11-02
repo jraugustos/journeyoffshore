@@ -63,3 +63,9 @@ CSV oferece casos, CSD, decisões, ações, acompanhamento e funcionalidades. Ca
 Contas individuais, permissões por papel, sincronização em tempo real e normalização das demais entidades em tabelas próprias podem ser adicionadas quando necessárias. Essas capacidades não são pressupostos para operar a primeira versão.
 
 A ação de importar JSON foi removida da interface conforme a revisão do header. O endpoint existente continua disponível para restaurações e migrações controladas, com autenticação, validação e controle de revisão. A exportação permanece disponível no menu por ícone.
+
+## Catálogo de trabalho e roadmap derivado
+
+`featureCatalog` é opcional nos metadados JSONB do workspace. Antes da primeira criação/edição, usa-se o catálogo de referência; na primeira alteração, uma cópia completa passa a ser persistida no banco e incluída no backup JSON. IDs estáveis preservam os vínculos de etapas. CSV e HTML usam o catálogo de trabalho. O catálogo original continua separado e sustenta a Timeline Planejada. Não há migração SQL para esta evolução. O controle de conflito do catálogo é conservador e considera a lista completa, evitando sobrescrever uma edição concorrente.
+
+A Timeline Aprofundada é calculada em leitura, sem segunda cópia de planejamento: macroprocessos e contextos na ordem da blueprint, uma linha por caso de uso, marcadores derivados de `steps.release`, incluindo o agrupamento A definir. Os vínculos funcionais vêm das mesmas etapas.

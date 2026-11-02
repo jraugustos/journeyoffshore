@@ -28,6 +28,7 @@ import FieldPopover, { fieldAnchor, fieldPanelId, type FieldAnchor } from './Fie
 import RecordPicker from './RecordPicker';
 import { removeHierarchy } from '@/lib/hierarchy';
 import { insertMacro, insertFront, insertStep } from '@/lib/blueprintStructure';
+import { workspaceMatrix, createFeature } from '@/lib/features';
 import AccessForm from './AccessForm';
 import LaunchTimeline from './LaunchTimeline';
 import { Avatar, People, Country, RecordTag, PhaseLegend } from './Visuals';
@@ -108,7 +109,8 @@ export default function Workspace() {
       </main>
     );
   const data = api.data,
-    { matrix, launch } = api.references;
+    { matrix: sourceMatrix, launch } = api.references;
+  const matrix = workspaceMatrix(data, sourceMatrix);
   const board =
     data.boards.find((item) => item.id === frontId) ||
     data.boards[0] ||
@@ -133,6 +135,15 @@ export default function Workspace() {
   }
   const ownerNames = (ids: string[] = []) => <People people={data.people} ids={ids} />;
   const ownersFor = (front: RecordData) => ownerNames(front.ownerIds);
+  function addFeature() {
+    let id = '';
+    mutate((draft) => {
+      id = createFeature(draft, sourceMatrix).id;
+    }, true);
+    revealStructure();
+    setQuery('');
+    setEditor({ type: 'feature', id });
+  }
   function revealStructure() {
     setMacroFilter('all');
     setProfileFilter('all');
@@ -1126,6 +1137,9 @@ export default function Workspace() {
               ))}
             </select>
           </label>
+          <button className="btn dark" onClick={addFeature}>
+            <Plus size={15} /> Adicionar funcionalidade
+          </button>
           <button className="btn" onClick={() => void exportData('csv', 'features')}>
             <Download size={15} />
             Exportar CSV
@@ -1165,8 +1179,10 @@ export default function Workspace() {
     content = (
       <LaunchTimeline
         launch={launch}
-        matrix={matrix}
+        matrix={sourceMatrix}
+        studyMatrix={matrix}
         state={data}
+        editStep={(boardId, caseId, id) => setEditor({ type: 'step', boardId, caseId, id })}
         editFeature={(id) => setEditor({ type: 'feature', id })}
         openFront={openFront}
         openCatalog={(phase) => {
@@ -1610,6 +1626,7 @@ export default function Workspace() {
           state={data}
           matrix={matrix}
           target={editor}
+          sourceMatrix={sourceMatrix}
           change={mutate}
           close={() => void closeEditor()}
           status={api.status}

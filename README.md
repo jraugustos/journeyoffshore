@@ -95,3 +95,11 @@ Os arquivos antigos não são servidos publicamente pelo Next.js. A base inicial
 - Os seletores são campos compactos: clique para abrir a busca e marcar os itens. Busque um nome novo para cadastrá-lo e vinculá-lo no mesmo lugar. No blueprint, cada célula abre apenas as opções daquele campo, junto à célula; o nome da etapa mantém a edição completa. Responsáveis do contexto também podem ser selecionados diretamente no cabeçalho.
 - Cada contexto/produto possui seus responsáveis. Capacidades podem ter responsáveis de referência e uma atribuição específica por contexto, que prevalece sobre a referência. A atribuição pode ser feita na etapa ou no botão “Responsáveis por capacidade” da frente.
 - Macroprocessos, contextos e etapas podem ser excluídos pelo editor, com confirmação do impacto. A exclusão de um macroprocesso remove seus contextos; a de um contexto remove seus casos e etapas. Funcionalidades permanecem no catálogo. O conteúdo removido é mantido em `deletedItems` na exportação JSON; não há restauração individual pela interface.
+
+### Catálogo e duas timelines
+
+Em Funcionalidades, use Adicionar funcionalidade ou abra um card para editar título, público, jornada, cobertura, referências, observações, marco e vínculos. Os códigos são gerados automaticamente e permanecem estáveis. Na linha Funcionalidades da blueprint da frente, expanda a lista e use Vincular ou criar para pesquisar ou cadastrar sem sair da etapa. A referência original permanece disponível no editor.
+
+No Launch Timeline, Timeline Planejada mantém o planejamento de referência. Timeline Aprofundada organiza todos os casos de uso por macroprocesso e contexto/produto. Cada caso ocupa uma linha, com os marcos das suas etapas. Expanda para consultar etapas e funcionalidades ou abrir sua edição. A definir reúne etapas sem marco e casos sem etapas. Nenhuma data ou duração é inferida.
+
+`npm run test:study` verifica catálogo, exportações, capacidades e timeline em uma instância isolada com as mesmas variáveis das demais suítes de navegador.

@@ -1,4 +1,5 @@
 import { type WorkspaceData, type RecordData, defaultCase, coverage } from './domain';
+import { workspaceMatrix } from './features';
 
 const text = (value: any) => String(value ?? '');
 const escape = (value: any) =>
@@ -12,6 +13,7 @@ export function csvCell(value: any) {
   return '"' + result.replace(/"/g, '""') + '"';
 }
 export function csvExport(state: WorkspaceData, kind: string, matrix: RecordData) {
+  matrix = workspaceMatrix(state, matrix);
   let headers: string[], rows: any[][];
   if (kind === 'cases') {
     headers = [
@@ -123,6 +125,7 @@ export function csvExport(state: WorkspaceData, kind: string, matrix: RecordData
 }
 
 export function htmlExport(state: WorkspaceData, matrix: RecordData) {
+  matrix = workspaceMatrix(state, matrix);
   const names = (kind: string, ids: string[] = []) =>
     ids
       .map((id) => (state[kind] || []).find((item: RecordData) => item.id === id)?.name || id)

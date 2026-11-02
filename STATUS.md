@@ -87,3 +87,9 @@ Senha de acesso alterada em produção e na configuração local, sem registrar 
 Macroprocessos, contextos/produtos e etapas podem ser inseridos pelas próprias divisórias, na visão geral e nas frentes. O contexto possui edição explícita por lápis, posição dentro do macroprocesso e transferência para outro macroprocesso, preservando casos, responsabilidades e vínculos das funcionalidades. Nas divisas compartilhadas, um único controle oferece os dois destinos possíveis. Inserções revelam o novo registro ao limpar os filtros; a ordem usa IDs reais da coleção completa. Salvamento automático e exclusões com confirmação continuam disponíveis. A grafia adotada é “macroprocesso”.
 
 Build de produção, 24 testes de regras e 8 cenários de navegador passaram em base isolada, com conferência visual em desktop e celular. [Evidências](tests/application-evidence/structure/results.json).
+
+## Catálogo e timeline aprofundada — 02/11/2026
+
+Responsáveis aparecem dentro do card da capacidade. O catálogo permite adicionar e editar funcionalidades, com código automático estável, referência original preservada e salvamento no banco. Também é possível cadastrar e vincular funcionalidades dentro da etapa. JSON, CSV e HTML incluem o catálogo de trabalho.
+
+Launch Timeline possui Timeline Planejada, com a referência original, e Timeline Aprofundada, derivada da blueprint: macroprocesso → contexto/produto → uma linha por caso de uso, incluindo alternativas. As etapas determinam os marcadores; a expansão mostra etapas e funcionalidades. Casos sem etapas e etapas sem marco aparecem em A definir. Alterações de marco se refletem automaticamente.

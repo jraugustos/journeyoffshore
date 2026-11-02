@@ -1,0 +1,21 @@
+{
+  "results": [
+    {
+      "name": "Criar e editar funcionalidade persiste e exporta",
+      "result": "passed"
+    },
+    {
+      "name": "Casos alternativos e marcos da blueprint alimentam a timeline",
+      "result": "passed"
+    },
+    {
+      "name": "Capacidade contém seus responsáveis e permite criar funcionalidade na etapa",
+      "result": "passed"
+    },
+    {
+      "name": "Conferência móvel e erros de execução",
+      "result": "passed"
+    }
+  ],
+  "errors": []
+}

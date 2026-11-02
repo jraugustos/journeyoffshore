@@ -1445,8 +1445,90 @@ body {
 .oj-capability-responsibility {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  margin-bottom: 10px;
+  gap: 10px;
+  margin-bottom: 6px;
+  padding: 10px;
+  border: 1px solid #e1e2e6;
+  border-radius: 9px;
+  background: #fff;
+  width: 100%;
+}
+.oj-capability-responsibility .v11-tag {
+  width: 100%;
+}
+.oj-capability-owners {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.oj-capability-owners > small {
+  color: #666670;
+  font-size: 10px;
+}
+.oj-roadmap-macro > h3 {
+  margin: 0;
+  padding: 14px 18px;
+  background: #202024;
+  color: white;
+  font-size: 15px;
+}
+.oj-roadmap-context-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 18px;
+  background: #f2f2f2;
+}
+.oj-roadmap-context-head > button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: #303034;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+.oj-roadmap-context-head .v15-owner-group {
+  font-size: 11px;
+}
+.oj-study-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--phase-tone, #ececf0);
+  color: var(--phase-text, #333);
+}
+.oj-study-phase {
+  margin-bottom: 20px;
+}
+.oj-study-step {
+  margin: 12px 0;
+  padding: 14px 0;
+  border-bottom: 1px solid #e5e5e8;
+}
+.oj-study-step-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #29292e;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.oj-study-step > p {
+  font-size: 12px;
+  color: #666;
+}
+.oj-study-marker.lt-marker {
+  background: var(--tone);
+  color: var(--marker-text);
+}
+.oj-feature-link {
+  margin-top: 8px;
 }
 .oj-capability-responsibility .v15-owner {
   font-size: 10px;

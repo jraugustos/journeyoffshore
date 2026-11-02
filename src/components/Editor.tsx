@@ -55,6 +55,7 @@ export function editorRecord(state: WorkspaceData, target: EditorTarget): Record
 export { default as SelectRecords } from './RecordPicker';
 import SelectRecords from './RecordPicker';
 import { moveFront } from '@/lib/blueprintStructure';
+import { createFeature, editableFeatures } from '@/lib/features';
 const DEFINITIONS: Record<
   string,
   { title: string; fields: [string, string, string?, string[]?][] }
@@ -174,6 +175,7 @@ export default function Editor({
   state,
   target,
   matrix,
+  sourceMatrix,
   change,
   close,
   status,
@@ -184,6 +186,7 @@ export default function Editor({
   state: WorkspaceData;
   target: EditorTarget;
   matrix: RecordData;
+  sourceMatrix: RecordData;
   change: (recipe: (draft: WorkspaceData) => void, immediate?: boolean) => void;
   close: () => void;
   status: string;
@@ -870,9 +873,10 @@ export default function Editor({
         )}
         {show('support') && field('support', 'Atendimento', 'textarea')}
         {show('features') && (
-          <details className="oj-editor-section">
+          <details className="oj-editor-section" open={!!target.section}>
             <summary>Funcionalidades vinculadas</summary>
             <SelectRecords
+              inline={!!target.anchor}
               label="Funcionalidades"
               records={matrix.items.map((item: RecordData) => ({
                 id: item.id,
@@ -880,6 +884,21 @@ export default function Editor({
               }))}
               selected={record.featureIds || []}
               onChange={(ids) => update('featureIds', ids, true)}
+              onCreate={(name) =>
+                change((draft) => {
+                  const feature = createFeature(draft, sourceMatrix, name, {
+                    jornada: board?.name || '',
+                    subjornada: record.name,
+                  });
+                  const step = editorRecord(draft, target)!;
+                  step.featureIds = [...(step.featureIds || []), feature.id];
+                  draft.featureRouting ??= {};
+                  draft.featureRouting[feature.id] = {
+                    boardId: board!.id,
+                    macroId: board!.macroId,
+                  };
+                }, true)
+              }
             />
           </details>
         )}
@@ -893,41 +912,88 @@ export default function Editor({
     );
   } else if (target.type === 'feature') {
     const feature = matrix.items.find((item: RecordData) => item.id === target.id)!;
-    title = feature.id + ' · ' + feature.funcionalidade;
+    title = 'Editar funcionalidade · ' + feature.id;
+    const original = sourceMatrix.items.find((item: RecordData) => item.id === target.id);
+    const definitionField = (key: string, label: string, multiline = false) => (
+      <label key={key} className={'oj-field ' + (multiline ? 'full' : '')}>
+        <span>{label}</span>
+        {multiline ? (
+          <textarea
+            aria-label={label}
+            rows={3}
+            value={feature[key] || ''}
+            onChange={(event) =>
+              change((draft) => {
+                editableFeatures(draft, sourceMatrix).find((item) => item.id === feature.id)![key] =
+                  event.target.value;
+              })
+            }
+          />
+        ) : (
+          <input
+            aria-label={label}
+            value={feature[key] || ''}
+            onChange={(event) =>
+              change((draft) => {
+                editableFeatures(draft, sourceMatrix).find((item) => item.id === feature.id)![key] =
+                  event.target.value;
+              })
+            }
+          />
+        )}
+      </label>
+    );
     const routedBoard = state.boards.find((item) => item.id === record.boardId);
     body = (
       <>
-        <dl className="oj-source">
-          <dt>Público</dt>
-          <dd>{feature.publico}</dd>
-          <dt>Marco original</dt>
-          <dd>{feature.marco_produto}</dd>
-          <dt>Cobertura declarada</dt>
-          <dd>{feature.status_vendor}</dd>
-          <dt>Contexto</dt>
-          <dd>{feature.observacao}</dd>
-          <dt>Requisitos RFI</dt>
-          <dd>{feature.rfi_ids}</dd>
-          <dt>Fontes</dt>
-          <dd>
-            {feature.fonte_rfi}
-            <br />
-            {feature.fonte_timeline}
-          </dd>
-        </dl>
+        {definitionField('funcionalidade', 'Funcionalidade', true)}
+        <label className="oj-field">
+          <span>Código da funcionalidade</span>
+          <input value={feature.id} readOnly />
+        </label>
+        {definitionField('publico', 'Público')}
+        {definitionField('jornada', 'Jornada')}
+        {definitionField('subjornada', 'Subjornada')}
+        {definitionField('status_vendor', 'Cobertura declarada')}
+        {definitionField('rfi_ids', 'Requisitos RFI')}
+        {definitionField('natureza', 'Natureza')}
+        {definitionField('prioridade', 'Prioridade')}
+        {definitionField('expectativa_ux', 'Expectativa de UX')}
+        {definitionField('observacao', 'Observação', true)}
+        {definitionField('fonte_rfi', 'Fonte RFI')}
+        {definitionField('fonte_timeline', 'Fonte do planejamento')}
+        {original && (
+          <details className="oj-editor-section">
+            <summary>Referência original preservada</summary>
+            <dl className="oj-source">
+              <dt>Funcionalidade</dt>
+              <dd>{original.funcionalidade}</dd>
+              <dt>Marco original</dt>
+              <dd>{original.marco_produto || 'A definir'}</dd>
+              <dt>Cobertura declarada</dt>
+              <dd>{original.status_vendor}</dd>
+              <dt>Observação</dt>
+              <dd>{original.observacao}</dd>
+            </dl>
+          </details>
+        )}
         <label className="oj-field">
           <span>Frente de trabalho</span>
           <select
+            aria-label="Contexto / produto da funcionalidade"
             value={record.boardId || ''}
             onChange={(event) =>
               change((draft) => {
-                const next = draft.boards.find((item) => item.id === event.target.value)!;
+                const next = draft.boards.find((item) => item.id === event.target.value);
                 draft.featureRouting ??= {};
-                draft.featureRouting[target.id!] = {
-                  ...record,
-                  boardId: next.id,
-                  macroId: next.macroId,
-                };
+                const routing = (draft.featureRouting[target.id!] ??= {});
+                if (next) {
+                  routing.boardId = next.id;
+                  routing.macroId = next.macroId;
+                } else {
+                  delete routing.boardId;
+                  delete routing.macroId;
+                }
               }, true)
             }
           >
@@ -943,6 +1009,7 @@ export default function Editor({
           <span>Marco revisto no workshop</span>
           <select
             name="release"
+            aria-label="Marco da funcionalidade"
             value={Object.hasOwn(record, 'release') ? record.release : '__source'}
             onChange={(event) => {
               if (event.target.value === '__source')
@@ -966,28 +1033,29 @@ export default function Editor({
         </label>
         {field('releaseReason', 'Justificativa da revisão', 'textarea')}
         {routedBoard && (
-          <fieldset className="oj-picker">
-            <legend>Etapas do caso padrão de {routedBoard.name}</legend>
-            {defaultCase(routedBoard).steps.map((step: RecordData) => (
-              <label className="oj-check" key={step.uid}>
-                <input
-                  type="checkbox"
-                  checked={step.featureIds?.includes(feature.id)}
-                  onChange={(event) =>
-                    change((draft) => {
-                      const item = defaultCase(
-                        draft.boards.find((b) => b.id === routedBoard.id)!,
-                      ).steps.find((s: RecordData) => s.uid === step.uid);
-                      item.featureIds = event.target.checked
-                        ? [...new Set([...(item.featureIds || []), feature.id])]
-                        : (item.featureIds || []).filter((id: string) => id !== feature.id);
-                    }, true)
-                  }
-                />
-                {step.name}
-              </label>
-            ))}
-          </fieldset>
+          <SelectRecords
+            label={'Etapas vinculadas em ' + routedBoard.name}
+            records={routedBoard.cases.flatMap((item: RecordData) =>
+              item.steps.map((step: RecordData) => ({
+                id: step.uid,
+                name: item.title + ' · ' + step.name,
+              })),
+            )}
+            selected={routedBoard.cases.flatMap((item: RecordData) =>
+              item.steps
+                .filter((step: RecordData) => step.featureIds?.includes(feature.id))
+                .map((step: RecordData) => step.uid),
+            )}
+            onChange={(ids) =>
+              change((draft) => {
+                for (const item of draft.boards.find((b) => b.id === routedBoard.id)!.cases)
+                  for (const step of item.steps)
+                    step.featureIds = ids.includes(step.uid)
+                      ? [...new Set([...(step.featureIds || []), feature.id])]
+                      : (step.featureIds || []).filter((id: string) => id !== feature.id);
+              }, true)
+            }
+          />
         )}
       </>
     );

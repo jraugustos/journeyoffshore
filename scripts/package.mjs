@@ -38,6 +38,7 @@ const roots = [
   'tests/application.spec.cjs',
   'tests/fidelity.spec.cjs',
   'tests/structure.spec.cjs',
+  'tests/study.spec.cjs',
 ];
 const paths = [];
 async function collect(item) {
