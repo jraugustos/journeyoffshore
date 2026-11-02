@@ -103,3 +103,5 @@ Em Funcionalidades, use Adicionar funcionalidade ou abra um card para editar tí
 No Launch Timeline, Timeline Planejada mantém o planejamento de referência. Timeline Aprofundada organiza todos os casos de uso por macroprocesso e contexto/produto. Cada caso ocupa uma linha, com os marcos das suas etapas. Expanda para consultar etapas e funcionalidades ou abrir sua edição. A definir reúne etapas sem marco e casos sem etapas. Nenhuma data ou duração é inferida.
 
 `npm run test:study` verifica catálogo, exportações, capacidades e timeline em uma instância isolada com as mesmas variáveis das demais suítes de navegador.
+
+Para excluir uma funcionalidade, abra seu card e use **Excluir funcionalidade** no rodapé do editor. A confirmação informa o número de etapas afetadas. A exclusão remove a funcionalidade do catálogo ativo, de todos os casos de uso e da classificação; guarda definição e vínculos no backup JSON. Os códigos excluídos não são reutilizados. Referências históricas da Timeline Planejada são preservadas como consulta.

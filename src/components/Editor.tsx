@@ -1205,16 +1205,18 @@ export default function Editor({
         </p>
       )}
       <footer>
-        {['macro', 'front', 'step', 'assignment'].includes(target.type) && (
+        {['macro', 'front', 'step', 'assignment', 'feature'].includes(target.type) && (
           <button type="button" className="btn oj-danger" onClick={() => onDelete(target)}>
             Excluir{' '}
             {target.type === 'macro'
               ? 'macroprocesso'
-              : target.type === 'front'
-                ? 'contexto / produto'
-                : target.type === 'assignment'
-                  ? 'vínculo'
-                  : 'etapa'}
+              : target.type === 'feature'
+                ? 'funcionalidade'
+                : target.type === 'front'
+                  ? 'contexto / produto'
+                  : target.type === 'assignment'
+                    ? 'vínculo'
+                    : 'etapa'}
           </button>
         )}
         <span role="status">

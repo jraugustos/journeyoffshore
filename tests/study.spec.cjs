@@ -151,6 +151,46 @@ if (!base || !password) throw Error('Use uma instância isolada.');
         );
       },
     );
+    await check(
+      'Exclusão confirma impacto, permite cancelar e remove vínculos de todos os casos',
+      async () => {
+        await nav('Funcionalidades');
+        await page
+          .locator('.bp-catalog-row')
+          .filter({ hasText: 'Fluxo personalizado revisado' })
+          .click();
+        page.once('dialog', (dialog) => dialog.dismiss());
+        await page.getByRole('button', { name: 'Excluir funcionalidade', exact: true }).click();
+        assert.ok((await state()).data.featureCatalog.some((f) => f.id === id));
+        page.once('dialog', (dialog) => dialog.accept());
+        await page.getByRole('button', { name: 'Excluir funcionalidade', exact: true }).click();
+        await saved();
+        const current = (await state()).data;
+        assert.equal(
+          current.featureCatalog.some((f) => f.id === id),
+          false,
+        );
+        assert.ok(
+          current.boards.every((b) =>
+            b.cases.every((c) => c.steps.every((step) => !step.featureIds?.includes(id))),
+          ),
+        );
+        assert.ok(
+          current.deletedItems.some((item) => item.type === 'feature' && item.record.id === id),
+        );
+        assert.equal(current.featureRouting?.[id], undefined);
+        await page.reload();
+        await saved();
+        await nav('Funcionalidades');
+        assert.equal(
+          await page
+            .locator('.bp-catalog-row')
+            .filter({ hasText: 'Fluxo personalizado revisado' })
+            .count(),
+          0,
+        );
+      },
+    );
     await check('Conferência móvel e erros de execução', async () => {
       await nav('Launch Timeline');
       await nav('Timeline Aprofundada');

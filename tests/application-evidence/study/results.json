@@ -13,6 +13,10 @@
       "result": "passed"
     },
     {
+      "name": "Exclusão confirma impacto, permite cancelar e remove vínculos de todos os casos",
+      "result": "passed"
+    },
+    {
       "name": "Conferência móvel e erros de execução",
       "result": "passed"
     }

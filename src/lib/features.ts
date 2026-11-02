@@ -19,9 +19,13 @@ export function createFeature(
   const next =
     Math.max(
       0,
-      ...[...source.items, ...items].map(
-        (item: RecordData) => Number(/^F(\d+)$/.exec(item.id)?.[1]) || 0,
-      ),
+      ...[
+        ...source.items,
+        ...items,
+        ...(state.deletedItems || [])
+          .filter((item: RecordData) => item.type === 'feature')
+          .map((item: RecordData) => item.record),
+      ].map((item: RecordData) => Number(/^F(\d+)$/.exec(item.id)?.[1]) || 0),
     ) + 1;
   const feature = {
     publico: '',
@@ -42,4 +46,29 @@ export function createFeature(
   };
   items.push(feature);
   return feature;
+}
+
+export function removeFeature(state: WorkspaceData, source: RecordData, id: string) {
+  const items = editableFeatures(state, source);
+  const feature = items.find((item) => item.id === id);
+  if (!feature) throw new Error('Funcionalidade não encontrada.');
+  const links: RecordData[] = [];
+  for (const board of state.boards)
+    for (const item of board.cases)
+      for (const step of item.steps) {
+        if (!step.featureIds?.includes(id)) continue;
+        links.push({ boardId: board.id, caseId: item.uid, stepId: step.uid });
+        step.featureIds = step.featureIds.filter((value: string) => value !== id);
+      }
+  state.deletedItems ??= [];
+  state.deletedItems.push({
+    uid: crypto.randomUUID(),
+    at: new Date().toISOString(),
+    type: 'feature',
+    record: clone(feature),
+    links,
+    routing: clone(state.featureRouting?.[id] || {}),
+  });
+  state.featureCatalog = items.filter((item) => item.id !== id);
+  if (state.featureRouting) delete state.featureRouting[id];
 }

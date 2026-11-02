@@ -93,3 +93,7 @@ Build de produção, 24 testes de regras e 8 cenários de navegador passaram em 
 Responsáveis aparecem dentro do card da capacidade. O catálogo permite adicionar e editar funcionalidades, com código automático estável, referência original preservada e salvamento no banco. Também é possível cadastrar e vincular funcionalidades dentro da etapa. JSON, CSV e HTML incluem o catálogo de trabalho.
 
 Launch Timeline possui Timeline Planejada, com a referência original, e Timeline Aprofundada, derivada da blueprint: macroprocesso → contexto/produto → uma linha por caso de uso, incluindo alternativas. As etapas determinam os marcadores; a expansão mostra etapas e funcionalidades. Casos sem etapas e etapas sem marco aparecem em A definir. Alterações de marco se refletem automaticamente.
+
+## CRUD completo de funcionalidades — 02/11/2026
+
+Exclusão disponível no rodapé do editor, para funcionalidades originais e novas, com confirmação do impacto. Remove vínculos em todos os casos e a classificação; mantém conteúdo e vínculos históricos no JSON e não reutiliza códigos. Referências excluídas da Timeline Planejada ficam somente para consulta, evitando abrir um editor inexistente. Build e 29 testes de regras passaram; a suíte de navegador inclui cancelamento e exclusão persistente.

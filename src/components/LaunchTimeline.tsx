@@ -320,6 +320,20 @@ function PlannedTimeline({
                                   return (
                                     <button
                                       className="lt-feature"
+                                      disabled={
+                                        !!state.featureCatalog &&
+                                        !state.featureCatalog.some(
+                                          (item: RecordData) => item.id === f.id,
+                                        )
+                                      }
+                                      title={
+                                        state.featureCatalog &&
+                                        !state.featureCatalog.some(
+                                          (item: RecordData) => item.id === f.id,
+                                        )
+                                          ? 'Excluída do catálogo de trabalho. Referência histórica preservada.'
+                                          : undefined
+                                      }
                                       key={f.id}
                                       style={phaseStyle(phase)}
                                       onClick={() => editFeature(f.id)}

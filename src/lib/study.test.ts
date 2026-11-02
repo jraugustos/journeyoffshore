@@ -7,7 +7,7 @@ import {
   copyCase,
   type WorkspaceData,
 } from './domain';
-import { workspaceMatrix, createFeature, editableFeatures } from './features';
+import { workspaceMatrix, createFeature, editableFeatures, removeFeature } from './features';
 import { deepTimeline } from './deepTimeline';
 import { diffState, applyChanges } from './changes';
 import { csvExport, htmlExport } from './exports';
@@ -76,5 +76,45 @@ describe('Catálogo editável e roadmap aprofundado', () => {
         .rows.find((r) => r.item.uid === standard.uid)!
         .phases.map((p) => p.phase),
     ).toEqual(['', 'Day-1']);
+  });
+});
+
+describe('Exclusão de funcionalidades', () => {
+  it('remove referência e todos os vínculos, persiste e preserva histórico sem alterar a fonte', () => {
+    const before = initial(),
+      next = clone(before),
+      original = clone(matrix);
+    const board = next.boards.find((b) => defaultCase(b).steps.length)!;
+    const item = defaultCase(board),
+      step = item.steps[0];
+    step.featureIds = ['F001', 'F002'];
+    const alternative = copyCase(item, board);
+    board.cases.push(alternative);
+    next.featureRouting = { F001: { boardId: board.id, release: 'Release D' } };
+    removeFeature(next, matrix, 'F001');
+    const saved = validateWorkspace(applyChanges(before, diffState(before, next)));
+    expect(workspaceMatrix(saved, matrix).items.some((f: any) => f.id === 'F001')).toBe(false);
+    expect(
+      saved.boards.every((b) =>
+        b.cases.every((c: any) => c.steps.every((s: any) => !s.featureIds?.includes('F001'))),
+      ),
+    ).toBe(true);
+    expect(saved.featureRouting.F001).toBeUndefined();
+    expect(saved.deletedItems.at(-1)).toMatchObject({
+      type: 'feature',
+      record: { id: 'F001' },
+      routing: { release: 'Release D' },
+    });
+    expect(saved.deletedItems.at(-1).links.length).toBeGreaterThanOrEqual(2);
+    expect(csvExport(saved, 'features', matrix)).not.toContain('"F001"');
+    expect(matrix).toEqual(original);
+  });
+  it('não reutiliza códigos excluídos e mantém catálogo vazio sem ressuscitar a referência', () => {
+    const s = initial(),
+      first = createFeature(s, matrix, 'Teste');
+    removeFeature(s, matrix, first.id);
+    expect(createFeature(s, matrix, 'Outro').id).toBe('F087');
+    s.featureCatalog = [];
+    expect(workspaceMatrix(s, matrix).items).toEqual([]);
   });
 });

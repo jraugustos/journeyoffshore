@@ -28,7 +28,7 @@ import FieldPopover, { fieldAnchor, fieldPanelId, type FieldAnchor } from './Fie
 import RecordPicker from './RecordPicker';
 import { removeHierarchy } from '@/lib/hierarchy';
 import { insertMacro, insertFront, insertStep } from '@/lib/blueprintStructure';
-import { workspaceMatrix, createFeature } from '@/lib/features';
+import { workspaceMatrix, createFeature, removeFeature } from '@/lib/features';
 import AccessForm from './AccessForm';
 import LaunchTimeline from './LaunchTimeline';
 import { Avatar, People, Country, RecordTag, PhaseLegend } from './Visuals';
@@ -1593,6 +1593,26 @@ export default function Workspace() {
       {editor && (
         <Editor
           onDelete={(target) => {
+            if (target.type === 'feature') {
+              const feature = matrix.items.find((item: RecordData) => item.id === target.id);
+              const links = data.boards.flatMap((board) =>
+                board.cases.flatMap((item: RecordData) =>
+                  item.steps.filter((step: RecordData) => step.featureIds?.includes(target.id)),
+                ),
+              ).length;
+              if (
+                !confirm(
+                  `Excluir ${feature?.id} — ${feature?.funcionalidade}? A funcionalidade será removida do catálogo e de ${links} etapa(s) vinculada(s), em todos os casos de uso. O conteúdo será preservado no backup JSON; a referência histórica da Timeline Planejada permanece.`,
+                )
+              )
+                return;
+              mutate((draft) => removeFeature(draft, sourceMatrix, target.id!), true);
+              setEditor(null);
+              setMessage(
+                'Funcionalidade excluída e vínculos removidos. Conteúdo preservado na exportação JSON.',
+              );
+              return;
+            }
             if (target.type === 'assignment') {
               removeAssignment(target.id!);
               return;
