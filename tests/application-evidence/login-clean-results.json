@@ -1,0 +1,14 @@
+{
+  "heading": "Acessar Workspace",
+  "footer": 0,
+  "loginButton": true,
+  "visibleType": "text",
+  "invalidPassword": "Senha incorreta. Tente novamente.",
+  "validPassword": true,
+  "mobile": {
+    "left": 24,
+    "right": 366,
+    "viewport": 390
+  },
+  "interfaceIcons": 3
+}

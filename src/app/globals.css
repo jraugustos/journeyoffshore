@@ -786,7 +786,7 @@ body {
 .access-panel {
   width: min(100%, 420px);
   padding: 40px 0;
-  margin-top: 50px;
+  margin-top: 0;
 }
 .access-panel > svg {
   color: #d76500;

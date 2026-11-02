@@ -30,23 +30,11 @@ export default function AccessForm({ onSuccess }: { onSuccess?: () => void }) {
   }
   return (
     <main className="access-page">
-      <div className="access-brand">
-        <img src="/brand.svg" alt="Itaú" width="48" height="48" />
-        <span>
-          Novas jornadas
-          <br />
-          <strong>Offshore</strong>
-        </span>
-      </div>
       <section className="access-panel">
         <LockKeyhole size={28} strokeWidth={1.5} />
-        <h1>
-          Vamos continuar
-          <br />o projeto.
-        </h1>
-        <p>Informe a senha compartilhada com a equipe para acessar o workspace.</p>
+        <h1>Acessar Workspace</h1>
         <form onSubmit={submit}>
-          <label htmlFor="project-password">Senha do projeto</label>
+          <label htmlFor="project-password">Senha</label>
           <div className="access-password">
             <input
               id="project-password"
@@ -73,12 +61,11 @@ export default function AccessForm({ onSuccess }: { onSuccess?: () => void }) {
             </p>
           )}
           <button className="access-submit" type="submit" disabled={busy}>
-            {busy ? 'Verificando…' : 'Acessar projeto'}
+            {busy ? 'Verificando…' : 'Login'}
             <ArrowRight size={19} />
           </button>
         </form>
       </section>
-      <footer>Um espaço para construir as jornadas do Novo Banco Offshore.</footer>
     </main>
   );
 }

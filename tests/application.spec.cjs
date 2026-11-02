@@ -52,8 +52,8 @@ const check = async (name, action) => {
   };
   const login = async (target, secret = password) => {
     await target.goto(base);
-    await target.getByLabel('Senha do projeto', { exact: true }).fill(secret);
-    await target.getByRole('button', { name: 'Acessar projeto' }).click();
+    await target.getByLabel('Senha', { exact: true }).fill(secret);
+    await target.getByRole('button', { name: 'Login' }).click();
   };
   try {
     await check('Páginas e dados são bloqueados sem senha', async () => {
@@ -83,11 +83,11 @@ const check = async (name, action) => {
     await check(
       'Senha compartilhada libera sessão protegida e senha incorreta mantém o bloqueio',
       async () => {
-        await page.getByLabel('Senha do projeto', { exact: true }).fill('senha-incorreta');
-        await page.getByRole('button', { name: 'Acessar projeto' }).click();
+        await page.getByLabel('Senha', { exact: true }).fill('senha-incorreta');
+        await page.getByRole('button', { name: 'Login' }).click();
         await page.getByRole('alert').filter({ hasText: 'Senha incorreta' }).waitFor();
-        await page.getByLabel('Senha do projeto', { exact: true }).fill(password);
-        await page.getByRole('button', { name: 'Acessar projeto' }).click();
+        await page.getByLabel('Senha', { exact: true }).fill(password);
+        await page.getByRole('button', { name: 'Login' }).click();
         await saved();
         const cookies = await context.cookies();
         const access = cookies.find((cookie) => cookie.name === 'offshore_access');
@@ -426,7 +426,7 @@ const check = async (name, action) => {
     });
     await check('Encerrar acesso revoga a sessão e volta a bloquear os dados', async () => {
       await page.getByRole('button', { name: 'Encerrar acesso', exact: true }).click();
-      await page.getByLabel('Senha do projeto', { exact: true }).waitFor();
+      await page.getByLabel('Senha', { exact: true }).waitFor();
       assert.equal((await api.get(base + '/api/workspace')).status(), 401);
       await page.screenshot({ path: path.join(output, 'login-desktop.png') });
     });

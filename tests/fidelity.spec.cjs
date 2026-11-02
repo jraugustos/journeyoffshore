@@ -39,8 +39,8 @@ const check = async (name, action) => {
   let initial;
   try {
     await page.goto(base);
-    await page.getByLabel('Senha do projeto', { exact: true }).fill(password);
-    await nav('Acessar projeto');
+    await page.getByLabel('Senha', { exact: true }).fill(password);
+    await nav('Login');
     await saved();
     initial = (await state()).data;
     const fixture = structuredClone(initial);

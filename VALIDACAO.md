@@ -113,3 +113,7 @@ Referências consultadas para o controle do menu: [Carbon — UI shell header](h
 ### Controle de navegação dentro da sidebar
 
 Conforme a referência fornecida pelo usuário, o controle saiu do header. Aberto, fica ao lado de Workspace; fechado, é o primeiro ícone da navegação com direção para expandir. TypeScript e build passaram. Conferidos os dois estados no desktop e no celular: o centro horizontal do controle recolhido e dos ícones de navegação coincidiu em 34,5 px; o botão permaneceu acessível no celular e reabriu Workspace. Dados não foram editados. Evidências: [aberto](tests/application-evidence/sidebar/open.png), [fechado](tests/application-evidence/sidebar/closed.png), [celular](tests/application-evidence/sidebar/mobile-open.png), [medições](tests/application-evidence/sidebar/results.json).
+
+## Login simplificado — 02/11/2026
+
+Removidos marca, apresentação e rodapé da tela de acesso. Textos atuais: “Acessar Workspace”, “Senha” e “Login”. TypeScript e build passaram. No navegador da base isolada, senha incorreta manteve o bloqueio; mostrar/ocultar senha funcionou; a senha de teste liberou o workspace e encerrar acesso retornou ao login. Layout conferido em desktop e 390 × 844. Evidências: [desktop](tests/application-evidence/login-clean-desktop.png), [celular](tests/application-evidence/login-clean-mobile.png), [resultados](tests/application-evidence/login-clean-results.json).
